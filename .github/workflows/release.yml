@@ -13,65 +13,14 @@ on:
         required: false
         default: false
         type: boolean
-  push:
-    tags:
-      - 'v*'
 
 permissions:
   contents: write
 
-concurrency:
-  group: release-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  prepare:
+  release:
     runs-on: ubuntu-latest
-    outputs:
-      version_number: ${{ steps.prepare.outputs.version_number }}
-      release_tag: ${{ steps.prepare.outputs.release_tag }}
-      release_title: ${{ steps.prepare.outputs.release_title }}
-      prerelease: ${{ steps.prepare.outputs.prerelease }}
-
-    steps:
-      - name: Resolve release version
-        id: prepare
-        shell: bash
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            raw_version="${{ github.event.inputs.version_number }}"
-            prerelease="${{ github.event.inputs.prerelease }}"
-          else
-            raw_version="${GITHUB_REF_NAME}"
-            prerelease="false"
-          fi
-
-          # Strip leading 'v' if present to normalize version_number
-          version_number="${raw_version#v}"
-
-          if [[ ! "$version_number" =~ ^[0-9A-Za-z][0-9A-Za-z.+_-]*$ ]]; then
-            echo "Invalid version_number: $version_number"
-            exit 1
-          fi
-
-          if [[ "$prerelease" != "true" ]]; then
-            prerelease="false"
-          fi
-
-          release_tag="v${version_number}"
-          release_title="Drosophila v${version_number}"
-
-          {
-            echo "version_number=$version_number"
-            echo "release_tag=$release_tag"
-            echo "release_title=$release_title"
-            echo "prerelease=$prerelease"
-          } >> "$GITHUB_OUTPUT"
-
-  build:
-    needs: prepare
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -79,40 +28,62 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Resolve release version
+        id: vars
+        shell: bash
+        run: |
+          raw_version="${{ github.event.inputs.version_number }}"
+          version_number="${raw_version#v}"
+
+          if [[ ! "$version_number" =~ ^[0-9A-Za-z][0-9A-Za-z.+_-]*$ ]]; then
+            echo "Invalid version_number: $version_number"
+            exit 1
+          fi
+
+          prerelease="${{ github.event.inputs.prerelease }}"
+          if [[ "$prerelease" != "true" ]]; then
+            prerelease="false"
+          fi
+
+          echo "version_number=$version_number" >> "$GITHUB_OUTPUT"
+          echo "release_tag=v${version_number}" >> "$GITHUB_OUTPUT"
+          echo "release_title=Drosophila v${version_number}" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-          cache: 'maven'
 
       - name: Build Minecraft Server Plugin (Paper / Spigot)
         shell: bash
         run: |
+          ver="${{ steps.vars.outputs.version_number }}"
           mkdir -p dist
+
           echo "Building DrosophilaBee JAR with Maven..."
           mvn -B clean package --file drosophila-paper/pom.xml
 
           target_jar="drosophila-paper/target/DrosophilaBee.jar"
           if [[ ! -f "$target_jar" ]]; then
-            echo "Artifact not found: $target_jar"
+            echo "Error: $target_jar not found!"
             exit 1
           fi
 
-          ver="${{ needs.prepare.outputs.version_number }}"
           cp "$target_jar" "dist/DrosophilaBee-v${ver}.jar"
           cp "$target_jar" "dist/DrosophilaBee.jar"
 
+          echo "Plugin build successful:"
           ls -lh dist/*.jar
 
       - name: Package Python Connectome Brain Simulation
         shell: bash
         run: |
-          ver="${{ needs.prepare.outputs.version_number }}"
+          ver="${{ steps.vars.outputs.version_number }}"
           pkg_name="drosophila-brain-v${ver}"
           mkdir -p "$pkg_name"
 
-          # Copy simulation code and runner scripts
           cp run_real.py "$pkg_name/"
           cp fly_brain_real.py "$pkg_name/"
           cp connectome_loader.py "$pkg_name/"
@@ -127,118 +98,39 @@ jobs:
 
           chmod +x "$pkg_name/setup.sh" "$pkg_name/start.sh"
 
-          # Create both .tar.gz and .zip archives
           tar -czf "dist/${pkg_name}.tar.gz" "$pkg_name"
           zip -r "dist/${pkg_name}.zip" "$pkg_name"
 
+          echo "Simulation packages created:"
           ls -lh dist/drosophila-brain*
 
-      - name: Upload release artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-artifacts
-          path: dist/*
-          if-no-files-found: error
-
-  release:
-    needs:
-      - prepare
-      - build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download release artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: release-artifacts
-          path: dist
-
-      - name: Verify downloaded artifacts
+      - name: Prepare Release Notes
         shell: bash
         run: |
-          shopt -s nullglob
-          files=(dist/*)
-          if [ "${#files[@]}" -eq 0 ]; then
-            echo "No release artifacts were downloaded."
-            exit 1
-          fi
-          ls -la dist
+          ver="${{ steps.vars.outputs.version_number }}"
+          sed "s/__VERSION__/${ver}/g" .github/release-notes-template.md > release-notes.md
+          cat release-notes.md
 
-      - name: Prepare release notes
-        shell: bash
-        run: |
-          ver="${{ needs.prepare.outputs.version_number }}"
-          cat > release-notes.md <<EOF
-# 🪰 Drosophila v${ver} — MaleCNS v1.0 Biological Connectome for Minecraft
-
-Biological fruit fly (*Drosophila melanogaster*) connectome simulation controlling a 3D flying Bee entity in Minecraft PaperMC/Spigot servers via real-time WebSocket telemetry.
-
----
-
-### 📦 Downloadable Assets / İndirilebilir Paketler
-
-| File / Dosya | Description / Açıklama | Installation / Kurulum |
-|---|---|---|
-| **\`DrosophilaBee-v${ver}.jar\`** | Minecraft Paper/Spigot Server Plugin | Put into server's \`plugins/\` folder |
-| **\`drosophila-brain-v${ver}.tar.gz\`** | Python Brain Simulation (Linux archive) | Extract and run \`./setup.sh\` then \`./start.sh\` |
-| **\`drosophila-brain-v${ver}.zip\`** | Python Brain Simulation (Windows/Universal zip) | Extract and run \`./setup.sh\` or \`python run_real.py\` |
-
----
-
-### 🎮 Compatibility / Uyumluluk
-
-* **Minecraft Server:** **1.20 - 1.21.x+** (PaperMC, Purpur, Spigot)
-  * *Recommended:* **PaperMC 1.20.4+** or **Paper 1.21.x** (provides high-performance async raytracing)
-* **Java Runtime:** **Java 17 - Java 21+** (compiled with Java 17 LTS bytecode target)
-* **Python Environment:** **Python 3.10 - 3.12+** (\`numpy\`, \`scipy\`, \`pyarrow\`, \`websockets\`, \`pygame\`)
-* **Connectome Dataset:** **MaleCNS v1.0** (13,000+ neurons, ~5M synapses, Janelia / Cambridge / MRC LMB / Google Research)
-
----
-
-### 🚀 Quick Start / Hızlı Başlangıç
-
-#### 1. Minecraft Sunucusu:
-1. \`DrosophilaBee-v${ver}.jar\` dosyasını \`plugins/\` klasörüne atın ve sunucuyu başlatın.
-2. \`plugins/DrosophilaBee/config.yml\` dosyasından \`auth-token\` ve dil seçiminizi (\`en\` / \`tr\`) yapın.
-
-#### 2. Python Beyin Simülasyonu:
-\`\`\`bash
-tar -xzf drosophila-brain-v${ver}.tar.gz
-cd drosophila-brain-v${ver}
-chmod +x setup.sh start.sh
-./setup.sh
-./start.sh
-\`\`\`
-*(Minecraft sunucusu farklı bir IP'deyse: \`./start.sh <SUNUCU_IP>\`)*
-EOF
-
-      - name: Ensure release tag is unique
+      - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          if gh release view "${{ needs.prepare.outputs.release_tag }}" >/dev/null 2>&1; then
-            echo "Release ${{ needs.prepare.outputs.release_tag }} already exists."
-            exit 1
-          fi
+          tag="${{ steps.vars.outputs.release_tag }}"
+          title="${{ steps.vars.outputs.release_title }}"
 
-      - name: Publish GitHub release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
-        run: |
           prerelease_flag=""
-          if [ "${{ github.event.inputs.prerelease }}" = "true" ]; then
+          if [ "${{ steps.vars.outputs.prerelease }}" = "true" ]; then
             prerelease_flag="--prerelease"
           fi
 
-          gh release create "${{ needs.prepare.outputs.release_tag }}" dist/* \
-            --title "${{ needs.prepare.outputs.release_title }}" \
-            --notes-file release-notes.md \
-            $prerelease_flag
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists, updating assets..."
+            gh release upload "$tag" dist/* --clobber
+          else
+            echo "Creating new release $tag..."
+            gh release create "$tag" dist/* \
+              --title "$title" \
+              --notes-file release-notes.md \
+              $prerelease_flag
+          fi
