@@ -21,6 +21,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
+import org.drosophila.compat.Compat;
 import org.drosophila.olfaction.OdorDiffusion;
 
 import java.util.Collection;
@@ -134,9 +135,11 @@ public class BeeController implements Listener {
         bee.setInvulnerable(this.invulnerable);
         bee.addScoreboardTag("drosophila_fly");
 
-        AttributeInstance maxHealthAttr = bee.getAttribute(Attribute.MAX_HEALTH);
-        if (maxHealthAttr != null) {
-            maxHealthAttr.setBaseValue(20.0);
+        if (Compat.MAX_HEALTH != null) {
+            AttributeInstance maxHealthAttr = bee.getAttribute(Compat.MAX_HEALTH);
+            if (maxHealthAttr != null) {
+                maxHealthAttr.setBaseValue(20.0);
+            }
         }
         bee.setHealth(20.0);
 
@@ -147,7 +150,7 @@ public class BeeController implements Listener {
         this.lastPosCheck = loc.clone();
 
         w.playSound(loc, Sound.ENTITY_BEE_POLLINATE, 1.0f, 1.2f);
-        w.spawnParticle(Particle.HAPPY_VILLAGER, loc.add(0, 0.5, 0), 8, 0.2, 0.2, 0.2, 0.02);
+        Compat.spawnHappyParticle(w, loc.add(0, 0.5, 0), 8, 0.2, 0.2, 0.2, 0.02);
 
         plugin.getLogger().info("[Drosophila] " + displayName + " spawned at: " + loc.getBlockX() + ", "
                 + loc.getBlockY() + ", " + loc.getBlockZ());
@@ -183,7 +186,7 @@ public class BeeController implements Listener {
             bee.teleport(safeLoc);
             lastPosCheck = safeLoc.clone();
             p.getWorld().playSound(safeLoc, Sound.ENTITY_BEE_POLLINATE, 1.0f, 1.5f);
-            p.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, safeLoc.clone().add(0, 0.4, 0), 10, 0.2, 0.2, 0.2, 0.05);
+            Compat.spawnHappyParticle(p.getWorld(), safeLoc.clone().add(0, 0.4, 0), 10, 0.2, 0.2, 0.2, 0.05);
         }
     }
 
@@ -335,7 +338,7 @@ public class BeeController implements Listener {
             liftY += 0.32;
             beeEntity.setRemainingAir(beeEntity.getMaximumAir());
             hurtLastFrame = true; // Suyu tehlike/acı hissetsin
-            loc.getWorld().spawnParticle(Particle.SPLASH, loc.clone().add(0, 0.2, 0), 4, 0.1, 0.1, 0.1, 0.05);
+            Compat.spawnSplashParticle(loc.getWorld(), loc.clone().add(0, 0.2, 0), 4, 0.1, 0.1, 0.1, 0.05);
         } else if (blockAhead.isLiquid()) {
             // Tam önü su: dalışı engelle, yukarı kaç
             liftY += 0.22;
@@ -531,9 +534,11 @@ public class BeeController implements Listener {
     public void healBee(double amount) {
         if (beeEntity == null || !beeEntity.isValid()) return;
         double maxHealth = 20.0;
-        AttributeInstance attr = beeEntity.getAttribute(Attribute.MAX_HEALTH);
-        if (attr != null) {
-            maxHealth = attr.getValue();
+        if (Compat.MAX_HEALTH != null) {
+            AttributeInstance attr = beeEntity.getAttribute(Compat.MAX_HEALTH);
+            if (attr != null) {
+                maxHealth = attr.getValue();
+            }
         }
         double current = beeEntity.getHealth();
         beeEntity.setHealth(Math.min(maxHealth, Math.max(0.0, current + amount)));
@@ -638,7 +643,7 @@ public class BeeController implements Listener {
                 leafRestCooldown = 80; // 4 saniyede bir hafif dinlenme
                 this.foodLevel = Math.min(16.0, this.foodLevel + 0.6); // Hafif tokluk desteği
                 healBee(0.5);
-                w.spawnParticle(Particle.HAPPY_VILLAGER, loc.clone().add(0, 0.2, 0), 2, 0.15, 0.15, 0.15, 0.02);
+                Compat.spawnHappyParticle(w, loc.clone().add(0, 0.2, 0), 2, 0.15, 0.15, 0.15, 0.02);
             }
         }
 
@@ -667,7 +672,7 @@ public class BeeController implements Listener {
                 healBee(0.5);
                 beeEntity.setHasNectar(true);
                 w.playSound(loc, Sound.ENTITY_BEE_POLLINATE, 0.5f, 1.6f);
-                w.spawnParticle(Particle.HAPPY_VILLAGER, loc.clone().add(0, 0.25, 0), 2, 0.15, 0.15, 0.15, 0.03);
+                Compat.spawnHappyParticle(w, loc.clone().add(0, 0.25, 0), 2, 0.15, 0.15, 0.15, 0.03);
             }
         }
     }

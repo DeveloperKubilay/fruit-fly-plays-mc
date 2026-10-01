@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.drosophila.DrosophilaPlugin;
+import org.drosophila.compat.Compat;
 import org.drosophila.controller.BeeController;
 import org.drosophila.network.BrainServer;
 
@@ -86,7 +87,7 @@ public class BottleManager implements Listener {
 
             // Efekt ve ses
             loc.getWorld().playSound(loc, Sound.ITEM_BOTTLE_FILL, 1.0f, 1.2f);
-            loc.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, loc.clone().add(0, 0.4, 0), 10, 0.2, 0.2, 0.2, 0.05);
+            Compat.spawnHappyParticle(loc.getWorld(), loc.clone().add(0, 0.4, 0), 10, 0.2, 0.2, 0.2, 0.05);
 
             // Eşyayı al ve şişeli sineği ver
             if (hand.getAmount() > 1) {
@@ -132,7 +133,7 @@ public class BottleManager implements Listener {
             if (released != null) {
                 spawnLoc.getWorld().playSound(spawnLoc, Sound.ITEM_BOTTLE_EMPTY, 1.0f, 1.2f);
                 spawnLoc.getWorld().playSound(spawnLoc, Sound.ENTITY_BEE_POLLINATE, 1.0f, 1.4f);
-                spawnLoc.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, spawnLoc.clone().add(0, 0.4, 0), 12, 0.2, 0.2, 0.2, 0.05);
+                Compat.spawnHappyParticle(spawnLoc.getWorld(), spawnLoc.clone().add(0, 0.4, 0), 12, 0.2, 0.2, 0.2, 0.05);
 
                 // Şişeli eşyayı eksilt, boş şişe ver
                 if (hand.getAmount() > 1) {

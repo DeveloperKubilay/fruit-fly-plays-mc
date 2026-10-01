@@ -33,7 +33,7 @@ fi
 SPIGOT_JAR="lib/spigot-api.jar"
 if [ ! -f "$SPIGOT_JAR" ]; then
     echo "[Build] Spigot API indiriliyor..."
-    curl -sL -o "$SPIGOT_JAR" "https://hub.spigotmc.org/nexus/content/repositories/snapshots/org/spigotmc/spigot-api/1.20.4-R0.1-SNAPSHOT/spigot-api-1.20.4-R0.1-20240424.120003-85.jar"
+    curl -sL -o "$SPIGOT_JAR" "https://hub.spigotmc.org/nexus/content/repositories/snapshots/org/spigotmc/spigot-api/26.1-R0.1-SNAPSHOT/spigot-api-26.1-R0.1-20260329.091546-5.jar"
 fi
 
 CP_SEP=":"
