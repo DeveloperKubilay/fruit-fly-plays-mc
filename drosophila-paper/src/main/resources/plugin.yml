@@ -1,0 +1,19 @@
+name: DrosophilaBee
+version: 1.0.0
+main: org.drosophila.DrosophilaPlugin
+api-version: '1.20'
+authors: [Kubilay]
+description: MaleCNS v1.0 Biological Drosophila Connectome controlling a 3D flying Bee entity.
+
+commands:
+  fruitfly:
+    description: MaleCNS v1.0 Biological Fruit Fly control commands
+    aliases: [fluitfly]
+    usage: /<command>
+    permission: drosophila.admin
+    permission-message: §c[Drosophila] You must have OP permission to use this command.
+
+permissions:
+  drosophila.admin:
+    description: Drosophila Fruit Fly administrator permission
+    default: op

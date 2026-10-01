@@ -1,0 +1,93 @@
+# ==============================================================================
+# DrosophilaBee Language File: English (en)
+# ==============================================================================
+
+entity:
+  name: "&eFruit Fly"
+
+commands:
+  no_permission: "&c[Drosophila] You must have OP permission to use this command."
+  player_only: "&cOnly an in-game player can use this command."
+  unknown: "&cUnknown command. Type &e/{0} help&c for available commands."
+  fly_not_found: "&c[Drosophila] Fruit fly entity not found!"
+  fly_spawning: "&c[Drosophila] Fruit fly is currently spawning, please try again in a moment."
+
+  tp:
+    success: "&a[Drosophila] 🪰 Teleported to the fruit fly."
+    console_loc: "&a[Drosophila] Fruit fly position: [{0}, {1}, {2}]"
+
+  come:
+    success: "&a[Drosophila] 🪰 Fruit fly brought to your location!"
+
+  feed:
+    apple_dropped: "&a[Drosophila] 🍎 Apple dropped at [{0}, {1}, {2}]! Watch the olfactory descent."
+    instantly_fed: "&a[Drosophila] 🍎 Fruit fly instantly satiated! (Satiety: 20.0/20.0, Health restored)"
+
+  hungry:
+    success: "&a[Drosophila] 🪰 Fruit fly made hungry! (Satiety: 3.0/20.0 • dNPF hunger hormone activated)"
+
+  food:
+    set: "&a[Drosophila] 🪰 Satiety level set to: {0}/20.0"
+    invalid: "&cPlease enter a valid number between 3 and 20. E.g.: /{0} food 10"
+    status: "&e[Drosophila] 🪰 Satiety: &f{0}/20.0 &7({1})"
+
+  spawnpoint:
+    set: "&a[Drosophila] 🪰 Home spawnpoint set to: [{0}, {1}, {2}]"
+    reset: "&a[Drosophila] 🪰 Spawnpoint reset (default world spawn will be used)."
+
+  home:
+    sent: "&a[Drosophila] 🪰 Fruit fly sent to its home spawnpoint!"
+    spawned: "&a[Drosophila] 🪰 Fruit fly spawned at its home!"
+
+  clear:
+    success: "&a[Drosophila] 🔄 Fruit fly brain memory reset! Mushroom body memories returned to base connectome weights."
+    not_connected: "&c[Drosophila] Python brain is not connected, reset command could not be delivered."
+
+  help:
+    header: "&6=== Fruit Fly (Drosophila MaleCNS) Commands ==="
+    tp: "&e/{0} tp &7- Teleport to the fruit fly."
+    come: "&e/{0} come &7- Bring the fruit fly to you."
+    feed: "&e/{0} feed [full] &7- Drops an apple (or 'full' to instantly satiate)."
+    hungry: "&e/{0} hungry &7(or /{0} starve) - Instantly starves the fly (triggers dNPF hormone)."
+    food: "&e/{0} food [amount] &7- Sets or displays satiety level (3-20)."
+    spawnpoint: "&e/{0} spawnpoint &7(or /{0} setspawn) - Sets current location as the fly's home."
+    home: "&e/{0} home &7- Sends the fly back to its home."
+    status: "&e/{0} status &7- Displays brain model, dopamine mood, health, satiety & senses."
+    clear: "&e/{0} clear &7- Resets memory back to baseline MaleCNS connectome."
+
+status:
+  header: "&6================= &e🪰 Fruit Fly Status &6================="
+  brain_connected: "&e🧠 Brain Model: &aCONNECTED &7(MaleCNS v1.0 • 13,000+ Neurons • 5M Synapses)"
+  brain_disconnected: "&e🧠 Brain Model: &cDISCONNECTED &7(Waiting for Python brain...)"
+  mood_title: "&e🎭 Mood: "
+  mood:
+    eating: "&6🍎 Feeding &7(Sugar Reward • PAM Dopamine Burst)"
+    scared: "&c😨 Scared / Escaping &7(Giant Fiber DNp01 Escape Reflex!)"
+    sad: "&d😢 Stressed / Hungry &7(PPL1 Negative Reinforcement • Purple Tears)"
+    happy: "&a💚 Happy / Content &7(PAM Dopamine Satisfaction)"
+    neutral: "&b🟢 Calm &7(Natural Exploration & Cruising Mode)"
+  stats_line: "&e❤️ Health: &c{0}&7/20.0  &8|  &e🍗 Satiety: &f{1}&7/20.0 &7({2})"
+  satiety:
+    satiated: "&aSatiated &7(Free Exploration & Light Seeking)"
+    normal: "&eNormal &7(Mild Appetite)"
+    hungry: "&cVery Hungry &7(dNPF Hormone Peaked • Searching for Food)"
+  location: "&e📍 Position: &f[{0}, {1}, {2}] &7(Heading: {3}°, Pitch: {4}°)"
+  odor_source: "&e👃 Odor Source: &6{0} &7(Distance: {1} blocks, L: {2} / R: {3})"
+  odor_none: "&e👃 Odor Source: &7None (Fresh air / Out of odor field)"
+  scan: "&e👁️ Surroundings: &7Items: &f{0} &7| Players: &f{1} &7| Threat: {2}"
+  threat:
+    none: "&aNone (Safe)"
+    detected: "&c{0} ({1} blocks)"
+  home_set: "&e🏠 Home (Spawnpoint): &a[{0}, {1}, {2}]"
+  home_none: "&e🏠 Home (Spawnpoint): &7None (Default World Spawn)"
+  spawning: "&eStatus: &aAutomatic spawning / resurrecting..."
+  footer: "&6============================================================"
+
+bottle:
+  item_name: "&aBottled Fruit Fly &e[{0}]"
+  lore:
+    - "&7MaleCNS v1.0 biological brain resting."
+    - "&7(0 CPU / 0 RAM sleep mode)"
+    - "&eRight-click ground to release."
+  captured: "&a[Drosophila] 🍾 Fruit fly safely bottled! Brain entered sleep mode (0 CPU)."
+  released: "&a[Drosophila] 🐝 Fruit fly released from bottle! Eyes opened and MaleCNS brain awakened."

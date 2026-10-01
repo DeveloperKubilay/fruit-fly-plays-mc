@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.vscode/
+.idea/
+*.log
+
+# --- Konektom verisi (~1.1 GB) ---
+# MaleCNS v1.0: Janelia/Cambridge/MRC LMB/Google, CC BY 4.0
+# Kaynağından indirilir, repoda taşınmaz.
+connectome/
+*.feather
+*.npz
+
+# --- Çalışma zamanı çıktıları ---
+logs/
+data/
+
+# --- Java build artifacts ---
+drosophila-paper/target/
+drosophila-paper/build/
+drosophila-paper/lib/
+*.b64
+
+# --- Yerel arşivler ve sunucu geçici paketleri ---
+sunucu/
+*.zip
+*.tar.gz

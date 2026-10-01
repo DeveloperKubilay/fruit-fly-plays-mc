@@ -1,0 +1,93 @@
+# ==============================================================================
+# DrosophilaBee Dil Dosyası: Türkçe (tr)
+# ==============================================================================
+
+entity:
+  name: "&eMeyve Sineği"
+
+commands:
+  no_permission: "&c[Drosophila] Bu komutu kullanmak için OP yetkiniz olmalıdır."
+  player_only: "&cBu komutu yalnızca oyundaki bir oyuncu kullanabilir."
+  unknown: "&cBilinmeyen komut. Kullanılabilir komutlar için &e/{0} help&c yazın."
+  fly_not_found: "&c[Drosophila] Meyve sineği dünyada bulunamadı!"
+  fly_spawning: "&c[Drosophila] Sinek hazırlanıyor, lütfen birazdan tekrar deneyin."
+
+  tp:
+    success: "&a[Drosophila] 🪰 Meyve sineğinin yanına ışınlandınız."
+    console_loc: "&a[Drosophila] Sinek konumu: [{0}, {1}, {2}]"
+
+  come:
+    success: "&a[Drosophila] 🪰 Meyve sineği yanınıza getirildi!"
+
+  feed:
+    apple_dropped: "&a[Drosophila] 🍎 Meyve sineğinin önüne elma bırakıldı: [{0}, {1}, {2}]! Koku ve iniş takibini izleyebilirsiniz."
+    instantly_fed: "&a[Drosophila] 🍎 Meyve sineği anında doyuruldu! (Tokluk: 20.0/20.0, Can yenilendi)"
+
+  hungry:
+    success: "&a[Drosophila] 🪰 Meyve sineği acıktırıldı! (Tokluk: 3.0/20.0 • dNPF hormonu aktifleşti)"
+
+  food:
+    set: "&a[Drosophila] 🪰 Meyve sineği tokluk seviyesi ayarlandı: {0}/20.0"
+    invalid: "&cLütfen 3 ile 20 arasında geçerli bir sayı girin. Örn: /{0} food 10"
+    status: "&e[Drosophila] 🪰 Meyve sineği tokluk: &f{0}/20.0 &7({1})"
+
+  spawnpoint:
+    set: "&a[Drosophila] 🪰 Meyve sineğinin kalıcı doğma noktası (spawnpoint) ayarlandı: [{0}, {1}, {2}]"
+    reset: "&a[Drosophila] 🪰 Sinek spawnpoint sıfırlandı (varsayılan dünya doğma noktası kullanılacak)."
+
+  home:
+    sent: "&a[Drosophila] 🪰 Meyve sineği evine (spawnpoint) gönderildi!"
+    spawned: "&a[Drosophila] 🪰 Meyve sineği evinde doğuruldu!"
+
+  clear:
+    success: "&a[Drosophila] 🔄 Meyve sineğinin beyni sıfırlandı! Mantar cisimciği anıları taban konektom ağırlıklarına döndü."
+    not_connected: "&c[Drosophila] Python beyni bağlı değil, sıfırlama komutu gönderilemedi."
+
+  help:
+    header: "&6=== Meyve Sineği (Drosophila MaleCNS) Komutları ==="
+    tp: "&e/{0} tp &7- Sineğin yanına ışınlanırsın."
+    come: "&e/{0} come &7- Sineği kendi yanına çağırırsın."
+    feed: "&e/{0} feed [full] &7- Sineğin önüne elma bırakır (veya full ile anında doyurur)."
+    hungry: "&e/{0} hungry &7(veya /{0} starve) - Sineği anında acıktırır (dNPF aktifleşir)."
+    food: "&e/{0} food [miktar] &7- Sineğin tokluk seviyesini (3-20) ayarlar veya gösterir."
+    spawnpoint: "&e/{0} spawnpoint &7(veya /{0} setspawn) - Bulunduğun yeri sineğin kalıcı evi yapar."
+    home: "&e/{0} home &7- Sineği evine gönderir."
+    status: "&e/{0} status &7- Beyin, ruh hali (dopamin), can, tokluk ve çevre algısını gösterir."
+    clear: "&e/{0} clear &7- Sineğin hafızasını sıfırlar (taban konektoma döner)."
+
+status:
+  header: "&6================= &e🪰 Meyve Sineği Durumu &6================="
+  brain_connected: "&e🧠 Beyin Modeli: &aBAĞLI &7(MaleCNS v1.0 • 13.000+ Nöron • 5M Sinaps)"
+  brain_disconnected: "&e🧠 Beyin Modeli: &cKOPUK &7(Python beyni bekleniyor...)"
+  mood_title: "&e🎭 Ruh Hali: "
+  mood:
+    eating: "&6🍎 Besleniyor &7(Şeker Ödülü • PAM Dopamin Patlaması)"
+    scared: "&c😨 Korkmuş / Kaçıyor &7(Dev Nöron DNp01 Kaçış Refleksi!)"
+    sad: "&d😢 Stresli / Aç &7(PPL1 Negatif Pekiştirme • Mor Gözyaşı)"
+    happy: "&a💚 Mutlu / Huzurlu &7(PAM Dopamin Tatmini)"
+    neutral: "&b🟢 Sakin &7(Doğal Keşif & Uçuş Modu)"
+  stats_line: "&e❤️ Can: &c{0}&7/20.0  &8|  &e🍗 Tokluk: &f{1}&7/20.0 &7({2})"
+  satiety:
+    satiated: "&aTok &7(Serbest Keşif & Işık Odaklı)"
+    normal: "&eNormal &7(Hafif İştahlı)"
+    hungry: "&cÇok Aç &7(dNPF Hormonu Tavan Yaptı • Yiyecek Arıyor)"
+  location: "&e📍 Konum: &f[{0}, {1}, {2}] &7(Yön: {3}°, Pitch: {4}°)"
+  odor_source: "&e👃 Koku Kaynağı: &6{0} &7(Mesafe: {1} blok, Sol: {2} / Sağ: {3})"
+  odor_none: "&e👃 Koku Kaynağı: &7Yok (Açık hava / Koku sahası dışında)"
+  scan: "&e👁️ Çevre Taraması: &7Yerdeki Eşyalar: &f{0} &7| Oyuncular: &f{1} &7| Tehdit: {2}"
+  threat:
+    none: "&aYok (Güvende)"
+    detected: "&c{0} ({1} blok)"
+  home_set: "&e🏠 Ev (Spawnpoint): &a[{0}, {1}, {2}]"
+  home_none: "&e🏠 Ev (Spawnpoint): &7Yok (Varsayılan Dünya Doğuşu)"
+  spawning: "&eDurum: &aOtomatik doğum / dirilme sürecinde..."
+  footer: "&6============================================================"
+
+bottle:
+  item_name: "&aŞişede Meyve Sineği &e[{0}]"
+  lore:
+    - "&7MaleCNS v1.0 biyolojik beyni dinlenmede."
+    - "&7(0 CPU / 0 RAM uyku modu)"
+    - "&eSalmak için yere sağ tıklayın."
+  captured: "&a[Drosophila] 🍾 Meyve sineği güvenle şişeye alındı! Beyin dinlenme moduna geçti (0 CPU)."
+  released: "&a[Drosophila] 🐝 Meyve sineği şişeden salındı! Gözlerini açtı ve MaleCNS beyni uyandı."
