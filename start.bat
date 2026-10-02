@@ -11,15 +11,27 @@ exit /b 1
 :VENV_OK
 call "venv\Scripts\activate.bat"
 
-rem Hedef Minecraft sunucu IP adresi (Parametre yoksa varsayılan: localhost)
-rem Kullanım / Usage:
-rem   start.bat                     -> Yerel sunucu (localhost:8765)
-rem   start.bat 192.168.1.105       -> Uzak sunucu IP'si
-rem   start.bat 192.168.1.105:8766  -> Özel port
+rem .env dosyası varsa ortam değişkenlerini yükle
+if exist ".env" (
+    for /f "usebackq tokens=1* delims==" %%a in (".env") do (
+        set "%%a=%%b"
+    )
+)
+
+rem Hedef Minecraft sunucu adresi (Varsayılan: localhost)
+rem Sıralama: 1. Komut satırı argümanı (%*) -> 2. MINECRAFT_HOST / TARGET env -> 3. localhost
 set "SERVER_HOST=%*"
 if defined SERVER_HOST goto RUN_APP
+if defined MINECRAFT_HOST (
+    set "SERVER_HOST=%MINECRAFT_HOST%"
+    goto RUN_APP
+)
 if defined TARGET (
     set "SERVER_HOST=%TARGET%"
+    goto RUN_APP
+)
+if defined SERVER_HOST_ENV (
+    set "SERVER_HOST=%SERVER_HOST_ENV%"
     goto RUN_APP
 )
 set "SERVER_HOST=localhost"

@@ -96,6 +96,7 @@ jobs:
           cp start.sh "$pkg_name/"
           cp setup.bat "$pkg_name/"
           cp start.bat "$pkg_name/"
+          cp .env.example "$pkg_name/"
           cp README.md "$pkg_name/"
 
           chmod +x "$pkg_name/setup.sh" "$pkg_name/start.sh"

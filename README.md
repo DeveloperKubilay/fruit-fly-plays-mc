@@ -81,6 +81,8 @@ cp target/DrosophilaBee.jar /path/to/server/plugins/
 
 ### 3. Python Tarafı (Beyin / İstemci)
 
+Simülasyon varsayılan olarak yerel sunucuya (`ws://localhost:8765`) bağlanır. Uzak sunucu IP'sini ister argüman olarak verebilir, isterseniz `.env` dosyasıyla modüler olarak tanımlayabilirsiniz.
+
 #### Hızlı Başlatma (1-Tık Kurulum & Çalıştırma):
 
 **Windows İçin:**
@@ -88,13 +90,13 @@ cp target/DrosophilaBee.jar /path/to/server/plugins/
 # 1. Kurulum (venv, kütüphaneler ve konektom modelini otomatik hazırlar):
 setup.bat
 
-# 2. Çalıştırma (Minecraft aynı bilgisayardaysa):
+# 2. Çalıştırma (Varsayılan: localhost:8765):
 start.bat
 
-# Minecraft başka bir sunucudaysa (Uzak IP):
-start.bat 192.168.1.50
+# Minecraft başka bir sunucudaysa (Uzak IP / Domain):
+start.bat 1.2.3.4
 # veya port ile:
-start.bat 192.168.1.50:8765
+start.bat 1.2.3.4:8765
 ```
 
 **Linux / macOS İçin:**
@@ -102,11 +104,19 @@ start.bat 192.168.1.50:8765
 # 1. Kurulum:
 ./setup.sh
 
-# 2. Çalıştırma:
+# 2. Çalıştırma (Varsayılan: localhost:8765):
 ./start.sh
 
-# Minecraft başka bir sunucudaysa (Uzak IP):
-./start.sh 192.168.1.50
+# Minecraft başka bir sunucudaysa (Uzak IP / Domain):
+./start.sh 1.2.3.4
+```
+
+#### Modüler Ortam Değişkeni Desteği (`.env`):
+Projeyi her defasında IP parametresi vermeden çalıştırmak için `.env.example` dosyasını `.env` olarak kopyalayabilirsiniz:
+```ini
+# .env dosyası
+MINECRAFT_HOST=1.2.3.4
+MINECRAFT_PORT=8765
 ```
 
 #### Manuel Çalıştırma (Geliştiriciler İçin):
@@ -115,13 +125,12 @@ start.bat 192.168.1.50:8765
 # 1. Bağımlılıkları kur
 pip install -r requirements.txt
 
-# 2. Çalıştır (aynı makinedeyse hiçbir parametre gerekmez):
+# 2. Çalıştır (Varsayılan: ws://localhost:8765):
 python run_real.py
 
-# Eğer Minecraft sunucusu başka bir makinedeyse, sunucunun IP'sini belirtin:
-python run_real.py 192.168.1.50
-# veya port ile birlikte:
-python run_real.py 192.168.1.50:8765
+# Uzak sunucuya bağlanma:
+python run_real.py 1.2.3.4
+python run_real.py 1.2.3.4:8765
 
 # Sessiz mod (kanat vuruşu sesi kapalı):
 python run_real.py --sessiz

@@ -5,12 +5,16 @@
 
 Kullanım:
     python run_real.py                     -> Yerel Minecraft sunucusuna bağlanır (ws://localhost:8765)
-    python run_real.py 192.168.1.50        -> Başka makinedeki sunucuya bağlanır (ws://192.168.1.50:8765)
-    python run_real.py 192.168.1.50:8766   -> Özel host ve port
+    python run_real.py 1.2.3.4             -> Uzak makinedeki sunucuya bağlanır (ws://1.2.3.4:8765)
+    python run_real.py 1.2.3.4:8766        -> Özel host ve port
     python run_real.py 8766                -> Özel port (localhost:8766)
     python run_real.py --server            -> Sunucu modu (eski ters bağlantı modu)
     python run_real.py --sessiz            -> Kanat vuruşu / işitme sesi kapalı
     python run_real.py --ses-aygit "..."   -> Belirli bir ses aygıtına çıkış ver
+
+Ortam Değişkenleri (.env veya export / set):
+    MINECRAFT_HOST=1.2.3.4                 -> Hedef sunucu IP / domain (varsayılan: localhost)
+    MINECRAFT_PORT=8765                    -> Hedef port (varsayılan: 8765)
 
 Minecraft Paper / Spigot sunucusundaki DrosophilaBee eklentisi 0.0.0.0:8765 üzerinde
 WebSocket sunucusunu açar; bu script istemci olarak Minecraft'a bağlanır.
@@ -85,9 +89,39 @@ def check_data():
     return True
 
 
+def load_dotenv():
+    """Varsa .env dosyasından ortam değişkenlerini yükler."""
+    env_file = os.path.join(HERE, ".env")
+    if os.path.exists(env_file):
+        try:
+            with open(env_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip('"').strip("'")
+                        os.environ.setdefault(k, v)
+        except Exception:
+            pass
+
+
 def main():
-    ws_host = "localhost"
+    load_dotenv()
+
+    # Varsayılan: localhost:8765 (modüler ortam değişkenleri: MINECRAFT_HOST, TARGET, SERVER_HOST)
+    ws_host = (
+        os.environ.get("MINECRAFT_HOST")
+        or os.environ.get("TARGET")
+        or os.environ.get("SERVER_HOST")
+        or "localhost"
+    )
     ws_port = 8765
+
+    env_port = os.environ.get("MINECRAFT_PORT") or os.environ.get("SERVER_PORT")
+    if env_port and str(env_port).isdigit():
+        ws_port = int(env_port)
+
     as_server = False
 
     for a in sys.argv[1:]:

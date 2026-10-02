@@ -11,15 +11,23 @@ fi
 
 source venv/bin/activate
 
-# Hedef Minecraft sunucu adresi (Parametre yoksa TARGET değişkeni veya localhost)
-# Kullanım:
-#   ./start.sh                  -> localhost:8765
-#   ./start.sh 192.168.1.105    -> Belirtilen IP
-#   ./start.sh 192.168.1.105:8766
+# .env dosyası varsa yükle
+if [ -f ".env" ]; then
+    set -a
+    source .env
+    set +a
+fi
+
+# Hedef Minecraft sunucu adresi (Varsayılan: localhost)
+# Sıralama: 1. Komut satırı argümanı ($@) -> 2. MINECRAFT_HOST / TARGET env -> 3. localhost
 if [ -n "$*" ]; then
     SERVER_ARGS=("$@")
+elif [ -n "$MINECRAFT_HOST" ]; then
+    SERVER_ARGS=("$MINECRAFT_HOST")
 elif [ -n "$TARGET" ]; then
     SERVER_ARGS=("$TARGET")
+elif [ -n "$SERVER_HOST" ]; then
+    SERVER_ARGS=("$SERVER_HOST")
 else
     SERVER_ARGS=("localhost")
 fi
