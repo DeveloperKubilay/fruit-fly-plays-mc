@@ -94,6 +94,8 @@ jobs:
           cp requirements.txt "$pkg_name/"
           cp setup.sh "$pkg_name/"
           cp start.sh "$pkg_name/"
+          cp setup.bat "$pkg_name/"
+          cp start.bat "$pkg_name/"
           cp README.md "$pkg_name/"
 
           chmod +x "$pkg_name/setup.sh" "$pkg_name/start.sh"

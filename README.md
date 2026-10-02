@@ -39,6 +39,10 @@ Drosophila/
 ├── fly_log.py                   # Nöral aktivite loglama
 ├── fly_sound.py                 # Kanat sesi simülasyonu (WingBeat)
 ├── run_real.py                  # ▶️ ANA ÇALIŞTIRICI (her şeyi başlatır)
+├── setup.bat                    # 🪟 Windows otomatik kurulum betiği
+├── start.bat                    # 🪟 Windows başlatıcı (yerel veya uzak IP)
+├── setup.sh                     # 🐧 Linux/macOS otomatik kurulum betiği
+├── start.sh                     # 🐧 Linux/macOS başlatıcı (yerel veya uzak IP)
 ├── dogrula.py                   # Beyin doğrulama / test aracı
 ├── requirements.txt             # Python bağımlılıkları
 └── .gitignore
@@ -77,15 +81,41 @@ cp target/DrosophilaBee.jar /path/to/server/plugins/
 
 ### 3. Python Tarafı (Beyin / İstemci)
 
-```bash
-# 1. Repoyu klonla
-git clone https://your-repo-url.git Drosophila
-cd Drosophila
+#### Hızlı Başlatma (1-Tık Kurulum & Çalıştırma):
 
-# 2. Bağımlılıkları kur
+**Windows İçin:**
+```cmd
+# 1. Kurulum (venv, kütüphaneler ve konektom modelini otomatik hazırlar):
+setup.bat
+
+# 2. Çalıştırma (Minecraft aynı bilgisayardaysa):
+start.bat
+
+# Minecraft başka bir sunucudaysa (Uzak IP):
+start.bat 192.168.1.50
+# veya port ile:
+start.bat 192.168.1.50:8765
+```
+
+**Linux / macOS İçin:**
+```bash
+# 1. Kurulum:
+./setup.sh
+
+# 2. Çalıştırma:
+./start.sh
+
+# Minecraft başka bir sunucudaysa (Uzak IP):
+./start.sh 192.168.1.50
+```
+
+#### Manuel Çalıştırma (Geliştiriciler İçin):
+
+```bash
+# 1. Bağımlılıkları kur
 pip install -r requirements.txt
 
-# 3. Çalıştır (aynı makinedeyse hiçbir parametre gerekmez):
+# 2. Çalıştır (aynı makinedeyse hiçbir parametre gerekmez):
 python run_real.py
 
 # Eğer Minecraft sunucusu başka bir makinedeyse, sunucunun IP'sini belirtin:

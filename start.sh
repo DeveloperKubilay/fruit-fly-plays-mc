@@ -11,6 +11,21 @@ fi
 
 source venv/bin/activate
 
-# Sunucuda varsayılan olarak sessiz/ekransız modda başlar (--sessiz)
-# GUI veya ses istenirse ek argümanlar parametre olarak iletilebilir
-exec python run_real.py --sessiz "$@"
+# Hedef Minecraft sunucu adresi (Parametre yoksa TARGET değişkeni veya localhost)
+# Kullanım:
+#   ./start.sh                  -> localhost:8765
+#   ./start.sh 192.168.1.105    -> Belirtilen IP
+#   ./start.sh 192.168.1.105:8766
+if [ -n "$*" ]; then
+    SERVER_ARGS=("$@")
+elif [ -n "$TARGET" ]; then
+    SERVER_ARGS=("$TARGET")
+else
+    SERVER_ARGS=("localhost")
+fi
+
+echo "================================================================"
+echo "  Hedef Minecraft Sunucusu: ws://${SERVER_ARGS[0]}"
+echo "================================================================"
+
+exec python run_real.py --sessiz "${SERVER_ARGS[@]}"
