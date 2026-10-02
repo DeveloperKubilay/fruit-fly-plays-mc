@@ -73,7 +73,7 @@ set "GRAPH_FILE=connectome\malecns_behavior.W.npz"
 
 if not exist "%GRAPH_FILE%" goto DOWNLOAD_CONNECTOME
 echo [OK] Hazır davranış grafiği bulundu (19 MB). Ek indirme gerekmez!
-goto FINISH_SETUP
+goto CONFIGURE_CONNECTION
 
 :DOWNLOAD_CONNECTOME
 echo [BİLGİ] Davranış alt-grafiği bulunamadı. Ham konektom verisi (~1.1 GB) indirilecek...
@@ -105,13 +105,87 @@ exit /b 1
 :COMPILE_OK
 echo [OK] Davranış grafiği başarıyla derlendi!
 
+:CONFIGURE_CONNECTION
+echo.
+echo ================================================================
+echo   [4/4] BAĞLANTI VE GÜVENLİK AYARLARI / CONFIGURATION
+echo ================================================================
+echo.
+echo Minecraft Sunucu Adresi (IP veya IP:Port):
+echo   - Başka bir sunucuya bağlamak istiyorsanız IP veya IP:Port yazın (örn: 1.2.3.4 veya 1.2.3.4:8765).
+echo   - Aynı makinedeki sunucu için doğrudan [ENTER]'a basın (localhost).
+set "INPUT_HOST="
+set /p "INPUT_HOST=Sunucu IP [localhost]: "
+if not defined INPUT_HOST set "INPUT_HOST=localhost"
+if "%INPUT_HOST%"=="" set "INPUT_HOST=localhost"
+
+rem IP:Port ayrıştırma desteği
+set "INPUT_PORT=8765"
+echo %INPUT_HOST% | findstr ":" >nul
+if %ERRORLEVEL% equ 0 (
+    for /f "tokens=1,2 delims=:" %%h in ("%INPUT_HOST%") do (
+        set "INPUT_HOST=%%~h"
+        if not "%%~i"=="" set "INPUT_PORT=%%~i"
+    )
+)
+
+:ASK_PASSWORD
+echo.
+echo Minecraft Güvenlik Şifresi / Token (ZORUNLU):
+echo (Minecraft sunucusundaki plugins/DrosophilaBee/config.yml dosyasındaki
+echo  brain.auth-token değeri ile birebir aynı olmalıdır)
+set "INPUT_PASS="
+set /p "INPUT_PASS=Şifre / Token: "
+if not defined INPUT_PASS goto PASS_REQUIRED
+if "%INPUT_PASS%"=="" goto PASS_REQUIRED
+goto SAVE_CONFIG
+
+:PASS_REQUIRED
+echo.
+echo [UYARI / WARNING] Şifre zorunludur, boş bırakılamaz!
+goto ASK_PASSWORD
+
+:SAVE_CONFIG
+echo.
+echo [BİLGİ] Ayarlar config.json ve .env dosyalarına kaydediliyor...
+
+rem config.json dosyasına JSON formatında yaz
+(
+  echo {
+  echo   "minecraft_host": "%INPUT_HOST%",
+  echo   "minecraft_port": %INPUT_PORT%,
+  echo   "auth_token": "%INPUT_PASS%"
+  echo }
+) > "config.json"
+
+rem .env dosyasına yaz
+(
+  echo # Drosophila Otomatik Yapılandırma
+  echo MINECRAFT_HOST=%INPUT_HOST%
+  echo MINECRAFT_PORT=%INPUT_PORT%
+  echo MINECRAFT_PASSWORD=%INPUT_PASS%
+  echo FLY_AUTH_TOKEN=%INPUT_PASS%
+) > ".env"
+
+echo [OK] Yapılandırma başarıyla kaydedildi! (config.json, .env)
+
 :FINISH_SETUP
 echo.
 echo ================================================================
 echo   KURULUM TAMAMLANDI / SETUP COMPLETED!
-echo   Çalıştırmak için / To run:
-echo     start.bat              (Aynı makinedeki Minecraft için / Localhost)
-echo     start.bat 1.2.3.4      (Minecraft başka IP'deyse / Remote host)
+echo   Çalıştırma Seçenekleri / Run Options:
+echo.
+echo   1. Kayıtlı Ayarlarla Başlatma (Grafik Arayüz / GUI):
+echo      start.bat
+echo.
+echo   2. Sadece Terminal Modu (GUI Yok, Düşük Kaynak Kullanımı):
+echo      start.bat --no-gui
+echo.
+echo   3. Özel IP veya IP:Port ve Şifre ile Başlatma:
+echo      start.bat 1.2.3.4
+echo      start.bat 1.2.3.4:8765
+echo      start.bat 1.2.3.4:8765 mypassword
+echo      start.bat 1.2.3.4:8765 mypassword --no-gui
 echo ================================================================
 echo.
 pause

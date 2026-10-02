@@ -1,6 +1,19 @@
 # 🪰 Drosophila v__VERSION__ — MaleCNS v1.0 Biological Connectome for Minecraft
 
-MaleCNS v1.0 biological connectome simulation controlling a 3D flying entity in Minecraft PaperMC servers via real-time WebSocket telemetry.
+MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simülasyonu. 13.000+ nöron ve 5.000.000+ sinaps ile Minecraft Paper/Bukkit/Spigot/Purpur sunucularında yaşayan gerçek bir 3D sinek varlığı kontrolü.
+
+---
+
+### 📢 Bilgilendirme / Important Notes
+
+* **Ayrı Dağıtık Mimari:** Projenin mimarisinde Minecraft sunucusu ile Python yapay zeka modeli tamamen ayrı çalışır.
+  * Eğer Minecraft sunucusu ile Python yapay zeka modelini **aynı makinede** çalıştırıyorsanız IP olarak `0.0.0.0` (veya `localhost` / Enter) kullanın.
+  * Eğer **farklı makinelerde** çalıştırıyorsanız hedef sunucunun IP adresini (`IP` veya `IP:Port`) yazmanız yeterlidir.
+* **Sunucu Sürümü ve Desteği:** Sunucunuzun **1.20 veya üzeri** olması gerekmektedir (**Paper, Purpur, Bukkit, Spigot** tam desteklenir).
+  * *Performans optimizasyonları ve asenkron ışın izleme avantajı için **1.21 ve üzeri** Paper / Purpur kullanmanız şiddetle tavsiye edilir.*
+* **Python Gereksinimi:** Bilgisayarınızda **Python 3.10 veya üzeri** yüklü olmalıdır. Ekran kartı (GPU) gerekmez, CPU üzerinde optimize çalışır.
+* **Topluluk ve Destek:** Herhangi bir sorun yaşarsanız, geri bildirimde bulunmak veya destek almak isterseniz Discord sunucumuzdan bize ulaşabilirsiniz:  
+  👉 **Discord Topluluğumuz:** [https://discord.gg/TQHAm67DmX](https://discord.gg/TQHAm67DmX)
 
 ---
 
@@ -8,49 +21,67 @@ MaleCNS v1.0 biological connectome simulation controlling a 3D flying entity in 
 
 | Dosya / File | Açıklama / Description | Kurulum / Installation |
 |---|---|---|
-| **`DrosophilaBee-v__VERSION__.jar`** | Minecraft Paper/Spigot Server Plugin | Sunucunun `plugins/` klasörüne atın |
-| **`drosophila-brain-v__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux/macOS) | `./setup.sh` -> `./start.sh` |
+| **`DrosophilaBee-v__VERSION__.jar`** | Minecraft Sunucu Eklentisi (Beden) | Sunucunun `plugins/` klasörüne atın |
 | **`drosophila-brain-v__VERSION__.zip`** | Python Beyin Simülasyonu (Windows) | `setup.bat` -> `start.bat` |
+| **`drosophila-brain-v__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux/macOS) | `./setup.sh` -> `./start.sh` |
 
 ---
 
-### 🎮 Compatibility / Uyumluluk
+### 🚀 Hızlı Kurulum & Başlatma / Quick Start
 
-* **Minecraft Sunucu Sürümü:** **1.20 - 1.21.x+** (PaperMC, Purpur, Spigot)
-  * NMS / internal dependency içermez; Bukkit & Spigot API sayesinde tüm 1.20.x ve 1.21.x sürümleriyle doğrudan uyumludur.
-  * *Tavsiye edilen:* **PaperMC 1.20.4+** veya **Paper 1.21.x** (asenkron ışın izleme ve yüksek performans sağlar).
-* **Java Sürümü:** **Java 17 - Java 21+** (Java 17 LTS bytecode uyumlu, Java 21+ ile sorunsuz çalışır).
-* **Python Sürümü:** **Python 3.10 - 3.12+** (`numpy`, `scipy`, `pyarrow`, `websockets`, `pygame`).
-* **Konektom Modeli:** **MaleCNS v1.0** (13.000+ nöron, 5.000.000+ sinaps, Janelia / Cambridge / MRC LMB / Google Research).
+#### 1. Minecraft Sunucusu (Beden):
+1. `DrosophilaBee-v__VERSION__.jar` dosyasını sunucunuzun `plugins/` klasörüne atın.
+2. Sunucunuzu başlatın veya `/reload` yapın (otomatik olarak `0.0.0.0:8765` üzerinde dinlemeye başlar).
+3. `plugins/DrosophilaBee/config.yml` dosyasından dilinizi (`en` / `tr`) seçebilirsiniz.
 
 ---
 
-### 🚀 Quick Start / Hızlı Başlangıç
+#### 2. Python Beyin Simülasyonu (Model):
 
-#### 1. Minecraft Sunucusu:
-1. `DrosophilaBee-v__VERSION__.jar` dosyasını `plugins/` klasörüne atın ve sunucuyu başlatın.
-2. `plugins/DrosophilaBee/config.yml` dosyasından dil seçiminizi (`en` / `tr`) veya diğer ayarları yapın.
-
-#### 2. Python Beyin Simülasyonu:
-
-**Windows İçin:**
+**🪟 Windows İçin:**
 ```cmd
-# 1. Kurulum (venv, kütüphaneler ve konektom modelini otomatik hazırlar):
+# Boş bir klasör açın ve içerisinde CMD (Komut İstemi) açarak indirin:
+curl -L -o drosophila-brain-v__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/v__VERSION__/drosophila-brain-v__VERSION__.zip
+tar -xf drosophila-brain-v__VERSION__.zip
+cd drosophila-brain-v__VERSION__
+
+# 1. Kurulum (Sanal ortamı hazırlar, kütüphaneleri kurar ve IP/şifre sorar):
 setup.bat
 
-# 2. Çalıştırma (Varsayılan: localhost:8765):
+# 2. Çalıştırma:
 start.bat
 
-# Minecraft başka bir sunucudaysa (Uzak IP):
-start.bat 1.2.3.4
+# İsteğe bağlı alternatif başlatma seçenekleri:
+start.bat --no-gui
+start.bat 1.2.3.4:8765 "mypassword"
+start.bat 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
-**Linux / macOS İçin:**
+**🐧 Linux / macOS İçin:**
 ```bash
+# Boş bir dizin oluşturup terminalde indirin:
+curl -L -o drosophila-brain-v__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/v__VERSION__/drosophila-brain-v__VERSION__.tar.gz
 tar -xzf drosophila-brain-v__VERSION__.tar.gz
 cd drosophila-brain-v__VERSION__
+
+# İzinleri verin ve kurulumu çalıştırın:
 chmod +x setup.sh start.sh
 ./setup.sh
+
+# Başlatın:
 ./start.sh
+
+# İsteğe bağlı alternatif başlatma seçenekleri:
+./start.sh --no-gui
+./start.sh 1.2.3.4:8765 "mypassword" --no-gui
 ```
-*(Minecraft sunucusu farklı bir IP'deyse: `./start.sh 1.2.3.4` veya `.env` dosyasına `MINECRAFT_HOST=1.2.3.4` yazabilirsiniz)*
+
+---
+
+### 🎮 Uyumluluk / Specifications
+
+* **Minecraft Sunucu Sürümü:** 1.20 - 1.21.x+ (Bukkit, CraftBukkit, Spigot, PaperMC, Purpur)
+* **Java Sürümü:** Java 17 - Java 21+
+* **Python Sürümü:** Python 3.10 - 3.12+ (GPU gerektirmez, ~2 GB RAM)
+* **Konektom Modeli:** MaleCNS v1.0 (13.000+ nöron, 5.000.000+ sinaps, Janelia / Cambridge / MRC LMB / Google Research)
+* **Lisans:** MaleCNS CC BY 4.0 & MIT License (DeveloperKubilay)

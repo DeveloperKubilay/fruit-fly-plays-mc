@@ -60,6 +60,7 @@ pygame.font.init()
 #   Kanal 1 — Sineğin duyduğu ortam sesi (Johnston organı sol/sağ stereo farkı)
 # Kapatmak için: run_real.py --sessiz ya da pencerede S tuşu
 SOUND_ON = True
+IS_HEADLESS = (os.environ.get("SDL_VIDEODRIVER") == "dummy")
 SCAN_ANG = np.linspace(np.pi * 0.75, -np.pi * 0.75, 32).astype(np.float32)
 
 WIN_W, WIN_H = 1060, 780
@@ -297,6 +298,8 @@ def bar(x, y, w, h, frac, col, bgc=(38, 44, 56)):
 
 def render(brain, motor, retina, cols, rows, distances, health, food,
            heading, cast_ms, extra, senses):
+    if IS_HEADLESS:
+        return
     canvas.fill(BG)
     f = fps_now()
 
@@ -640,16 +643,26 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
     prev_retina_floor = None
     loaded_fly_id = label
     is_bottled = False
-    AUTH_TOKEN = os.environ.get("FLY_AUTH_TOKEN", "drosophila_secret_token_123")
-    uri = f"ws://{ws_host}:{ws_port}?token={AUTH_TOKEN}"
+    AUTH_TOKEN = (
+        os.environ.get("FLY_AUTH_TOKEN")
+        or os.environ.get("MINECRAFT_PASSWORD")
+        or os.environ.get("PASSWORD")
+        or os.environ.get("AUTH_TOKEN")
+        or ""
+    ).strip()
+    uri = f"ws://{ws_host}:{ws_port}?token={AUTH_TOKEN}" if AUTH_TOKEN else f"ws://{ws_host}:{ws_port}"
+
+    if IS_HEADLESS:
+        print("[GerçekBeyin] 🖥️ Sadece Terminal Modu (--no-gui) devrede.")
 
     if as_server:
         print("[GerçekBeyin] 🌐 WebSocket Sunucusu dinliyor: 0.0.0.0:%d" % ws_port)
         print("              Minecraft Paper/Spigot sunucusundaki DrosophilaBee eklentisi buraya bağlanacak.")
-        screen.fill(BG)
-        t = F_LBL.render("DrosophilaBee eklentisi bekleniyor (0.0.0.0:%d)..." % ws_port, True, ALERT)
-        screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
-        pygame.display.flip()
+        if not IS_HEADLESS:
+            screen.fill(BG)
+            t = F_LBL.render("DrosophilaBee eklentisi bekleniyor (0.0.0.0:%d)..." % ws_port, True, ALERT)
+            screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
+            pygame.display.flip()
 
         incoming_queue = asyncio.Queue()
         active_ws = None
@@ -667,10 +680,11 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
 
         server = await websockets.serve(_client_handler, "0.0.0.0", ws_port, max_size=2 ** 24, ping_interval=5, ping_timeout=3)
     else:
-        screen.fill(BG)
-        t = F_LBL.render(f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})...", True, ALERT)
-        screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
-        pygame.display.flip()
+        if not IS_HEADLESS:
+            screen.fill(BG)
+            t = F_LBL.render(f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})...", True, ALERT)
+            screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
+            pygame.display.flip()
 
     waiting_logged = False
     while True:
@@ -1126,8 +1140,14 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                         # Gerçek canavardan kaçış: yukarı tırmanış
                         cmd_pitch = -0.38
                     elif dropped < 8.0 and dropped > 0.3:
-                        # Yerdeki yiyeceğe/çiçeğe odaklanma: aşağı süzülüş
-                        cmd_pitch = 0.34
+                        # Yiyecek / yaprak / çiçek kaynağına odaklanma
+                        food_dy = float(data.get("food_delta_y", -1.0))
+                        if food_dy > 0.4:
+                            # Ağaç yaprağı / yüksekteki besin: yukarı tırmanış
+                            cmd_pitch = -0.32
+                        else:
+                            # Yerdeki yiyeceğe/çiçeğe odaklanma: aşağı süzülüş
+                            cmd_pitch = 0.34
                     elif obst > 0.6:
                         # Önünde yüksek duvar var: hafif yukarı
                         cmd_pitch = -0.20
@@ -1445,11 +1465,12 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                     traceback.print_exc()
 
             log.event("KOPTU", "bağlantı kesildi: %s" % type(_e).__name__)
-            screen.fill(BG)
-            msg = f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})..." if not as_server else f"DrosophilaBee eklentisi bekleniyor (0.0.0.0:{ws_port})..."
-            t = F_LBL.render(msg, True, ALERT)
-            screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
-            pygame.display.flip()
+            if not IS_HEADLESS:
+                screen.fill(BG)
+                msg = f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})..." if not as_server else f"DrosophilaBee eklentisi bekleniyor (0.0.0.0:{ws_port})..."
+                t = F_LBL.render(msg, True, ALERT)
+                screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
+                pygame.display.flip()
             for ev in pygame.event.get():
                 if ev.type == pygame.QUIT:
                     pygame.quit()

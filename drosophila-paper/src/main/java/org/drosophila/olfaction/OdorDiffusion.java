@@ -122,23 +122,24 @@ public class OdorDiffusion {
             }
         }
 
-        // 2. AĞAÇ YAPRAKLARI (Maksimum 5.0 blok dar menzil, %38 çekim)
+        // 2. AĞAÇ YAPRAKLARI (Maksimum 8.0 blok menzil, dikeyde ağaç tacına tırmanabilme, %38 çekim)
         // Sinek tokken (foodLevel >= 15.0) yapraklara ASLA yönelmez, böylece ağaç tacında kilitlenip kalmaz!
         if (foodLevel < 15.0) {
             int bx = beeLoc.getBlockX();
             int by = beeLoc.getBlockY();
             int bz = beeLoc.getBlockZ();
-            int lr = 4; // Yatay 4 blok yarıçap
+            int lr = 6; // Yatay 6 blok yarıçap
+            double maxLeafRange = 8.0;
 
             for (int x = bx - lr; x <= bx + lr; x++) {
                 for (int z = bz - lr; z <= bz + lr; z++) {
-                    for (int y = Math.max(world.getMinHeight(), by - 2); y <= Math.min(world.getMaxHeight(), by + 3); y++) {
+                    for (int y = Math.max(world.getMinHeight(), by - 2); y <= Math.min(world.getMaxHeight(), by + 8); y++) {
                         Block b = world.getBlockAt(x, y, z);
                         Material mat = b.getType();
                         if (isLeafBlock(mat)) {
                             Location lLoc = b.getLocation().add(0.5, 0.5, 0.5);
                             double d = beeLoc.distance(lLoc);
-                            if (d <= 5.0) {
+                            if (d <= maxLeafRange) {
                                 float leafWeight = 0.38f; // ~%38-40 hafif doğal çekim
                                 // Yaprak İçi Reseptör Adaptasyonu (Sensory Adaptation):
                                 // Sinek yaprağa çok yakınken (d < 1.4) koku itkisi %70 sönümlenir.
@@ -146,7 +147,7 @@ public class OdorDiffusion {
                                 if (d < 1.4) {
                                     leafWeight *= 0.30f;
                                 }
-                                double salience = leafWeight * ((5.0 - d) / 5.0);
+                                double salience = leafWeight * ((maxLeafRange - d) / maxLeafRange);
                                 salience *= hungerFactor;
                                 if (salience > bestSalience) {
                                     bestSalience = salience;
@@ -154,7 +155,7 @@ public class OdorDiffusion {
                                     bestSourceLoc = lLoc;
                                     sourceName = mat.name().toLowerCase();
                                     sourceType = "leaf";
-                                    sourceMaxRange = 5.0;
+                                    sourceMaxRange = maxLeafRange;
                                     sourceBaseWeight = leafWeight;
                                 }
                             }

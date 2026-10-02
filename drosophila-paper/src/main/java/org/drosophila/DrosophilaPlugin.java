@@ -340,7 +340,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
                 p.sendMessage(languageManager.get("commands.spawnpoint.reset"));
                 return true;
             }
-            Location loc = p.getLocation();
+            Location loc = p.getLocation().add(0, 1.0, 0);
             beeController.setCustomSpawnLocation(loc);
             p.sendMessage(languageManager.get("commands.spawnpoint.set", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
             return true;

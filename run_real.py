@@ -22,6 +22,7 @@ Konektom dosyaları eksikse indirme komutlarını gösterir.
 """
 
 import asyncio
+import json
 import os
 import signal
 import sys
@@ -33,8 +34,11 @@ try:
 except Exception:
     pass
 
-# Headless / Sunucu ortamında X11 veya ses aygıtı yoksa pygame'in çökmesini engelle
-if "DISPLAY" not in os.environ and os.name != "nt":
+# Headless / Sunucu ortamında X11 veya ses aygıtı yoksa veya --no-gui istenmişse dummy video/audio driver ayarla
+if any(a in sys.argv for a in ("--no-gui", "--nogui", "--headless")):
+    os.environ["SDL_VIDEODRIVER"] = "dummy"
+    os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
+elif "DISPLAY" not in os.environ and os.name != "nt":
     os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
     os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
 if "--sessiz" in sys.argv:
@@ -89,8 +93,25 @@ def check_data():
     return True
 
 
-def load_dotenv():
-    """Varsa .env dosyasından ortam değişkenlerini yükler."""
+def load_config():
+    """Varsa config.json veya .env dosyasından bağlantı ve güvenlik ayarlarını yükler."""
+    cfg_file = os.path.join(HERE, "config.json")
+    if os.path.exists(cfg_file):
+        try:
+            with open(cfg_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict):
+                    if "minecraft_host" in data and data["minecraft_host"]:
+                        os.environ.setdefault("MINECRAFT_HOST", str(data["minecraft_host"]))
+                    if "minecraft_port" in data and data["minecraft_port"]:
+                        os.environ.setdefault("MINECRAFT_PORT", str(data["minecraft_port"]))
+                    token_val = data.get("auth_token") or data.get("password") or data.get("token")
+                    if token_val:
+                        os.environ.setdefault("FLY_AUTH_TOKEN", str(token_val))
+                        os.environ.setdefault("MINECRAFT_PASSWORD", str(token_val))
+        except Exception:
+            pass
+
     env_file = os.path.join(HERE, ".env")
     if os.path.exists(env_file):
         try:
@@ -102,12 +123,16 @@ def load_dotenv():
                         k = k.strip()
                         v = v.strip().strip('"').strip("'")
                         os.environ.setdefault(k, v)
+                        if k in ("MINECRAFT_PASSWORD", "PASSWORD", "AUTH_TOKEN", "FLY_PASSWORD"):
+                            os.environ.setdefault("FLY_AUTH_TOKEN", v)
+                        elif k == "FLY_AUTH_TOKEN":
+                            os.environ.setdefault("MINECRAFT_PASSWORD", v)
         except Exception:
             pass
 
 
 def main():
-    load_dotenv()
+    load_config()
 
     # Varsayılan: localhost:8765 (modüler ortam değişkenleri: MINECRAFT_HOST, TARGET, SERVER_HOST)
     ws_host = (
@@ -122,22 +147,66 @@ def main():
     if env_port and str(env_port).isdigit():
         ws_port = int(env_port)
 
-    as_server = False
+    # MINECRAFT_HOST içinde IP:Port varsa ayrıştır (Örn: 1.2.3.4:8765)
+    if ":" in ws_host:
+        parts = ws_host.split(":", 1)
+        ws_host = parts[0]
+        if parts[1].isdigit():
+            ws_port = int(parts[1])
 
-    for a in sys.argv[1:]:
+    auth_token = (
+        os.environ.get("FLY_AUTH_TOKEN")
+        or os.environ.get("MINECRAFT_PASSWORD")
+        or os.environ.get("PASSWORD")
+        or os.environ.get("AUTH_TOKEN")
+        or os.environ.get("FLY_PASSWORD")
+        or ""
+    )
+
+    as_server = False
+    no_gui = any(a in sys.argv for a in ("--no-gui", "--nogui", "--headless"))
+
+    i = 1
+    positional = []
+    while i < len(sys.argv):
+        a = sys.argv[i]
         if a in ("--server", "--sunucu"):
             as_server = True
-        elif a.startswith("--"):
-            continue
-        elif ":" in a:
-            parts = a.split(":", 1)
+        elif a in ("--token", "--password", "-p"):
+            if i + 1 < len(sys.argv):
+                auth_token = sys.argv[i + 1]
+                i += 1
+        elif a.startswith("--token="):
+            auth_token = a.split("=", 1)[1]
+        elif a.startswith("--password="):
+            auth_token = a.split("=", 1)[1]
+        elif a in ("--no-gui", "--nogui", "--headless", "--sessiz"):
+            pass
+        elif a == "--ses-aygit":
+            if i + 1 < len(sys.argv):
+                i += 1
+        elif not a.startswith("--"):
+            positional.append(a)
+        i += 1
+
+    if len(positional) >= 1:
+        arg_host = positional[0]
+        if ":" in arg_host:
+            parts = arg_host.split(":", 1)
             ws_host = parts[0]
             if parts[1].isdigit():
                 ws_port = int(parts[1])
-        elif a.isdigit() and len(a) >= 4:
-            ws_port = int(a)
-        elif "." in a or a == "localhost":
-            ws_host = a
+        elif arg_host.isdigit() and len(arg_host) >= 4:
+            ws_port = int(arg_host)
+        else:
+            ws_host = arg_host
+
+    if len(positional) >= 2:
+        auth_token = positional[1]
+
+    if auth_token:
+        os.environ["FLY_AUTH_TOKEN"] = auth_token
+        os.environ["MINECRAFT_PASSWORD"] = auth_token
 
     print("=" * 72)
     print("  🪰 DROSOPHILA — GERÇEK MaleCNS v1.0 KONEKTOMU")
@@ -145,6 +214,13 @@ def main():
         print("  🌐 WebSocket Sunucusu: 0.0.0.0:%d (DrosophilaBee bekleniyor)" % ws_port)
     else:
         print("  🌐 Hedef Minecraft Sunucusu: ws://%s:%d" % (ws_host, ws_port))
+    if no_gui:
+        print("  🖥️ Arayüz Modu: Sadece Terminal Modu (--no-gui)")
+    if auth_token:
+        masked = auth_token[:2] + "*" * max(1, len(auth_token) - 4) + auth_token[-2:] if len(auth_token) > 4 else "***"
+        print("  🔑 Güvenlik Şifresi: %s" % masked)
+    else:
+        print("  ⚠️ Güvenlik Şifresi: Belirtilmedi")
     print("=" * 72)
 
     if not check_data():

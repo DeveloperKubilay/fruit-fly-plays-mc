@@ -172,6 +172,7 @@ public class BrainServer extends WebSocketServer {
         sb.append("\"peer_dist\":").append(String.format(java.util.Locale.US, "%.2f", odor.peerDist)).append(",");
         sb.append("\"peer_bearing\":").append(String.format(java.util.Locale.US, "%.4f", odor.peerBearing)).append(",");
         sb.append("\"dropped_food_dist\":").append(String.format(java.util.Locale.US, "%.2f", odor.closestDist)).append(",");
+        sb.append("\"food_delta_y\":").append(String.format(java.util.Locale.US, "%.2f", odor.foodDeltaY)).append(",");
         sb.append("\"food_count\":").append(odor.closestDist < 1.4 ? 1 : 0).append(",");
         sb.append("\"taste\":").append(String.format(java.util.Locale.US, "%.4f", odor.taste)).append(",");
 

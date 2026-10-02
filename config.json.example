@@ -1,0 +1,5 @@
+{
+  "minecraft_host": "localhost",
+  "minecraft_port": 8765,
+  "auth_token": "drosophila_secret_token_123"
+}

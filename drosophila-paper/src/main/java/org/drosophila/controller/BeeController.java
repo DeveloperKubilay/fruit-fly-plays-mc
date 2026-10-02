@@ -209,6 +209,23 @@ public class BeeController implements Listener {
     }
 
     public Location getCustomSpawnLocation() {
+        if (customSpawnLocation == null && plugin.getConfig().contains("bee.spawnpoint.world")) {
+            String wName = plugin.getConfig().getString("bee.spawnpoint.world");
+            World w = Bukkit.getWorld(wName);
+            if (w != null) {
+                double x = plugin.getConfig().getDouble("bee.spawnpoint.x");
+                double y = plugin.getConfig().getDouble("bee.spawnpoint.y");
+                double z = plugin.getConfig().getDouble("bee.spawnpoint.z");
+                float yaw = (float) plugin.getConfig().getDouble("bee.spawnpoint.yaw", 0.0);
+                float pitch = (float) plugin.getConfig().getDouble("bee.spawnpoint.pitch", 0.0);
+                customSpawnLocation = new Location(w, x, y, z, yaw, pitch);
+            }
+        } else if (customSpawnLocation != null && customSpawnLocation.getWorld() == null) {
+            String wName = plugin.getConfig().getString("bee.spawnpoint.world");
+            if (wName != null) {
+                customSpawnLocation.setWorld(Bukkit.getWorld(wName));
+            }
+        }
         return customSpawnLocation;
     }
 
@@ -231,8 +248,9 @@ public class BeeController implements Listener {
     public void respawnDefault() {
         respawnScheduled = false;
         Location spawnLoc = null;
-        if (customSpawnLocation != null && customSpawnLocation.getWorld() != null) {
-            spawnLoc = customSpawnLocation.clone();
+        Location custom = getCustomSpawnLocation();
+        if (custom != null && custom.getWorld() != null) {
+            spawnLoc = custom.clone();
         } else {
             World w = Bukkit.getWorlds().get(0);
             spawnLoc = w.getSpawnLocation().add(0, 1.5, 0);
@@ -332,6 +350,7 @@ public class BeeController implements Listener {
         Block blockBelow = loc.clone().subtract(0, 0.8, 0).getBlock();
 
         boolean trackingFoodBelow = (odor != null && odor.closestDist <= 12.0f && odor.foodDeltaY < -0.15f);
+        boolean trackingFoodAbove = (odor != null && odor.closestDist <= 12.0f && odor.foodDeltaY > 0.20f);
 
         if (curBlock.isLiquid() || blockBelow.isLiquid()) {
             // Su içinde veya hemen üstünde: acil yukarı yüksel! Kanatlar ıslanmasın!
@@ -356,6 +375,11 @@ public class BeeController implements Listener {
             double targetY = (odor.foodLoc != null) ? (odor.foodLoc.getY() + 0.35) : (loc.getY() + odor.foodDeltaY + 0.35);
             double diffY = targetY - loc.getY();
             liftY += Math.max(-0.25, Math.min(0.15, diffY * 0.22));
+        } else if (trackingFoodAbove) {
+            // Besin/yaprak arının üstünde: ağaç tepesine ve yukarıdaki kaynağa doğru tırmanış
+            double targetY = (odor.foodLoc != null) ? (odor.foodLoc.getY() + 0.35) : (loc.getY() + odor.foodDeltaY + 0.35);
+            double diffY = targetY - loc.getY();
+            liftY += Math.min(0.28, Math.max(0.06, diffY * 0.25));
         } else if (distToGround < 1.1 && cmd.pitch <= 0.15 && (odor == null || odor.closestDist > 3.0f)) {
             // Yere çok yakınsa hafif zemin etkisiyle yukarı süzül (ancak yemeğe yaklaşmıyorsa)
             liftY += 0.07;
@@ -481,11 +505,13 @@ public class BeeController implements Listener {
             return loc;
         }
         double[][] offsets = {
-            {0, 0.6, 0}, {0, -0.6, 0},
+            {0, 0.6, 0}, {0, 1.0, 0}, {0, 1.5, 0}, {0, -0.6, 0},
             {0.5, 0, 0}, {-0.5, 0, 0},
             {0, 0, 0.5}, {0, 0, -0.5},
             {0.5, 0.5, 0}, {-0.5, 0.5, 0},
-            {0, 0.5, 0.5}, {0, 0.5, -0.5}
+            {0.5, 1.0, 0}, {-0.5, 1.0, 0},
+            {0, 0.5, 0.5}, {0, 0.5, -0.5},
+            {0, 1.0, 0.5}, {0, 1.0, -0.5}
         };
         for (double[] off : offsets) {
             double nx = loc.getX() + off[0];
