@@ -9,8 +9,8 @@ MaleCNS v1.0 biological connectome simulation controlling a 3D flying entity in 
 | Dosya / File | Açıklama / Description | Kurulum / Installation |
 |---|---|---|
 | **`DrosophilaBee-v__VERSION__.jar`** | Minecraft Paper/Spigot Server Plugin | Sunucunun `plugins/` klasörüne atın |
-| **`drosophila-brain-v__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux) | Sunucuda veya harici makinede `./setup.sh` -> `./start.sh` |
-| **`drosophila-brain-v__VERSION__.zip`** | Python Beyin Simülasyonu (Windows/Zip) | Zipten çıkarıp `./setup.sh` veya `python run_real.py` çalıştırın |
+| **`drosophila-brain-v__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux/macOS) | `./setup.sh` -> `./start.sh` |
+| **`drosophila-brain-v__VERSION__.zip`** | Python Beyin Simülasyonu (Windows) | `setup.bat` -> `start.bat` |
 
 ---
 
@@ -29,9 +29,23 @@ MaleCNS v1.0 biological connectome simulation controlling a 3D flying entity in 
 
 #### 1. Minecraft Sunucusu:
 1. `DrosophilaBee-v__VERSION__.jar` dosyasını `plugins/` klasörüne atın ve sunucuyu başlatın.
-2. `plugins/DrosophilaBee/config.yml` dosyasından `auth-token` ve dil seçiminizi (`en` / `tr`) yapın.
+2. `plugins/DrosophilaBee/config.yml` dosyasından dil seçiminizi (`en` / `tr`) veya diğer ayarları yapın.
 
 #### 2. Python Beyin Simülasyonu:
+
+**Windows İçin:**
+```cmd
+# 1. Kurulum (venv, kütüphaneler ve konektom modelini otomatik hazırlar):
+setup.bat
+
+# 2. Çalıştırma (Varsayılan: localhost:8765):
+start.bat
+
+# Minecraft başka bir sunucudaysa (Uzak IP):
+start.bat 1.2.3.4
+```
+
+**Linux / macOS İçin:**
 ```bash
 tar -xzf drosophila-brain-v__VERSION__.tar.gz
 cd drosophila-brain-v__VERSION__
@@ -39,4 +53,4 @@ chmod +x setup.sh start.sh
 ./setup.sh
 ./start.sh
 ```
-*(Minecraft sunucusu farklı bir IP'deyse: `./start.sh <SUNUCU_IP>`)*
+*(Minecraft sunucusu farklı bir IP'deyse: `./start.sh 1.2.3.4` veya `.env` dosyasına `MINECRAFT_HOST=1.2.3.4` yazabilirsiniz)*
