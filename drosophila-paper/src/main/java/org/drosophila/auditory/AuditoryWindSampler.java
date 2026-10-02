@@ -52,7 +52,7 @@ public class AuditoryWindSampler {
         // 2. İŞİTME (JO-A / JO-B):
         // 16 blok yarıçapındaki ses yayan varlıkları (canavarlar, koşan oyuncular, patlamalar, havai fişekler) tara
         Collection<Entity> nearby = world.getNearbyEntities(beeLoc, MAX_HEARING_RANGE, MAX_HEARING_RANGE, MAX_HEARING_RANGE,
-                e -> (e instanceof Monster || e instanceof Player || e instanceof FireworkRocket || e instanceof TNTPrimed) && e != bee);
+                e -> (e instanceof Monster || e instanceof Player || e instanceof Firework || e instanceof TNTPrimed) && e != bee);
 
         double maxIntensity = 0.0;
         Entity loudestEntity = null;
@@ -77,7 +77,7 @@ public class AuditoryWindSampler {
             } else if (e instanceof TNTPrimed) {
                 // TNT fünye/patlama tıslaması (yüksek tehdit)
                 intensity *= 1.9;
-            } else if (e instanceof FireworkRocket) {
+            } else if (e instanceof Firework || e.getType().name().contains("FIREWORK")) {
                 // Havai fişek roket ıslığı ve patlaması
                 intensity *= 1.6;
             }
