@@ -30,42 +30,45 @@ Biological fruit fly (*Drosophila melanogaster*) connectome simulation powered b
 #### 2. Python Brain Simulation (Brain):
 
 **🪟 Windows:**
+
+Open an empty folder, open Command Prompt (CMD), and paste this block (paste by right-clicking in CMD):
 ```cmd
-# Create an empty folder, open Command Prompt (CMD), and paste this code (paste by right-clicking):
 curl -L -o drosophila-brain-__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.zip
 tar -xf drosophila-brain-__VERSION__.zip
 cd drosophila-brain-__VERSION__
-
-# 1. Setup (Creates virtual environment, installs dependencies, configures IP & token):
 setup.bat
-
-# 2. Run (after setup finishes):
-# start.bat
-
-# Optional runner arguments:
-# start.bat --no-gui
-# start.bat 1.2.3.4:8765 "mypassword"
-# start.bat 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
+After setup finishes, launch the simulation:
+```cmd
+start.bat
+```
+
+Optional launch options:
+* Console mode only (Headless / No GUI): `start.bat --no-gui`
+* Custom server address: `start.bat 1.2.3.4:8765`
+* Custom address and token: `start.bat 1.2.3.4:8765 "mypassword"`
+
 **🐧 Linux / macOS:**
+
+Open an empty directory, open terminal, and paste (paste with `Ctrl + Shift + V`):
 ```bash
-# Create an empty directory, open terminal, and paste this code (paste with Ctrl + Shift + V):
 curl -L -o drosophila-brain-__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.tar.gz
 tar -xzf drosophila-brain-__VERSION__.tar.gz
 cd drosophila-brain-__VERSION__
-
-# Set execute permissions and run setup:
 chmod +x setup.sh start.sh
 ./setup.sh
-
-# Run (after setup finishes):
-# ./start.sh
-
-# Optional runner arguments:
-# ./start.sh --no-gui
-# ./start.sh 1.2.3.4:8765 "mypassword" --no-gui
 ```
+
+After setup finishes, launch the simulation:
+```bash
+./start.sh
+```
+
+Optional launch options:
+* Console mode only: `./start.sh --no-gui`
+* Custom server address: `./start.sh 1.2.3.4:8765`
+* Custom address and token: `./start.sh 1.2.3.4:8765 "mypassword"`
 
 ### 🎮 Specifications
 * **Minecraft Compatibility:** 1.20 - 1.21.x+ (Bukkit, CraftBukkit, Spigot, PaperMC, Purpur)
@@ -108,42 +111,45 @@ MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simül
 #### 2. Python Beyin Simülasyonu (Model):
 
 **🪟 Windows İçin:**
+
+Boş bir klasör açın, içerisinde CMD (Komut İstemi) açarak bu komutları kopyalayıp yapıştırın (CMD penceresine sağ tıklayarak yapıştırılır):
 ```cmd
-# Boş bir klasör açın, içerisinde CMD (Komut İstemi) açarak bu kodu kopyalayıp yapıştırın (sağ tıklamayla yapıştırılır):
 curl -L -o drosophila-brain-__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.zip
 tar -xf drosophila-brain-__VERSION__.zip
 cd drosophila-brain-__VERSION__
-
-# 1. Kurulum (Sanal ortamı hazırlar, kütüphaneleri kurar ve IP/şifre sorar):
 setup.bat
-
-# 2. Çalıştırma (Kurulum tamamlandıktan sonra):
-# start.bat
-
-# İsteğe bağlı alternatif başlatma seçenekleri:
-# start.bat --no-gui
-# start.bat 1.2.3.4:8765 "mypassword"
-# start.bat 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
+Kurulum tamamlandıktan sonra başlatmak için:
+```cmd
+start.bat
+```
+
+İsteğe bağlı alternatif başlatma seçenekleri:
+* Sadece terminal / konsol modu (GUI kapalı, düşük CPU): `start.bat --no-gui`
+* Farklı bir sunucu IP'sine bağlanma: `start.bat 1.2.3.4:8765`
+* Özel IP ve şifre ile başlatma: `start.bat 1.2.3.4:8765 "mypassword"`
+
 **🐧 Linux / macOS İçin:**
+
+Boş bir dizin oluşturup terminalde bu komutları yapıştırın (`Ctrl + Shift + V` ile yapıştırılır):
 ```bash
-# Boş bir dizin oluşturup terminalde bu kodu yapıştırın (Ctrl + Shift + V ile yapıştırılır):
 curl -L -o drosophila-brain-__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.tar.gz
 tar -xzf drosophila-brain-__VERSION__.tar.gz
 cd drosophila-brain-__VERSION__
-
-# İzinleri verin ve kurulumu çalıştırın:
 chmod +x setup.sh start.sh
 ./setup.sh
-
-# Başlatın (Kurulum tamamlandıktan sonra):
-# ./start.sh
-
-# İsteğe bağlı alternatif başlatma seçenekleri:
-# ./start.sh --no-gui
-# ./start.sh 1.2.3.4:8765 "mypassword" --no-gui
 ```
+
+Kurulum tamamlandıktan sonra başlatmak için:
+```bash
+./start.sh
+```
+
+İsteğe bağlı alternatif başlatma seçenekleri:
+* Sadece terminal modu (GUI kapalı): `./start.sh --no-gui`
+* Farklı bir sunucu IP'sine bağlanma: `./start.sh 1.2.3.4:8765`
+* Özel IP ve şifre ile başlatma: `./start.sh 1.2.3.4:8765 "mypassword"`
 
 ### 🎮 Uyumluluk
 * **Minecraft Sunucu Sürümü:** 1.20 - 1.21.x+ (Bukkit, CraftBukkit, Spigot, PaperMC, Purpur)

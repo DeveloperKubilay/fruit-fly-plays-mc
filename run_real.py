@@ -131,6 +131,25 @@ def load_config():
             pass
 
 
+def _flush_input_buffer():
+    """Flushes any pending characters from console input buffer (especially on Windows)."""
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            import time
+            time.sleep(0.05)
+            h = ctypes.windll.kernel32.GetStdHandle(-10)
+            ctypes.windll.kernel32.FlushConsoleInputBuffer(h)
+        except Exception:
+            pass
+        try:
+            import msvcrt
+            while msvcrt.kbhit():
+                msvcrt.getch()
+        except Exception:
+            pass
+
+
 def interactive_setup():
     """Interactive configuration wizard invoked by setup.bat and setup.sh."""
     print("\n" + "=" * 64)
@@ -140,13 +159,21 @@ def interactive_setup():
     print("  - To connect to another server, enter IP or IP:Port (e.g. 1.2.3.4 or 1.2.3.4:8765)")
     print("  - For local server on this machine, press [ENTER] directly (localhost).")
 
+    _flush_input_buffer()
     try:
         host_input = input("Server IP [localhost]: ").strip()
     except (KeyboardInterrupt, EOFError):
         print("\n[Cancelled / İptal]")
         return
 
-    if not host_input:
+    # If buffer accidentally read an invalid string, comment or command, fall back to localhost
+    if (
+        not host_input
+        or host_input.startswith("#")
+        or host_input.startswith("rem ")
+        or host_input.endswith(".bat")
+        or "start.bat" in host_input
+    ):
         host_input = "localhost"
 
     port = 8765
@@ -160,12 +187,19 @@ def interactive_setup():
     print("\nMinecraft Security Password / Token:")
     print("  - Press [ENTER] to use default (%s)" % default_token)
     print("  - Or enter your custom token configured in plugins/FruitFly/config.yml")
+    _flush_input_buffer()
     try:
         password = input("Password / Token [%s]: " % default_token).strip()
     except (KeyboardInterrupt, EOFError):
         print("\n[Cancelled / İptal]")
         return
-    if not password:
+    if (
+        not password
+        or password.startswith("#")
+        or password.startswith("rem ")
+        or password.endswith(".bat")
+        or "start.bat" in password
+    ):
         password = default_token
 
     cfg = {

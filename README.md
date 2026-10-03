@@ -76,26 +76,30 @@ From the [GitHub Releases](../../releases) page:
 ### 3. Python Brain Setup (Brain)
 
 #### 🪟 Windows:
-```cmd
-# Step 1: Run the automated wizard (creates venv, installs requirements, sets IP & token):
-setup.bat
 
-# Step 2: Launch (after setup completes):
-# start.bat
+Run the automated wizard (creates venv, installs requirements, sets IP & token):
+```cmd
+setup.bat
+```
+
+Launch the simulation (after setup completes):
+```cmd
+start.bat
 ```
 
 #### 🐧 Linux / macOS:
+
+Extract archive and run setup:
 ```bash
-# Extract archive and navigate into directory:
 tar -xzf drosophila-brain-*.tar.gz
 cd drosophila-brain-*
-
-# Grant permissions and run setup:
 chmod +x setup.sh start.sh
 ./setup.sh
+```
 
-# Launch (after setup completes):
-# ./start.sh
+Launch the simulation (after setup completes):
+```bash
+./start.sh
 ```
 
 ---
@@ -106,21 +110,27 @@ chmod +x setup.sh start.sh
 
 You can also launch with custom arguments:
 
-```cmd
-# 1. Start with saved configuration (config.json / .env):
-start.bat
+* **Start with saved configuration (`config.json` / `.env`):**
+  ```cmd
+  start.bat
+  ```
 
-# 2. Headless Terminal Mode (no Pygame GUI, minimal CPU usage for servers):
-start.bat --no-gui
+* **Headless Terminal Mode (no Pygame GUI, minimal CPU usage for servers):**
+  ```cmd
+  start.bat --no-gui
+  ```
 
-# 3. Specify custom IP or IP:Port (uses saved password):
-start.bat 1.2.3.4
-start.bat 1.2.3.4:8765
+* **Specify custom IP or IP:Port (uses saved password):**
+  ```cmd
+  start.bat 1.2.3.4
+  start.bat 1.2.3.4:8765
+  ```
 
-# 4. Specify custom IP:Port and password explicitly:
-start.bat 1.2.3.4:8765 "mypassword"
-start.bat 1.2.3.4:8765 "mypassword" --no-gui
-```
+* **Specify custom IP:Port and password explicitly:**
+  ```cmd
+  start.bat 1.2.3.4:8765 "mypassword"
+  start.bat 1.2.3.4:8765 "mypassword" --no-gui
+  ```
 
 *(Linux/macOS users can pass the same arguments to `./start.sh`).*
 
@@ -354,26 +364,30 @@ Proje, fiziksel beden ile biyolojik beyni birbirinden ayıran modern bir dağıt
 ### 3. Python Beyin Simülasyonu Kurulumu (Beyin)
 
 #### 🪟 Windows İçin Hızlı Kurulum:
-```cmd
-# 1. Adım: Kurulumu çalıştırın (Sanal ortamı kurar, kütüphaneleri yükler ve ayarları sorar):
-setup.bat
 
-# 2. Adım: Başlatın (Kurulum tamamlandıktan sonra):
-# start.bat
+Kurulum sihirbazını çalıştırın (sanal ortamı kurar, kütüphaneleri yükler, IP ve şifreyi yapılandırır):
+```cmd
+setup.bat
+```
+
+Kurulum tamamlandıktan sonra simülasyonu başlatın:
+```cmd
+start.bat
 ```
 
 #### 🐧 Linux / macOS İçin Hızlı Kurulum:
+
+Arşivi açın ve kurulumu çalıştırın:
 ```bash
-# Arşivi açın ve klasöre girin:
 tar -xzf drosophila-brain-*.tar.gz
 cd drosophila-brain-*
-
-# İzinleri verin ve kurulumu yapın:
 chmod +x setup.sh start.sh
 ./setup.sh
+```
 
-# Başlatın (Kurulum tamamlandıktan sonra):
-# ./start.sh
+Kurulum tamamlandıktan sonra simülasyonu başlatın:
+```bash
+./start.sh
 ```
 
 ---
@@ -384,21 +398,27 @@ chmod +x setup.sh start.sh
 
 Ardından farklı senaryolara göre dilediğiniz gibi başlatabilirsiniz:
 
-```cmd
-# 1. Kayıtlı ayarlarla (config.json / .env) başlatma:
-start.bat
+* **Kayıtlı ayarlarla (`config.json` / `.env`) başlatma:**
+  ```cmd
+  start.bat
+  ```
 
-# 2. Sadece Terminal Modu (Ekran kartsız sunucular / düşük CPU kullanımı, GUI kapalı):
-start.bat --no-gui
+* **Sadece Terminal Modu (Ekran kartsız sunucular / düşük CPU kullanımı, GUI kapalı):**
+  ```cmd
+  start.bat --no-gui
+  ```
 
-# 3. Özel IP veya IP:Port belirterek başlatma (Şifreyi kayıtlı dosyalardan alır):
-start.bat 1.2.3.4
-start.bat 1.2.3.4:8765
+* **Özel IP veya IP:Port belirterek başlatma (Şifreyi kayıtlı dosyalardan alır):**
+  ```cmd
+  start.bat 1.2.3.4
+  start.bat 1.2.3.4:8765
+  ```
 
-# 4. Özel IP:Port ve Şifre ile başlatma:
-start.bat 1.2.3.4:8765 "mypassword"
-start.bat 1.2.3.4:8765 "mypassword" --no-gui
-```
+* **Özel IP:Port ve Şifre ile başlatma:**
+  ```cmd
+  start.bat 1.2.3.4:8765 "mypassword"
+  start.bat 1.2.3.4:8765 "mypassword" --no-gui
+  ```
 
 *(Linux/macOS kullanıcıları aynı parametreleri `./start.sh` ile kullanabilir).*
 
