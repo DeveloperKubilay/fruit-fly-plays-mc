@@ -44,7 +44,7 @@ commands:
     not_connected: "&c[Drosophila] Python brain is not connected, reset command could not be delivered."
 
   help:
-    header: "&6=== Fruit Fly (Drosophila MaleCNS) Commands ==="
+    header: "&6─── &eFruit Fly (MaleCNS) Commands &6───"
     tp: "&e/{0} tp &7- Teleport to the fruit fly."
     come: "&e/{0} come &7- Bring the fruit fly to you."
     feed: "&e/{0} feed [full] &7- Drops an apple (or 'full' to instantly satiate)."
@@ -56,7 +56,7 @@ commands:
     clear: "&e/{0} clear &7- Resets memory back to baseline MaleCNS connectome."
 
 status:
-  header: "&6================= &e🪰 Fruit Fly Status &6================="
+  header: "&6─── &e🪰 Fruit Fly Status &6───"
   brain_connected: "&e🧠 Brain Model: &aCONNECTED &7(MaleCNS v1.0 • 13,000+ Neurons • 5M Synapses)"
   brain_disconnected: "&e🧠 Brain Model: &cDISCONNECTED &7(Waiting for Python brain...)"
   mood_title: "&e🎭 Mood: "
@@ -81,7 +81,7 @@ status:
   home_set: "&e🏠 Home (Spawnpoint): &a[{0}, {1}, {2}]"
   home_none: "&e🏠 Home (Spawnpoint): &7None (Default World Spawn)"
   spawning: "&eStatus: &aAutomatic spawning / resurrecting..."
-  footer: "&6============================================================"
+  footer: "&6──────────────────────────────────────"
 
 bottle:
   item_name: "&aBottled Fruit Fly &e[{0}]"

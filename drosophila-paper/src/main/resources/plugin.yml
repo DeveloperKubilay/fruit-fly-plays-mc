@@ -8,7 +8,6 @@ description: MaleCNS v1.0 Biological Drosophila Connectome controlling a 3D flyi
 commands:
   fruitfly:
     description: MaleCNS v1.0 Biological Fruit Fly control commands
-    aliases: [fluitfly]
     usage: /<command>
     permission: drosophila.admin
     permission-message: §c[Drosophila] You must have OP permission to use this command.

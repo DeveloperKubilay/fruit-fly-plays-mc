@@ -292,9 +292,9 @@ public class BeeController implements Listener {
         beeEntity.setRotation(newYaw, targetPitch);
 
         // Metabolik enerji harcaması (Uçuş maliyeti):
-        // Havada süzülürken saniyede ~0.04 tokluk harcanır (20 tickte bir 0.04), kaçarken/sprintte 0.08
+        // Havada süzülürken saniyede ~0.016 tokluk harcanır, sprintte/kaçışta ~0.032
         // MIN_FOOD (3.0) altına inmez; sinek açlıktan ölmez, sadece yemek arama/dNPF duyarlılığı tavan yapar.
-        double burnPerTick = (cmd.sprint || cmd.is_escaping) ? 0.004 : 0.002;
+        double burnPerTick = (cmd.sprint || cmd.is_escaping) ? 0.0016 : 0.0008;
         this.foodLevel = Math.max(MIN_FOOD, this.foodLevel - burnPerTick);
 
         if (flowerSipCooldown > 0) {
@@ -646,9 +646,8 @@ public class BeeController implements Listener {
         }
 
         // 2. AĞAÇ YAPRAKLARINDA DİNLENME (Leaf Resting & Canopy Micro-Foraging):
-        // Sinek ağaç yapraklarına konduğunda dinlenir ve küçük bir tokluk desteği alır.
-        // Tokluk 15.0'e ulaştığında tokluk kapısı devreye girer ve sinek ağaçtan açık havaya uçar.
-        if (leafRestCooldown <= 0 && foodLevel < 15.0) {
+        // Sinek ağaç yapraklarına konduğunda dinlenir ve tokluk desteği alır.
+        if (leafRestCooldown <= 0 && foodLevel < 19.5) {
             int bx = loc.getBlockX();
             int by = loc.getBlockY();
             int bz = loc.getBlockZ();
@@ -666,16 +665,16 @@ public class BeeController implements Listener {
                 }
             }
             if (foundLeaf) {
-                leafRestCooldown = 80; // 4 saniyede bir hafif dinlenme
-                this.foodLevel = Math.min(16.0, this.foodLevel + 0.6); // Hafif tokluk desteği
+                leafRestCooldown = 40; // 2 saniyede bir yaprak beslenmesi / dinlenme
+                this.foodLevel = Math.min(MAX_FOOD, this.foodLevel + 1.5); // Gerçekçi tokluk desteği
                 healBee(0.5);
                 Compat.spawnHappyParticle(w, loc.clone().add(0, 0.2, 0), 2, 0.15, 0.15, 0.15, 0.02);
             }
         }
 
-        // 3. ÇİÇEK NEKTARI (Sadece çok açken acil hayatta kalma yudumu: foodLevel < 10.0):
-        // Drosophila meyve sineğidir; karnını çiçekle tıka basa doyuramaz, sadece hayatta kalma yudumu alır.
-        if (flowerSipCooldown <= 0 && foodLevel < 10.0) {
+        // 3. ÇİÇEK NEKTARI (Nectar Foraging):
+        // Meyve sineği çiçeklerden nektar yudumlayarak tokluğunu destekler.
+        if (flowerSipCooldown <= 0 && foodLevel < 16.0) {
             boolean foundFlower = false;
             int bx = loc.getBlockX();
             int by = loc.getBlockY();
@@ -693,8 +692,8 @@ public class BeeController implements Listener {
                 }
             }
             if (foundFlower) {
-                flowerSipCooldown = 80; // 4 saniyede bir küçük yudum
-                this.foodLevel = Math.min(12.0, this.foodLevel + 0.8); // Sadece hayatta kalma seviyesine kadar
+                flowerSipCooldown = 50; // 2.5 saniyede bir nektar yudumu
+                this.foodLevel = Math.min(16.0, this.foodLevel + 1.2);
                 healBee(0.5);
                 beeEntity.setHasNectar(true);
                 w.playSound(loc, Sound.ENTITY_BEE_POLLINATE, 0.5f, 1.6f);

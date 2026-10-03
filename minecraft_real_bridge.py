@@ -240,13 +240,17 @@ def draw_neural_overlay(brain, motor, extra, lang="en"):
     kc_spikes = brain.spike_count[brain.kc_idx] if kc_len else np.array([])
     kc_silent = 100.0 * float((kc_spikes == 0).mean()) if len(kc_spikes) else 0.0
     cy2 = c2.y + 32
+    pam_val = brain.rate(brain.pam_idx)
+    ppl_val = brain.rate(brain.ppl1_idx)
+    is_pam_active = pam_val > 5.0 or motor.get("pam_dev_s", 0.0) > 0.8
+    is_ppl_active = ppl_val > 5.0 or motor.get("ppl_dev_s", 0.0) > 0.8
     if is_tr:
         mb_items = [
             ("Kenyon (KC)", "%d hücre" % kc_len, brain.rate(brain.kc_idx), 20.0, (180, 140, 255)),
             ("KC Sessiz", "%%%.0f seyrek" % kc_silent, kc_silent, 100.0, GREEN if kc_silent > 80 else (255, 180, 60)),
             ("MBON", "%d hücre" % len(brain.mbon_idx), brain.rate(brain.mbon_idx), 35.0, (255, 200, 100)),
-            ("PAM Ödül", "dopamin", brain.rate(brain.pam_idx), 25.0, GREEN),
-            ("PPL1 Ceza", "dopamin", brain.rate(brain.ppl1_idx), 25.0, ALERT),
+            ("PAM Ödül", "ödül aktif" if is_pam_active else "taban (3Hz)", pam_val, 25.0, GREEN if is_pam_active else (130, 180, 130)),
+            ("PPL1 Ceza", "ceza aktif" if is_ppl_active else "taban (3Hz)", ppl_val, 25.0, ALERT if is_ppl_active else (170, 140, 140)),
             ("APL", "GABA inhib.", brain.rate_of_type("APL"), 25.0, (200, 120, 255)),
             ("DPA", "plastisite", abs(motor.get("rpe", 0.0)) * 20.0, 20.0, GREEN if motor.get("rpe", 0.0) >= 0 else ALERT),
         ]
@@ -255,8 +259,8 @@ def draw_neural_overlay(brain, motor, extra, lang="en"):
             ("Kenyon (KC)", "%d cells" % kc_len, brain.rate(brain.kc_idx), 20.0, (180, 140, 255)),
             ("KC Silent", "%%%.0f sparse" % kc_silent, kc_silent, 100.0, GREEN if kc_silent > 80 else (255, 180, 60)),
             ("MBON", "%d cells" % len(brain.mbon_idx), brain.rate(brain.mbon_idx), 35.0, (255, 200, 100)),
-            ("PAM Reward", "dopamine", brain.rate(brain.pam_idx), 25.0, GREEN),
-            ("PPL1 Punish", "dopamine", brain.rate(brain.ppl1_idx), 25.0, ALERT),
+            ("PAM Reward", "active" if is_pam_active else "baseline(3Hz)", pam_val, 25.0, GREEN if is_pam_active else (130, 180, 130)),
+            ("PPL1 Punish", "active" if is_ppl_active else "baseline(3Hz)", ppl_val, 25.0, ALERT if is_ppl_active else (170, 140, 140)),
             ("APL", "GABA inhib.", brain.rate_of_type("APL"), 25.0, (200, 120, 255)),
             ("DPA", "plasticity", abs(motor.get("rpe", 0.0)) * 20.0, 20.0, GREEN if motor.get("rpe", 0.0) >= 0 else ALERT),
         ]
@@ -472,10 +476,16 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     mbon_str = ("MBON %5.2f Hz  (%d hücre)" if is_tr else "MBON %5.2f Hz  (%d cells)") % (
         brain.rate(brain.mbon_idx), len(brain.mbon_idx))
     canvas.blit(F_M.render(mbon_str, True, TXT), (p3.x + 14, p3.y + 74))
-    pam_str = ("PAM  %5.2f Hz  ödül" if is_tr else "PAM  %5.2f Hz  reward") % brain.rate(brain.pam_idx)
-    canvas.blit(F_M.render(pam_str, True, GREEN), (p3.x + 14, p3.y + 92))
-    ppl_str = ("PPL1 %5.2f Hz  ceza" if is_tr else "PPL1 %5.2f Hz  punish") % brain.rate(brain.ppl1_idx)
-    canvas.blit(F_M.render(ppl_str, True, ALERT), (p3.x + 14, p3.y + 108))
+    _pam_r = brain.rate(brain.pam_idx)
+    _ppl_r = brain.rate(brain.ppl1_idx)
+    _pam_act = _pam_r > 5.0 or motor.get("pam_dev_s", 0.0) > 0.8
+    _ppl_act = _ppl_r > 5.0 or motor.get("ppl_dev_s", 0.0) > 0.8
+    pam_tag = ("ödül (aktif)" if _pam_act else "ödül tabanı") if is_tr else ("reward (active)" if _pam_act else "reward base")
+    pam_str = "PAM  %5.2f Hz  %s" % (_pam_r, pam_tag)
+    canvas.blit(F_M.render(pam_str, True, GREEN if _pam_act else (140, 180, 140)), (p3.x + 14, p3.y + 92))
+    ppl_tag = ("ceza (aktif)" if _ppl_act else "ceza tabanı") if is_tr else ("punish (active)" if _ppl_act else "punish base")
+    ppl_str = "PPL1 %5.2f Hz  %s" % (_ppl_r, ppl_tag)
+    canvas.blit(F_M.render(ppl_str, True, ALERT if _ppl_act else (170, 140, 140)), (p3.x + 14, p3.y + 108))
     rpe = motor.get("rpe", 0.0)
     rpe_str = ("dopamin hata sinyali %+.3f" if is_tr else "dopamine error signal %+.3f") % rpe
     canvas.blit(F_M.render(rpe_str, True,

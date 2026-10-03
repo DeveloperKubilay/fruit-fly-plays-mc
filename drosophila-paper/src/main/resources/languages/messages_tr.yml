@@ -44,7 +44,7 @@ commands:
     not_connected: "&c[Drosophila] Python beyni bağlı değil, sıfırlama komutu gönderilemedi."
 
   help:
-    header: "&6=== Meyve Sineği (Drosophila MaleCNS) Komutları ==="
+    header: "&6─── &eMeyve Sineği (MaleCNS) Komutları &6───"
     tp: "&e/{0} tp &7- Sineğin yanına ışınlanırsın."
     come: "&e/{0} come &7- Sineği kendi yanına çağırırsın."
     feed: "&e/{0} feed [full] &7- Sineğin önüne elma bırakır (veya full ile anında doyurur)."
@@ -56,7 +56,7 @@ commands:
     clear: "&e/{0} clear &7- Sineğin hafızasını sıfırlar (taban konektoma döner)."
 
 status:
-  header: "&6================= &e🪰 Meyve Sineği Durumu &6================="
+  header: "&6─── &e🪰 Meyve Sineği Durumu &6───"
   brain_connected: "&e🧠 Beyin Modeli: &aBAĞLI &7(MaleCNS v1.0 • 13.000+ Nöron • 5M Sinaps)"
   brain_disconnected: "&e🧠 Beyin Modeli: &cKOPUK &7(Python beyni bekleniyor...)"
   mood_title: "&e🎭 Ruh Hali: "
@@ -81,7 +81,7 @@ status:
   home_set: "&e🏠 Ev (Spawnpoint): &a[{0}, {1}, {2}]"
   home_none: "&e🏠 Ev (Spawnpoint): &7Yok (Varsayılan Dünya Doğuşu)"
   spawning: "&eDurum: &aOtomatik doğum / dirilme sürecinde..."
-  footer: "&6============================================================"
+  footer: "&6──────────────────────────────────────"
 
 bottle:
   item_name: "&aŞişede Meyve Sineği &e[{0}]"
