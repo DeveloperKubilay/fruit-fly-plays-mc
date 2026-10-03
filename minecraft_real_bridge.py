@@ -815,7 +815,7 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
         or os.environ.get("MINECRAFT_PASSWORD")
         or os.environ.get("PASSWORD")
         or os.environ.get("AUTH_TOKEN")
-        or ""
+        or "drosophila_secret_token_123"
     ).strip()
     uri = f"ws://{ws_host}:{ws_port}?token={AUTH_TOKEN}" if AUTH_TOKEN else f"ws://{ws_host}:{ws_port}"
     current_lang = "en"

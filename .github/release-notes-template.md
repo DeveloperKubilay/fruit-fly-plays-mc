@@ -39,8 +39,8 @@ cd drosophila-brain-__VERSION__
 # 1. Setup (Creates virtual environment, installs dependencies, configures IP & token):
 setup.bat
 
-# 2. Run:
-start.bat
+# 2. Run (after setup finishes):
+# start.bat
 
 # Optional runner arguments:
 # start.bat --no-gui
@@ -59,8 +59,8 @@ cd drosophila-brain-__VERSION__
 chmod +x setup.sh start.sh
 ./setup.sh
 
-# Run:
-./start.sh
+# Run (after setup finishes):
+# ./start.sh
 
 # Optional runner arguments:
 # ./start.sh --no-gui
@@ -117,8 +117,8 @@ cd drosophila-brain-__VERSION__
 # 1. Kurulum (Sanal ortamı hazırlar, kütüphaneleri kurar ve IP/şifre sorar):
 setup.bat
 
-# 2. Çalıştırma:
-start.bat
+# 2. Çalıştırma (Kurulum tamamlandıktan sonra):
+# start.bat
 
 # İsteğe bağlı alternatif başlatma seçenekleri:
 # start.bat --no-gui
@@ -137,8 +137,8 @@ cd drosophila-brain-__VERSION__
 chmod +x setup.sh start.sh
 ./setup.sh
 
-# Başlatın:
-./start.sh
+# Başlatın (Kurulum tamamlandıktan sonra):
+# ./start.sh
 
 # İsteğe bağlı alternatif başlatma seçenekleri:
 # ./start.sh --no-gui

@@ -80,8 +80,8 @@ From the [GitHub Releases](../../releases) page:
 # Step 1: Run the automated wizard (creates venv, installs requirements, sets IP & token):
 setup.bat
 
-# Step 2: Launch:
-start.bat
+# Step 2: Launch (after setup completes):
+# start.bat
 ```
 
 #### 🐧 Linux / macOS:
@@ -94,8 +94,8 @@ cd drosophila-brain-*
 chmod +x setup.sh start.sh
 ./setup.sh
 
-# Launch:
-./start.sh
+# Launch (after setup completes):
+# ./start.sh
 ```
 
 ---
@@ -358,8 +358,8 @@ Proje, fiziksel beden ile biyolojik beyni birbirinden ayıran modern bir dağıt
 # 1. Adım: Kurulumu çalıştırın (Sanal ortamı kurar, kütüphaneleri yükler ve ayarları sorar):
 setup.bat
 
-# 2. Adım: Başlatın:
-start.bat
+# 2. Adım: Başlatın (Kurulum tamamlandıktan sonra):
+# start.bat
 ```
 
 #### 🐧 Linux / macOS İçin Hızlı Kurulum:
@@ -372,8 +372,8 @@ cd drosophila-brain-*
 chmod +x setup.sh start.sh
 ./setup.sh
 
-# Başlatın:
-./start.sh
+# Başlatın (Kurulum tamamlandıktan sonra):
+# ./start.sh
 ```
 
 ---

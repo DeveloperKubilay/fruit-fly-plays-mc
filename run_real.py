@@ -156,17 +156,17 @@ def interactive_setup():
         if parts[1].isdigit():
             port = int(parts[1])
 
-    while True:
-        print("\nMinecraft Security Password / Token (REQUIRED):")
-        print("(Must match the brain.auth-token in plugins/FruitFly/config.yml on your server)")
-        try:
-            password = input("Password / Token: ").strip()
-        except (KeyboardInterrupt, EOFError):
-            print("\n[Cancelled / İptal]")
-            return
-        if password:
-            break
-        print("\n[WARNING / UYARI] Password is required, cannot be blank!")
+    default_token = "drosophila_secret_token_123"
+    print("\nMinecraft Security Password / Token:")
+    print("  - Press [ENTER] to use default (%s)" % default_token)
+    print("  - Or enter your custom token configured in plugins/FruitFly/config.yml")
+    try:
+        password = input("Password / Token [%s]: " % default_token).strip()
+    except (KeyboardInterrupt, EOFError):
+        print("\n[Cancelled / İptal]")
+        return
+    if not password:
+        password = default_token
 
     cfg = {
         "minecraft_host": host_input,
@@ -223,7 +223,7 @@ def main():
         or os.environ.get("PASSWORD")
         or os.environ.get("AUTH_TOKEN")
         or os.environ.get("FLY_PASSWORD")
-        or ""
+        or "drosophila_secret_token_123"
     )
 
     as_server = False
