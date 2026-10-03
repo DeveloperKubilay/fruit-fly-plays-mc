@@ -95,12 +95,19 @@ ALERT = (255, 70, 90)
 GREEN = (55, 225, 125)
 
 # Dashboard'da izlenecek gerçek hücre tipleri (görme -> karar -> hareket)
-WATCH = [
+WATCH_EN = [
+    ("R1-R6", "photoreceptor"), ("L1", "lamina ON"), ("L2", "lamina OFF"),
+    ("Mi1", "medulla ON"), ("Mi9", "medulla delay"), ("Tm3", "medulla ON"),
+    ("Tm9", "medulla OFF"), ("T4a", "motion ON"), ("T5a", "motion OFF"),
+    ("LPLC2", "looming"), ("LC4", "looming"), ("APL", "MB inhibition"),
+]
+WATCH_TR = [
     ("R1-R6", "fotoreseptör"), ("L1", "lamina ON"), ("L2", "lamina OFF"),
     ("Mi1", "medulla ON"), ("Mi9", "medulla gecikme"), ("Tm3", "medulla ON"),
     ("Tm9", "medulla OFF"), ("T4a", "hareket ON"), ("T5a", "hareket OFF"),
     ("LPLC2", "looming"), ("LC4", "looming"), ("APL", "MB inhibisyon"),
 ]
+WATCH = WATCH_EN
 
 _fps = []
 
@@ -157,40 +164,64 @@ def draw_button(rect, text, on):
                     rect.y + (rect.h - t.get_height()) // 2))
 
 
-def draw_neural_overlay(brain, motor, extra):
+def draw_neural_overlay(brain, motor, extra, lang="en"):
     """SPACE veya TAB ile açılan tam kapsamlı MaleCNS v1.0 Nöral Aktivite Haritası."""
     ov_rect = pygame.Rect(14, 34, CANVAS_W - 28, CANVAS_H - 42)
     overlay = pygame.Surface((ov_rect.width, ov_rect.height))
     overlay.fill((16, 20, 28))
     pygame.draw.rect(overlay, (42, 52, 68), (0, 0, ov_rect.width, ov_rect.height), 2, border_radius=10)
 
-    title = F_TITLE.render("🧠 BİYOLOJİK KONEKTOM NÖRAL AKTİVİTE HARİTASI (MaleCNS v1.0)", True, ACC)
+    is_tr = (lang == "tr")
+
+    if is_tr:
+        title = F_TITLE.render("🧠 BİYOLOJİK KONEKTOM NÖRAL AKTİVİTE HARİTASI (MaleCNS v1.0)", True, ACC)
+        sub_text = ("[TAB veya SPACE ile kapat]  |  118.820 Nöron  |  4.037.761 Sinaps  |  Ortalama Aktivite: %.2f Hz"
+                    % brain.mean_rate)
+    else:
+        title = F_TITLE.render("🧠 BIOLOGICAL CONNECTOME NEURAL ACTIVITY MAP (MaleCNS v1.0)", True, ACC)
+        sub_text = ("[Press TAB or SPACE to close]  |  118,820 Neurons  |  4,037,761 Synapses  |  Mean Activity: %.2f Hz"
+                    % brain.mean_rate)
     overlay.blit(title, (18, 12))
-    sub = F_MS.render("[TAB veya SPACE ile kapat]  |  118.820 Nöron  |  4.037.761 Sinaps  |  Ortalama Aktivite: %.2f Hz"
-                     % brain.mean_rate, True, (160, 200, 220))
+    sub = F_MS.render(sub_text, True, (160, 200, 220))
     overlay.blit(sub, (18, 36))
 
     col_w = (ov_rect.width - 50) // 4
     col_y = 62
     col_h = 470
 
-    # 1. GÖRSEL LOBLAR
+    # 1. GÖRSEL LOBLAR / OPTIC LOBES
     c1 = pygame.Rect(10, col_y, col_w, col_h)
     pygame.draw.rect(overlay, PANEL, c1, border_radius=8)
-    overlay.blit(F_LBL.render("1. GÖRSEL LOBLAR (Optic)", True, (255, 220, 90)), (c1.x + 12, c1.y + 8))
-    optic_types = [
-        ("R1-R6", "Fotoreseptör", 40.0),
-        ("L1", "Lamina ON", 35.0),
-        ("L2", "Lamina OFF", 35.0),
-        ("Mi1", "Medulla ON", 30.0),
-        ("Mi9", "Medulla gecikme", 30.0),
-        ("Tm3", "Medulla ON", 30.0),
-        ("Tm9", "Medulla OFF", 30.0),
-        ("T4a", "Hareket ON", 40.0),
-        ("T5a", "Hareket OFF", 40.0),
-        ("LC4", "Looming tehdit", 30.0),
-        ("LPLC2", "Genişleyen cisim", 30.0),
-    ]
+    p1_title = "1. GÖRSEL LOBLAR (Optic)" if is_tr else "1. OPTIC LOBES (Vision)"
+    overlay.blit(F_LBL.render(p1_title, True, (255, 220, 90)), (c1.x + 12, c1.y + 8))
+    if is_tr:
+        optic_types = [
+            ("R1-R6", "Fotoreseptör", 40.0),
+            ("L1", "Lamina ON", 35.0),
+            ("L2", "Lamina OFF", 35.0),
+            ("Mi1", "Medulla ON", 30.0),
+            ("Mi9", "Medulla gecikme", 30.0),
+            ("Tm3", "Medulla ON", 30.0),
+            ("Tm9", "Medulla OFF", 30.0),
+            ("T4a", "Hareket ON", 40.0),
+            ("T5a", "Hareket OFF", 40.0),
+            ("LC4", "Looming tehdit", 30.0),
+            ("LPLC2", "Genişleyen cisim", 30.0),
+        ]
+    else:
+        optic_types = [
+            ("R1-R6", "Photoreceptor", 40.0),
+            ("L1", "Lamina ON", 35.0),
+            ("L2", "Lamina OFF", 35.0),
+            ("Mi1", "Medulla ON", 30.0),
+            ("Mi9", "Medulla delay", 30.0),
+            ("Tm3", "Medulla ON", 30.0),
+            ("Tm9", "Medulla OFF", 30.0),
+            ("T4a", "Motion ON", 40.0),
+            ("T5a", "Motion OFF", 40.0),
+            ("LC4", "Looming threat", 30.0),
+            ("LPLC2", "Expanding obj", 30.0),
+        ]
     cy = c1.y + 32
     for tname, desc, max_hz in optic_types:
         r = brain.rate_of_type(tname)
@@ -200,23 +231,35 @@ def draw_neural_overlay(brain, motor, extra):
         overlay.blit(F_MS.render("%4.1f" % r, True, TXT), (c1.x + col_w - 52, cy + 10))
         cy += 38
 
-    # 2. MANTAR CİSİMCİĞİ
+    # 2. MANTAR CİSİMCİĞİ / MUSHROOM BODY
     c2 = pygame.Rect(20 + col_w, col_y, col_w, col_h)
     pygame.draw.rect(overlay, PANEL, c2, border_radius=8)
-    overlay.blit(F_LBL.render("2. ÖĞRENME (Mushroom Body)", True, (255, 215, 0)), (c2.x + 12, c2.y + 8))
+    p2_title = "2. ÖĞRENME (Mushroom Body)" if is_tr else "2. LEARNING (Mushroom Body)"
+    overlay.blit(F_LBL.render(p2_title, True, (255, 215, 0)), (c2.x + 12, c2.y + 8))
     kc_len = len(brain.kc_idx)
     kc_spikes = brain.spike_count[brain.kc_idx] if kc_len else np.array([])
     kc_silent = 100.0 * float((kc_spikes == 0).mean()) if len(kc_spikes) else 0.0
     cy2 = c2.y + 32
-    mb_items = [
-        ("Kenyon (KC)", "%d hücre" % kc_len, brain.rate(brain.kc_idx), 20.0, (180, 140, 255)),
-        ("KC Sessiz", "%%%.0f seyrek" % kc_silent, kc_silent, 100.0, GREEN if kc_silent > 80 else (255, 180, 60)),
-        ("MBON", "%d hücre" % len(brain.mbon_idx), brain.rate(brain.mbon_idx), 35.0, (255, 200, 100)),
-        ("PAM Ödül", "dopamin", brain.rate(brain.pam_idx), 25.0, GREEN),
-        ("PPL1 Ceza", "dopamin", brain.rate(brain.ppl1_idx), 25.0, ALERT),
-        ("APL", "GABA inhib.", brain.rate_of_type("APL"), 25.0, (200, 120, 255)),
-        ("DPA", "plastisite", abs(motor.get("rpe", 0.0)) * 20.0, 20.0, GREEN if motor.get("rpe", 0.0) >= 0 else ALERT),
-    ]
+    if is_tr:
+        mb_items = [
+            ("Kenyon (KC)", "%d hücre" % kc_len, brain.rate(brain.kc_idx), 20.0, (180, 140, 255)),
+            ("KC Sessiz", "%%%.0f seyrek" % kc_silent, kc_silent, 100.0, GREEN if kc_silent > 80 else (255, 180, 60)),
+            ("MBON", "%d hücre" % len(brain.mbon_idx), brain.rate(brain.mbon_idx), 35.0, (255, 200, 100)),
+            ("PAM Ödül", "dopamin", brain.rate(brain.pam_idx), 25.0, GREEN),
+            ("PPL1 Ceza", "dopamin", brain.rate(brain.ppl1_idx), 25.0, ALERT),
+            ("APL", "GABA inhib.", brain.rate_of_type("APL"), 25.0, (200, 120, 255)),
+            ("DPA", "plastisite", abs(motor.get("rpe", 0.0)) * 20.0, 20.0, GREEN if motor.get("rpe", 0.0) >= 0 else ALERT),
+        ]
+    else:
+        mb_items = [
+            ("Kenyon (KC)", "%d cells" % kc_len, brain.rate(brain.kc_idx), 20.0, (180, 140, 255)),
+            ("KC Silent", "%%%.0f sparse" % kc_silent, kc_silent, 100.0, GREEN if kc_silent > 80 else (255, 180, 60)),
+            ("MBON", "%d cells" % len(brain.mbon_idx), brain.rate(brain.mbon_idx), 35.0, (255, 200, 100)),
+            ("PAM Reward", "dopamine", brain.rate(brain.pam_idx), 25.0, GREEN),
+            ("PPL1 Punish", "dopamine", brain.rate(brain.ppl1_idx), 25.0, ALERT),
+            ("APL", "GABA inhib.", brain.rate_of_type("APL"), 25.0, (200, 120, 255)),
+            ("DPA", "plasticity", abs(motor.get("rpe", 0.0)) * 20.0, 20.0, GREEN if motor.get("rpe", 0.0) >= 0 else ALERT),
+        ]
     for name, desc, val, max_v, col in mb_items:
         overlay.blit(F_MS.render("%-11s %-11s" % (name, desc), True, MUTE), (c2.x + 10, cy2))
         pygame.draw.rect(overlay, (35, 42, 54), (c2.x + 10, cy2 + 14, col_w - 70, 6), border_radius=2)
@@ -224,22 +267,35 @@ def draw_neural_overlay(brain, motor, extra):
         overlay.blit(F_MS.render("%4.1f" % val, True, TXT), (c2.x + col_w - 52, cy2 + 10))
         cy2 += 55
 
-    # 3. İNEN MOTOR NÖRONLAR
+    # 3. İNEN MOTOR NÖRONLAR / DESCENDING NEURONS
     c3 = pygame.Rect(30 + col_w * 2, col_y, col_w, col_h)
     pygame.draw.rect(overlay, PANEL, c3, border_radius=8)
-    overlay.blit(F_LBL.render("3. MOTOR ÇIKTILAR (Descending)", True, ACC), (c3.x + 12, c3.y + 8))
+    p3_title = "3. MOTOR ÇIKTILAR (Descending)" if is_tr else "3. MOTOR OUTPUTS (Descending)"
+    overlay.blit(F_LBL.render(p3_title, True, ACC), (c3.x + 12, c3.y + 8))
     rates = motor.get("rates", {})
     cy3 = c3.y + 32
-    dn_items = [
-        ("DNp20 Sol", "görsel tork L", motor.get("DNp20_L", 0.0), 40.0, (120, 200, 255)),
-        ("DNp20 Sağ", "görsel tork R", motor.get("DNp20_R", 0.0), 40.0, (120, 200, 255)),
-        ("DNa02", "merkezi yönelim", brain.rate_of_type("DNa02"), 30.0, (140, 220, 180)),
-        ("DNpe017", "ileri yürüyüş", rates.get("forward", 0.0), 40.0, GREEN),
-        ("MDN", "geri çekilme", rates.get("backward", 0.0), 30.0, (255, 180, 60)),
-        ("DNp09", "hızlı kaçış", rates.get("fast", 0.0), 35.0, (255, 150, 200)),
-        ("DNp01", "Giant Fiber", rates.get("escape", 0.0), 25.0, ALERT),
-        ("MN9", "hortum/proboscis", rates.get("feed", 0.0), 30.0, (255, 230, 140)),
-    ]
+    if is_tr:
+        dn_items = [
+            ("DNp20 Sol", "görsel tork L", motor.get("DNp20_L", 0.0), 40.0, (120, 200, 255)),
+            ("DNp20 Sağ", "görsel tork R", motor.get("DNp20_R", 0.0), 40.0, (120, 200, 255)),
+            ("DNa02", "merkezi yönelim", brain.rate_of_type("DNa02"), 30.0, (140, 220, 180)),
+            ("DNpe017", "ileri yürüyüş", rates.get("forward", 0.0), 40.0, GREEN),
+            ("MDN", "geri çekilme", rates.get("backward", 0.0), 30.0, (255, 180, 60)),
+            ("DNp09", "hızlı kaçış", rates.get("fast", 0.0), 35.0, (255, 150, 200)),
+            ("DNp01", "Giant Fiber", rates.get("escape", 0.0), 25.0, ALERT),
+            ("MN9", "hortum/proboscis", rates.get("feed", 0.0), 30.0, (255, 230, 140)),
+        ]
+    else:
+        dn_items = [
+            ("DNp20 Left", "visual torque L", motor.get("DNp20_L", 0.0), 40.0, (120, 200, 255)),
+            ("DNp20 Right", "visual torque R", motor.get("DNp20_R", 0.0), 40.0, (120, 200, 255)),
+            ("DNa02", "steering drive", brain.rate_of_type("DNa02"), 30.0, (140, 220, 180)),
+            ("DNpe017", "forward walk", rates.get("forward", 0.0), 40.0, GREEN),
+            ("MDN", "backward crawl", rates.get("backward", 0.0), 30.0, (255, 180, 60)),
+            ("DNp09", "fast escape", rates.get("fast", 0.0), 35.0, (255, 150, 200)),
+            ("DNp01", "Giant Fiber", rates.get("escape", 0.0), 25.0, ALERT),
+            ("MN9", "proboscis feed", rates.get("feed", 0.0), 30.0, (255, 230, 140)),
+        ]
     for name, desc, val, max_v, col in dn_items:
         overlay.blit(F_MS.render("%-9s %-13s" % (name, desc), True, MUTE), (c3.x + 10, cy3))
         pygame.draw.rect(overlay, (35, 42, 54), (c3.x + 10, cy3 + 14, col_w - 70, 6), border_radius=2)
@@ -247,22 +303,35 @@ def draw_neural_overlay(brain, motor, extra):
         overlay.blit(F_MS.render("%4.1f" % val, True, TXT), (c3.x + col_w - 52, cy3 + 10))
         cy3 += 50
 
-    # 4. DUYU VE ÇEVRE
+    # 4. DUYU VE ÇEVRE / SENSORY & ENVIRONMENT
     c4 = pygame.Rect(40 + col_w * 3, col_y, col_w, col_h)
     pygame.draw.rect(overlay, PANEL, c4, border_radius=8)
-    overlay.blit(F_LBL.render("4. DUYU VE ÇEVRE (Sensory)", True, (180, 255, 150)), (c4.x + 12, c4.y + 8))
+    p4_title = "4. DUYU VE ÇEVRE (Sensory)" if is_tr else "4. SENSES & ENVIRONMENT (Sensory)"
+    overlay.blit(F_LBL.render(p4_title, True, (180, 255, 150)), (c4.x + 12, c4.y + 8))
     jo_r = brain.rate(brain.jo_idx) if len(brain.jo_idx) else 0.0
     cy4 = c4.y + 32
-    sens_items = [
-        ("ORN Sol", "sol anten koku", brain.rate(brain.orn_L) if len(brain.orn_L) else 0.0, 35.0, (150, 245, 130)),
-        ("ORN Sağ", "sağ anten koku", brain.rate(brain.orn_R) if len(brain.orn_R) else 0.0, 35.0, (150, 245, 130)),
-        ("PN", "anten lobu proj.", brain.rate(brain.pn_idx) if len(brain.pn_idx) else 0.0, 35.0, (180, 240, 160)),
-        ("LH", "lateral horn", brain.rate(brain.lh_idx) if len(brain.lh_idx) else 0.0, 35.0, (200, 220, 140)),
-        ("Johnston", "işitme+rüzgâr", jo_r, 35.0, (255, 210, 120)),
-        ("OCG01 Sol", "sol ocellus", brain.rate(brain.ocg_L) if len(brain.ocg_L) else 0.0, 35.0, (255, 235, 140)),
-        ("OCG01 Sağ", "sağ ocellus", brain.rate(brain.ocg_R) if len(brain.ocg_R) else 0.0, 35.0, (255, 235, 140)),
-        ("GRN Tat", "şeker nektar", brain.rate(brain.grn_idx) if len(brain.grn_idx) else 0.0, 30.0, (255, 180, 120)),
-    ]
+    if is_tr:
+        sens_items = [
+            ("ORN Sol", "sol anten koku", brain.rate(brain.orn_L) if len(brain.orn_L) else 0.0, 35.0, (150, 245, 130)),
+            ("ORN Sağ", "sağ anten koku", brain.rate(brain.orn_R) if len(brain.orn_R) else 0.0, 35.0, (150, 245, 130)),
+            ("PN", "anten lobu proj.", brain.rate(brain.pn_idx) if len(brain.pn_idx) else 0.0, 35.0, (180, 240, 160)),
+            ("LH", "lateral horn", brain.rate(brain.lh_idx) if len(brain.lh_idx) else 0.0, 35.0, (200, 220, 140)),
+            ("Johnston", "işitme+rüzgâr", jo_r, 35.0, (255, 210, 120)),
+            ("OCG01 Sol", "sol ocellus", brain.rate(brain.ocg_L) if len(brain.ocg_L) else 0.0, 35.0, (255, 235, 140)),
+            ("OCG01 Sağ", "sağ ocellus", brain.rate(brain.ocg_R) if len(brain.ocg_R) else 0.0, 35.0, (255, 235, 140)),
+            ("GRN Tat", "şeker nektar", brain.rate(brain.grn_idx) if len(brain.grn_idx) else 0.0, 30.0, (255, 180, 120)),
+        ]
+    else:
+        sens_items = [
+            ("ORN Left", "L antenna odor", brain.rate(brain.orn_L) if len(brain.orn_L) else 0.0, 35.0, (150, 245, 130)),
+            ("ORN Right", "R antenna odor", brain.rate(brain.orn_R) if len(brain.orn_R) else 0.0, 35.0, (150, 245, 130)),
+            ("PN", "ant. lobe proj.", brain.rate(brain.pn_idx) if len(brain.pn_idx) else 0.0, 35.0, (180, 240, 160)),
+            ("LH", "lateral horn", brain.rate(brain.lh_idx) if len(brain.lh_idx) else 0.0, 35.0, (200, 220, 140)),
+            ("Johnston", "hearing+wind", jo_r, 35.0, (255, 210, 120)),
+            ("OCG01 Left", "left ocellus", brain.rate(brain.ocg_L) if len(brain.ocg_L) else 0.0, 35.0, (255, 235, 140)),
+            ("OCG01 Right", "right ocellus", brain.rate(brain.ocg_R) if len(brain.ocg_R) else 0.0, 35.0, (255, 235, 140)),
+            ("GRN Taste", "sugar nectar", brain.rate(brain.grn_idx) if len(brain.grn_idx) else 0.0, 30.0, (255, 180, 120)),
+        ]
     for name, desc, val, max_v, col in sens_items:
         overlay.blit(F_MS.render("%-9s %-13s" % (name, desc), True, MUTE), (c4.x + 10, cy4))
         pygame.draw.rect(overlay, (35, 42, 54), (c4.x + 10, cy4 + 14, col_w - 70, 6), border_radius=2)
@@ -276,7 +345,10 @@ def draw_neural_overlay(brain, motor, extra):
     mat_h = ov_rect.height - mat_y - 10
     if mat_h > 20:
         pygame.draw.rect(overlay, (22, 28, 37), (10, mat_y, mat_w, mat_h), border_radius=6)
-        overlay.blit(F_S.render("CANLI NÖRAL SPİKE MATRİSİ — Kenyon Hücreleri & İnen Nöronların Anlık Ateşlemeleri:", True, MUTE), (20, mat_y + 4))
+        mat_title = ("CANLI NÖRAL SPİKE MATRİSİ — Kenyon Hücreleri & İnen Nöronların Anlık Ateşlemeleri:"
+                     if is_tr else
+                     "LIVE NEURAL SPIKE MATRIX — Kenyon Cells & Descending Neurons Real-Time Spikes:")
+        overlay.blit(F_S.render(mat_title, True, MUTE), (20, mat_y + 4))
         n_show = min(400, len(kc_spikes))
         if n_show > 0:
             bw = (mat_w - 20) / float(n_show)
@@ -297,35 +369,49 @@ def bar(x, y, w, h, frac, col, bgc=(38, 44, 56)):
 
 
 def render(brain, motor, retina, cols, rows, distances, health, food,
-           heading, cast_ms, extra, senses):
+           heading, cast_ms, extra, senses, lang="en"):
     if IS_HEADLESS:
         return
     canvas.fill(BG)
     f = fps_now()
+    is_tr = (lang == "tr")
 
-    canvas.blit(F_TITLE.render("DROSOPHILA  |  MaleCNS v1.0 GERÇEK KONEKTOM",
-                               True, ACC), (18, 7))
-    hdr = ("%.1f FPS   %d nöron  %d bağlantı   beyin %.0f ms   ışın %s"
-           % (f, brain.N, brain.W.nnz, extra.get("brain_ms", 0.0),
-              ("%.0f ms" % cast_ms) if cast_ms else "-"))
+    hdr_title = "DROSOPHILA  |  MaleCNS v1.0 GERÇEK KONEKTOM" if is_tr else "DROSOPHILA  |  MaleCNS v1.0 REAL CONNECTOME"
+    canvas.blit(F_TITLE.render(hdr_title, True, ACC), (18, 7))
+    if is_tr:
+        hdr = ("%.1f FPS   %d nöron  %d bağlantı   beyin %.0f ms   ışın %s"
+               % (f, brain.N, brain.W.nnz, extra.get("brain_ms", 0.0),
+                  ("%.0f ms" % cast_ms) if cast_ms else "-"))
+    else:
+        hdr = ("%.1f FPS   %d neurons  %d synapses   brain %.0f ms   raycast %s"
+               % (f, brain.N, brain.W.nnz, extra.get("brain_ms", 0.0),
+                  ("%.0f ms" % cast_ms) if cast_ms else "-"))
     sh = F_MS.render(hdr, True, MUTE if f > 8 else ALERT)
     canvas.blit(sh, (CANVAS_W - 18 - sh.get_width(), 10))
     _ses = extra.get("ses")
     if _ses is None:
-        draw_button(SES_BTN, "SES YOK (kart)", False)
+        draw_button(SES_BTN, "SES YOK (kart)" if is_tr else "NO AUDIO (device)", False)
     else:
-        draw_button(SES_BTN, "SES: AÇIK" if _ses else "SES: kapalı", bool(_ses))
+        if is_tr:
+            draw_button(SES_BTN, "SES: AÇIK" if _ses else "SES: kapalı", bool(_ses))
+        else:
+            draw_button(SES_BTN, "AUDIO: ON" if _ses else "AUDIO: off", bool(_ses))
 
     _ov = extra.get("show_overlay", False)
-    draw_button(NEURAL_BTN, "HARİTA: AÇIK [TAB]" if _ov else "BEYİN HARİTASI [TAB]", bool(_ov))
+    if is_tr:
+        draw_button(NEURAL_BTN, "HARİTA: AÇIK [TAB]" if _ov else "BEYİN HARİTASI [TAB]", bool(_ov))
+    else:
+        draw_button(NEURAL_BTN, "MAP: ON [TAB]" if _ov else "BRAIN MAP [TAB]", bool(_ov))
 
     # ---------------- PANEL 1: retina ----------------
     p1 = pygame.Rect(14, 32, CANVAS_W - 28, 204)
     pygame.draw.rect(canvas, PANEL, p1, border_radius=10)
-    canvas.blit(F_LBL.render(
-        "1. PETEK GÖZ — %d ommatidium (gerçek sinek ~1500) — ekrandaki görüntü "
-        "fotoreseptörlere giren görüntünün AYNISI"
-        % (cols * rows), True, (255, 220, 90)), (p1.x + 12, p1.y + 5))
+    p1_desc = (
+        "1. PETEK GÖZ — %d ommatidium (gerçek sinek ~1500) — ekrandaki görüntü fotoreseptörlere giren görüntünün AYNISI"
+        if is_tr else
+        "1. COMPOUND EYE — %d ommatidia (real fly ~1500) — scene matches photoreceptor inputs"
+    ) % (cols * rows)
+    canvas.blit(F_LBL.render(p1_desc, True, (255, 220, 90)), (p1.x + 12, p1.y + 5))
     ix, iy, iw, ih = 24, 52, CANVAS_W - 48, 126
     s = retina_surface(retina, cols, rows) if retina is not None else None
     if s is not None:
@@ -335,8 +421,8 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     pygame.draw.rect(canvas, (58, 68, 84), (ix, iy, iw, ih), 1)
     pygame.draw.line(canvas, (255, 255, 255), (ix + iw // 2, iy),
                      (ix + iw // 2, iy + ih), 1)
-    canvas.blit(F_S.render("<< SOL GÖZ", True, (0, 210, 235)), (ix + 6, iy + ih + 2))
-    r_lbl = F_S.render("SAĞ GÖZ >>", True, (255, 175, 45))
+    canvas.blit(F_S.render("<< SOL GÖZ" if is_tr else "<< LEFT EYE", True, (0, 210, 235)), (ix + 6, iy + ih + 2))
+    r_lbl = F_S.render("SAĞ GÖZ >>" if is_tr else "RIGHT EYE >>", True, (255, 175, 45))
     canvas.blit(r_lbl, (ix + iw - r_lbl.get_width() - 6, iy + ih + 2))
     if distances is not None and len(distances) == 32:
         cw = iw / 32.0
@@ -345,18 +431,23 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
             v = float(np.clip(1.0 - (d - 1.0) / 14.0, 0.0, 1.0))
             pygame.draw.rect(canvas, (int(40 + 215 * v), int(200 * (1 - v) + 40), 40),
                              (ix + int(c * cw), iy + ih + 15, int(cw) - 1, 9))
-        canvas.blit(F_S.render("MESAFE ŞERİDİ: kırmızı = yakın (çarpmak üzere), "
-                               "yeşil = açık yol   |   en yakın %.1f m"
-                               % float(np.min(distances)), True, (150, 160, 178)),
-                    (ix + 2, iy + ih + 26))
+        dist_text = (
+            "MESAFE ŞERİDİ: kırmızı = yakın (çarpmak üzere), yeşil = açık yol   |   en yakın %.1f m"
+            if is_tr else
+            "DISTANCE STRIP: red = close (collision risk), green = open path   |   closest %.1f m"
+        ) % float(np.min(distances))
+        canvas.blit(F_S.render(dist_text, True, (150, 160, 178)), (ix + 2, iy + ih + 26))
 
     # ---------------- PANEL 2: görsel yol ----------------
     p2 = pygame.Rect(14, 242, 620, 196)
     pygame.draw.rect(canvas, PANEL, p2, border_radius=10)
-    canvas.blit(F_LBL.render("2. GÖRSEL YOL — gerçek hücre tiplerinin ateşleme hızı",
-                             True, TXT), (p2.x + 12, p2.y + 6))
+    p2_desc = ("2. GÖRSEL YOL — gerçek hücre tiplerinin ateşleme hızı"
+               if is_tr else
+               "2. VISUAL PATHWAY — biological firing rates of cell types")
+    canvas.blit(F_LBL.render(p2_desc, True, TXT), (p2.x + 12, p2.y + 6))
     y = p2.y + 24
-    for tname, human in WATCH:
+    watch_list = WATCH_TR if is_tr else WATCH_EN
+    for tname, human in watch_list:
         r = brain.rate_of_type(tname)
         canvas.blit(F_MS.render("%-7s %-16s" % (tname, human), True, MUTE), (p2.x + 14, y))
         bar(p2.x + 195, y + 2, 300, 8, r / 40.0,
@@ -367,25 +458,27 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     # ---------------- PANEL 3: mantar cisimciği ----------------
     p3 = pygame.Rect(644, 242, CANVAS_W - 658, 196)
     pygame.draw.rect(canvas, PANEL, p3, border_radius=10)
-    canvas.blit(F_LBL.render("3. MANTAR CİSİMCİĞİ (öğrenme)", True, (255, 215, 0)),
-                (p3.x + 12, p3.y + 6))
+    p3_desc = "3. MANTAR CİSİMCİĞİ (öğrenme)" if is_tr else "3. MUSHROOM BODY (learning)"
+    canvas.blit(F_LBL.render(p3_desc, True, (255, 215, 0)), (p3.x + 12, p3.y + 6))
     kc = brain.spike_count[brain.kc_idx]
     silent = 100.0 * float((kc == 0).mean()) if len(kc) else 0.0
-    canvas.blit(F_M.render("Kenyon hücresi: %d" % len(brain.kc_idx), True, TXT),
-                (p3.x + 14, p3.y + 24))
-    canvas.blit(F_M.render("sessiz: %%%.0f  (gerçek sinek %%90+)" % silent, True,
+    kc_cell_str = ("Kenyon hücresi: %d" if is_tr else "Kenyon cells: %d") % len(brain.kc_idx)
+    canvas.blit(F_M.render(kc_cell_str, True, TXT), (p3.x + 14, p3.y + 24))
+    silent_str = ("sessiz: %%%.0f  (gerçek sinek %%90+)" if is_tr else "silent: %%%.0f  (real fly 90%%+)") % silent
+    canvas.blit(F_M.render(silent_str, True,
                            GREEN if silent > 80 else (255, 180, 60)), (p3.x + 14, p3.y + 40))
     canvas.blit(F_M.render("KC   %5.2f Hz" % brain.rate(brain.kc_idx), True, TXT),
                 (p3.x + 14, p3.y + 58))
-    canvas.blit(F_M.render("MBON %5.2f Hz  (%d hücre)"
-                           % (brain.rate(brain.mbon_idx), len(brain.mbon_idx)),
-                           True, TXT), (p3.x + 14, p3.y + 74))
-    canvas.blit(F_M.render("PAM  %5.2f Hz  ödül" % brain.rate(brain.pam_idx),
-                           True, GREEN), (p3.x + 14, p3.y + 92))
-    canvas.blit(F_M.render("PPL1 %5.2f Hz  ceza" % brain.rate(brain.ppl1_idx),
-                           True, ALERT), (p3.x + 14, p3.y + 108))
+    mbon_str = ("MBON %5.2f Hz  (%d hücre)" if is_tr else "MBON %5.2f Hz  (%d cells)") % (
+        brain.rate(brain.mbon_idx), len(brain.mbon_idx))
+    canvas.blit(F_M.render(mbon_str, True, TXT), (p3.x + 14, p3.y + 74))
+    pam_str = ("PAM  %5.2f Hz  ödül" if is_tr else "PAM  %5.2f Hz  reward") % brain.rate(brain.pam_idx)
+    canvas.blit(F_M.render(pam_str, True, GREEN), (p3.x + 14, p3.y + 92))
+    ppl_str = ("PPL1 %5.2f Hz  ceza" if is_tr else "PPL1 %5.2f Hz  punish") % brain.rate(brain.ppl1_idx)
+    canvas.blit(F_M.render(ppl_str, True, ALERT), (p3.x + 14, p3.y + 108))
     rpe = motor.get("rpe", 0.0)
-    canvas.blit(F_M.render("dopamin hata sinyali %+.3f" % rpe, True,
+    rpe_str = ("dopamin hata sinyali %+.3f" if is_tr else "dopamine error signal %+.3f") % rpe
+    canvas.blit(F_M.render(rpe_str, True,
                            GREEN if rpe > 0 else (MUTE if abs(rpe) < .02 else ALERT)),
                 (p3.x + 14, p3.y + 126))
     # KC aktivite şeridi
@@ -406,17 +499,27 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     # ---------------- PANEL 4: inen nöronlar ----------------
     p4 = pygame.Rect(14, 444, CANVAS_W - 28, 114)
     pygame.draw.rect(canvas, PANEL, p4, border_radius=10)
-    canvas.blit(F_LBL.render(
-        "4. İNEN NÖRONLAR — motor komutu BURADAN okunuyor (kural yok, spike var)   "
-        "| DNp20 girdisinin %68'i görsel, %44'ü ocelli",
-        True, TXT), (p4.x + 12, p4.y + 5))
+    p4_desc = (
+        "4. İNEN NÖRONLAR — motor komutu BURADAN okunuyor (kural yok, spike var)   | DNp20 girdisinin %68'i görsel, %44'ü ocelli"
+        if is_tr else
+        "4. DESCENDING NEURONS — motor decoded from spikes directly   | DNp20 input: 68% visual, 44% ocelli"
+    )
+    canvas.blit(F_LBL.render(p4_desc, True, TXT), (p4.x + 12, p4.y + 5))
     rates = motor["rates"]
-    cols4 = [("DNp20 sol", motor["DNp20_L"], (120, 200, 255)),
-             ("DNp20 sağ", motor["DNp20_R"], (120, 200, 255)),
-             ("DNpe017 ileri", rates["forward"], GREEN),
-             ("MDN geri", rates["backward"], (255, 180, 60)),
-             ("DNp09 hızlı", rates["fast"], (255, 150, 200)),
-             ("DNp01 Giant Fiber", rates["escape"], ALERT)]
+    if is_tr:
+        cols4 = [("DNp20 sol", motor["DNp20_L"], (120, 200, 255)),
+                 ("DNp20 sağ", motor["DNp20_R"], (120, 200, 255)),
+                 ("DNpe017 ileri", rates["forward"], GREEN),
+                 ("MDN geri", rates["backward"], (255, 180, 60)),
+                 ("DNp09 hızlı", rates["fast"], (255, 150, 200)),
+                 ("DNp01 Giant Fiber", rates["escape"], ALERT)]
+    else:
+        cols4 = [("DNp20 left", motor["DNp20_L"], (120, 200, 255)),
+                 ("DNp20 right", motor["DNp20_R"], (120, 200, 255)),
+                 ("DNpe017 fwd", rates["forward"], GREEN),
+                 ("MDN back", rates["backward"], (255, 180, 60)),
+                 ("DNp09 fast", rates["fast"], (255, 150, 200)),
+                 ("DNp01 Giant Fiber", rates["escape"], ALERT)]
     x = p4.x + 16
     for name, val, col in cols4:
         canvas.blit(F_MS.render(name, True, MUTE), (x, p4.y + 23))
@@ -425,88 +528,110 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
                          border_radius=3)
         canvas.blit(F_M.render("%5.1f Hz" % val, True, TXT), (x, p4.y + 49))
         x += 172
-    canvas.blit(F_M.render(
-        "MOTOR:  tork %+.3f   itiş %+.2f   geri %s   koşu %s   zıpla %s"
-        % (motor["steering_torque"], motor["forward_thrust"],
-           motor["back"], motor["sprint"], motor["jump"]), True, ACC),
-        (p4.x + 16, p4.y + 67))
-    canvas.blit(F_MS.render(
-        "Can %.0f/20   Tokluk %.0f/20   yön %.0f°   ortalama ağ aktivitesi %.2f Hz"
-        % (health, food, math.degrees(heading) % 360, brain.mean_rate),
-        True, MUTE), (p4.x + 16, p4.y + 88))
+    if is_tr:
+        motor_str = ("MOTOR:  tork %+.3f   itiş %+.2f   geri %s   koşu %s   zıpla %s"
+                     % (motor["steering_torque"], motor["forward_thrust"],
+                        motor["back"], motor["sprint"], motor["jump"]))
+        stats_str = ("Can %.0f/20   Tokluk %.0f/20   yön %.0f°   ortalama ağ aktivitesi %.2f Hz"
+                     % (health, food, math.degrees(heading) % 360, brain.mean_rate))
+    else:
+        motor_str = ("MOTOR:  torque %+.3f   thrust %+.2f   back %s   sprint %s   jump %s"
+                     % (motor["steering_torque"], motor["forward_thrust"],
+                        motor["back"], motor["sprint"], motor["jump"]))
+        stats_str = ("Health %.0f/20   Food %.0f/20   heading %.0f°   mean network activity %.2f Hz"
+                     % (health, food, math.degrees(heading) % 360, brain.mean_rate))
+    canvas.blit(F_M.render(motor_str, True, ACC), (p4.x + 16, p4.y + 67))
+    canvas.blit(F_MS.render(stats_str, True, MUTE), (p4.x + 16, p4.y + 88))
 
     # ---------------- PANEL 5: ANTENLER (koku + işitme) ----------------
     p5a = pygame.Rect(14, 564, CANVAS_W - 28, 92)
     pygame.draw.rect(canvas, PANEL, p5a, border_radius=10)
-    canvas.blit(F_LBL.render(
-        "5. ANTENLER + OCELLI — koku ORN'lere, ses Johnston organına, "
-        "ışık OCG01'e giriyor",
-        True, (180, 255, 150)), (p5a.x + 12, p5a.y + 5))
+    p5a_desc = (
+        "5. ANTENLER + OCELLI — koku ORN'lere, ses Johnston organına, ışık OCG01'e giriyor"
+        if is_tr else
+        "5. ANTENNAE + OCELLI — odor to ORNs, sound to Johnston's organ, light to OCG01"
+    )
+    canvas.blit(F_LBL.render(p5a_desc, True, (180, 255, 150)), (p5a.x + 12, p5a.y + 5))
 
     ol, orr = senses.get("odor_l", 0.0), senses.get("odor_r", 0.0)
     snd, sname = senses.get("sound", 0.0), senses.get("sound_name", "")
     wind = senses.get("wind", 0.0)
 
-    canvas.blit(F_MS.render("koku SOL anten", True, MUTE), (p5a.x + 16, p5a.y + 23))
+    canvas.blit(F_MS.render("koku SOL anten" if is_tr else "odor LEFT antenna", True, MUTE), (p5a.x + 16, p5a.y + 23))
     bar(p5a.x + 130, p5a.y + 25, 140, 8, ol, (150, 245, 130))
-    canvas.blit(F_MS.render("koku SAĞ anten", True, MUTE), (p5a.x + 16, p5a.y + 38))
+    canvas.blit(F_MS.render("koku SAĞ anten" if is_tr else "odor RIGHT antenna", True, MUTE), (p5a.x + 16, p5a.y + 38))
     bar(p5a.x + 130, p5a.y + 40, 140, 8, orr, (150, 245, 130))
     _od = motor.get("odor_d", 0.0)
     _opath = senses.get("odor_path", -1.0)
-    canvas.blit(F_MS.render(
-        "kokunun HAVADAN yolu: %s | kuş uçuşu %.1f m"
-        % (("%.1f m" % _opath) if _opath >= 0 else "ULAŞMIYOR (duvar arkasında)",
-           senses.get("food_dist", 99.0)),
-        True, GREEN if _opath >= 0 else MUTE), (p5a.x + 16, p5a.y + 54))
-    canvas.blit(F_MS.render(
-        "anten farkı %+.2f | zaman değişimi %+.3f -> %s"
-        % (ol - orr, _od,
-           "YAKLAŞIYOR" if _od > 0.01 else
-           "UZAKLAŞIYOR — arıyor" if _od < -0.01 else "sabit"),
-        True, GREEN if _od > 0.01 else (ALERT if _od < -0.01 else MUTE)),
-        (p5a.x + 16, p5a.y + 70))
+    if is_tr:
+        path_str = ("kokunun HAVADAN yolu: %s | kuş uçuşu %.1f m"
+                    % (("%.1f m" % _opath) if _opath >= 0 else "ULAŞMIYOR (duvar arkasında)",
+                       senses.get("food_dist", 99.0)))
+        diff_str = ("anten farkı %+.2f | zaman değişimi %+.3f -> %s"
+                    % (ol - orr, _od,
+                       "YAKLAŞIYOR" if _od > 0.01 else
+                       "UZAKLAŞIYOR — arıyor" if _od < -0.01 else "sabit"))
+    else:
+        path_str = ("odor AIR PATH: %s | direct dist %.1f m"
+                    % (("%.1f m" % _opath) if _opath >= 0 else "BLOCKED (behind wall)",
+                       senses.get("food_dist", 99.0)))
+        diff_str = ("antenna delta %+.2f | temporal delta %+.3f -> %s"
+                    % (ol - orr, _od,
+                       "APPROACHING" if _od > 0.01 else
+                       "RECEDING — searching" if _od < -0.01 else "stable"))
+    canvas.blit(F_MS.render(path_str, True, GREEN if _opath >= 0 else MUTE), (p5a.x + 16, p5a.y + 54))
+    canvas.blit(F_MS.render(diff_str, True, GREEN if _od > 0.01 else (ALERT if _od < -0.01 else MUTE)),
+                (p5a.x + 16, p5a.y + 70))
 
     canvas.blit(F_MS.render("ORN  %5.2f Hz   PN %5.2f Hz   lateral horn %5.2f Hz"
                             % (brain.rate(np.concatenate([brain.orn_L, brain.orn_R]))
                                if len(brain.orn_L) + len(brain.orn_R) else 0.0,
                                brain.rate(brain.pn_idx), brain.rate(brain.lh_idx)),
                             True, TXT), (p5a.x + 330, p5a.y + 23))
-    canvas.blit(F_MS.render("Johnston organı %5.2f Hz   (%d nöron)"
-                            % (brain.rate(brain.jo_idx), len(brain.jo_idx)),
-                            True, TXT), (p5a.x + 330, p5a.y + 38))
-    canvas.blit(F_MS.render("ses %.2f  %-22s hava akımı %.2f"
-                            % (snd, sname[:22], wind),
-                            True, (255, 210, 120) if snd > 0.05 else MUTE),
+    jo_desc = ("Johnston organı %5.2f Hz   (%d nöron)" if is_tr else "Johnston organ %5.2f Hz   (%d neurons)") % (
+        brain.rate(brain.jo_idx), len(brain.jo_idx))
+    canvas.blit(F_MS.render(jo_desc, True, TXT), (p5a.x + 330, p5a.y + 38))
+    snd_desc = ("ses %.2f  %-22s hava akımı %.2f" if is_tr else "sound %.2f  %-22s wind flow %.2f") % (
+        snd, sname[:22], wind)
+    canvas.blit(F_MS.render(snd_desc, True, (255, 210, 120) if snd > 0.05 else MUTE),
                 (p5a.x + 330, p5a.y + 54))
 
     # OCELLI
     _sky = senses.get("sky", 1.0)
-    _gun = "GÜNDÜZ" if _sky > 0.7 else ("GECE" if _sky < 0.35 else "alacakaranlık")
-    canvas.blit(F_MS.render("%s (gök %.2f)%s" % (
-        _gun, _sky,
-        "  ocelli doygun" if _sky > 0.7 else "  ışık yönü okunur"), True,
-        (255, 235, 140) if _sky > 0.7 else (140, 170, 255)),
-        (p5a.x + 690, p5a.y + 5))
+    if is_tr:
+        _gun = "GÜNDÜZ" if _sky > 0.7 else ("GECE" if _sky < 0.35 else "alacakaranlık")
+        _gun_note = "  ocelli doygun" if _sky > 0.7 else "  ışık yönü okunur"
+        oc_light_str = "ocellus ışığı  sol %.2f  sağ %.2f"
+    else:
+        _gun = "DAY" if _sky > 0.7 else ("NIGHT" if _sky < 0.35 else "twilight")
+        _gun_note = "  ocelli saturated" if _sky > 0.7 else "  light bearing active"
+        oc_light_str = "ocellus light  L %.2f  R %.2f"
+    canvas.blit(F_MS.render("%s (%.2f)%s" % (_gun, _sky, _gun_note), True,
+                (255, 235, 140) if _sky > 0.7 else (140, 170, 255)),
+                (p5a.x + 690, p5a.y + 5))
     gl, gr = getattr(brain, "ocelli_lr", (0.0, 0.0))
-    canvas.blit(F_MS.render("ocellus ışığı  sol %.2f  sağ %.2f" % (gl, gr),
-                            True, (255, 235, 140)), (p5a.x + 690, p5a.y + 23))
-    canvas.blit(F_MS.render("OCG01  sol %5.2f Hz  sağ %5.2f Hz"
-                            % (brain.rate(brain.ocg_L), brain.rate(brain.ocg_R)),
-                            True, TXT), (p5a.x + 690, p5a.y + 38))
+    canvas.blit(F_MS.render(oc_light_str % (gl, gr), True, (255, 235, 140)), (p5a.x + 690, p5a.y + 23))
+    canvas.blit(F_MS.render("OCG01  %s %5.2f Hz  %s %5.2f Hz" % (
+        ("sol", brain.rate(brain.ocg_L), "sağ", brain.rate(brain.ocg_R)) if is_tr else
+        ("L", brain.rate(brain.ocg_L), "R", brain.rate(brain.ocg_R))),
+        True, TXT), (p5a.x + 690, p5a.y + 38))
 
     # TEHLİKE / SU / SICAKLIK / ENVANTER
     _inv = senses.get("inv_empty", -1)
     if _inv == 0:
-        canvas.blit(F_LBL.render("ENVANTER DOLU!", True, ALERT), (p5a.x + 330, p5a.y + 5))
+        canvas.blit(F_LBL.render("ENVANTER DOLU!" if is_tr else "INVENTORY FULL!", True, ALERT), (p5a.x + 330, p5a.y + 5))
     elif _inv > 0 and senses.get("food_dist", 99.0) < 16.0:
-        canvas.blit(F_MS.render("yerde yemek %.1f m (boş %d)" % (senses["food_dist"], _inv),
-                                True, (150, 245, 130)), (p5a.x + 330, p5a.y + 5))
+        inv_str = ("yerde yemek %.1f m (boş %d)" if is_tr else "food on ground %.1f m (empty %d)") % (
+            senses["food_dist"], _inv)
+        canvas.blit(F_MS.render(inv_str, True, (150, 245, 130)), (p5a.x + 330, p5a.y + 5))
 
     _cr, _cp = senses.get("chat_reward", 0.0), senses.get("chat_punish", 0.0)
     if _cr > 0.02 or _cp > 0.02:
-        canvas.blit(F_LBL.render(
-            "SOHBET: %s" % ("ÖDÜL" if _cr > _cp else "CEZA"),
-            True, GREEN if _cr > _cp else ALERT), (p5a.x + 200, p5a.y + 5))
+        if is_tr:
+            chat_lbl = "SOHBET: %s" % ("ÖDÜL" if _cr > _cp else "CEZA")
+        else:
+            chat_lbl = "CHAT: %s" % ("REWARD" if _cr > _cp else "PUNISH")
+        canvas.blit(F_LBL.render(chat_lbl, True, GREEN if _cr > _cp else ALERT), (p5a.x + 200, p5a.y + 5))
 
     _w_ahead = senses.get("water_ahead", False)
     _w_below = senses.get("water_below", False)
@@ -516,24 +641,33 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     _cold = senses.get("cold", 0.0)
     _rain = senses.get("is_raining", False)
     if _w_ahead or _w_below or _w_dist < 6.0:
-        canvas.blit(F_LBL.render("SU TEHLİKESİ: %.1f m %s" % (_w_dist, "[ALT]" if _w_below else "[ÖN]"),
-                                 True, (45, 175, 255)), (p5a.x + 480, p5a.y + 70))
+        w_tag = ("[ALT]" if _w_below else "[ÖN]") if is_tr else ("[BELOW]" if _w_below else "[AHEAD]")
+        w_title = "SU TEHLİKESİ: %.1f m %s" if is_tr else "WATER HAZARD: %.1f m %s"
+        canvas.blit(F_LBL.render(w_title % (_w_dist, w_tag), True, (45, 175, 255)), (p5a.x + 480, p5a.y + 70))
     elif _heat > 0.02:
-        canvas.blit(F_LBL.render("SICAK %.2f" % _heat, True, (255, 140, 60)), (p5a.x + 480, p5a.y + 70))
+        canvas.blit(F_LBL.render(("SICAK %.2f" if is_tr else "HEAT %.2f") % _heat, True, (255, 140, 60)), (p5a.x + 480, p5a.y + 70))
     elif _cold > 0.05 or _rain:
-        canvas.blit(F_LBL.render("SOĞUK / YAĞMUR", True, (140, 215, 255)), (p5a.x + 480, p5a.y + 70))
+        canvas.blit(F_LBL.render("SOĞUK / YAĞMUR" if is_tr else "COLD / RAIN", True, (140, 215, 255)), (p5a.x + 480, p5a.y + 70))
 
     hb = senses.get("hazard_bearing")
     if hb is not None and max(senses.get("mech", 0.0), senses.get("obst", 0.0)) > 0.0:
-        side = "SOL" if hb > 0.05 else ("SAĞ" if hb < -0.05 else "TAM ÖN")
-        canvas.blit(F_MS.render("tehlike: %s -> ters yön" % side, True, ALERT), (p5a.x + 690, p5a.y + 54))
+        if is_tr:
+            side = "SOL" if hb > 0.05 else ("SAĞ" if hb < -0.05 else "TAM ÖN")
+            hz_str = "tehlike: %s -> ters yön" % side
+        else:
+            side = "LEFT" if hb > 0.05 else ("RIGHT" if hb < -0.05 else "FRONT")
+            hz_str = "hazard: %s -> reverse turn" % side
+        canvas.blit(F_MS.render(hz_str, True, ALERT), (p5a.x + 690, p5a.y + 54))
 
     # ---------------- PANEL 6: İÇSEL DURUM ----------------
     p6 = pygame.Rect(14, 662, CANVAS_W - 28, 48)
     pygame.draw.rect(canvas, PANEL, p6, border_radius=10)
-    canvas.blit(F_LBL.render(
-        "6. İÇSEL DURUM — gerçek dopamin nöronlarından (uydurma değil)",
-        True, (255, 170, 210)), (p6.x + 12, p6.y + 4))
+    p6_desc = (
+        "6. İÇSEL DURUM — gerçek dopamin nöronlarından (uydurma değil)"
+        if is_tr else
+        "6. INTERNAL STATE — decoded from dopamine neurons (MaleCNS connectome)"
+    )
+    canvas.blit(F_LBL.render(p6_desc, True, (255, 170, 210)), (p6.x + 12, p6.y + 4))
 
     pam_v = motor.get("pam_dev_s", 0.0)
     ppl_v = motor.get("ppl_dev_s", 0.0)
@@ -541,18 +675,32 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     mb_v = motor.get("rpe", 0.0)
     hunger = float(np.clip((20.0 - food) / 20.0, 0.0, 1.0))
 
-    drives = [
-        ("İŞTAH / ÖDÜL", min(1.0, max(0.0, pam_v) / 3.0), (90, 230, 140), "PAM sapma"),
-        ("KAÇINMA / CEZA", min(1.0, max(0.0, ppl_v) / 3.0), (255, 150, 90), "PPL1 sapma"),
-        ("TEHLİKE / KAÇIŞ", min(1.0, esc_v / 6.0), (255, 80, 95), "DNp01+04"),
-        ("AÇLIK", hunger, (150, 190, 255), "besin"),
-        ("KOKU UYARIMI", min(1.0, max(0.0, motor.get("arousal", 0.0))),
-         (255, 215, 120), "KC %.1f Hz" % motor.get("kc_rate", 0.0)),
-        ("ARAMA (kayıp)", min(1.0, max(0.0, motor.get("odor_lost", 0.0))),
-         (200, 160, 255), "koku düşüyor"),
-        ("ÖĞRENME SİNYALİ", min(1.0, abs(mb_v) * 8.0),
-         GREEN if mb_v >= 0 else ALERT, "dopamin hatası"),
-    ]
+    if is_tr:
+        drives = [
+            ("İŞTAH / ÖDÜL", min(1.0, max(0.0, pam_v) / 3.0), (90, 230, 140), "PAM sapma"),
+            ("KAÇINMA / CEZA", min(1.0, max(0.0, ppl_v) / 3.0), (255, 150, 90), "PPL1 sapma"),
+            ("TEHLİKE / KAÇIŞ", min(1.0, esc_v / 6.0), (255, 80, 95), "DNp01+04"),
+            ("AÇLIK", hunger, (150, 190, 255), "besin"),
+            ("KOKU UYARIMI", min(1.0, max(0.0, motor.get("arousal", 0.0))),
+             (255, 215, 120), "KC %.1f Hz" % motor.get("kc_rate", 0.0)),
+            ("ARAMA (kayıp)", min(1.0, max(0.0, motor.get("odor_lost", 0.0))),
+             (200, 160, 255), "koku düşüyor"),
+            ("ÖĞRENME SİNYALİ", min(1.0, abs(mb_v) * 8.0),
+             GREEN if mb_v >= 0 else ALERT, "dopamin hatası"),
+        ]
+    else:
+        drives = [
+            ("APPETITE / REWARD", min(1.0, max(0.0, pam_v) / 3.0), (90, 230, 140), "PAM dev"),
+            ("AVERSION / PUNISH", min(1.0, max(0.0, ppl_v) / 3.0), (255, 150, 90), "PPL1 dev"),
+            ("DANGER / ESCAPE", min(1.0, esc_v / 6.0), (255, 80, 95), "DNp01+04"),
+            ("HUNGER", hunger, (150, 190, 255), "nutrients"),
+            ("ODOR AROUSAL", min(1.0, max(0.0, motor.get("arousal", 0.0))),
+             (255, 215, 120), "KC %.1f Hz" % motor.get("kc_rate", 0.0)),
+            ("SEARCH (lost)", min(1.0, max(0.0, motor.get("odor_lost", 0.0))),
+             (200, 160, 255), "odor falling"),
+            ("LEARNING SIGNAL", min(1.0, abs(mb_v) * 8.0),
+             GREEN if mb_v >= 0 else ALERT, "dopamine error"),
+        ]
     bx = p6.x + 16
     bw = (p6.width - 44) // len(drives)
     for name, frac, col, src in drives:
@@ -565,33 +713,52 @@ def render(brain, motor, retina, cols, rows, distances, health, food,
     p5 = pygame.Rect(14, 716, CANVAS_W - 28, 58)
     pygame.draw.rect(canvas, PANEL, p5, border_radius=10)
     gf = rates["escape"]
-    if gf > 6:
-        st, sc = "GIANT FIBER — acil sıçrama", ALERT
-    elif rates["backward"] > 9:
-        st, sc = "MDN — geri yürüyor", (255, 180, 60)
-    elif rates["fast"] > 10:
-        st, sc = "DNp09 — hızlı kaçış", (255, 150, 200)
-    elif rates["forward"] > 12:
-        st, sc = "DNpe017 — ileri yürüyor", GREEN
-    elif abs(motor["steering_torque"]) > 0.25:
-        st, sc = "DNp20 — dönüyor", (120, 200, 255)
-    else:
-        st, sc = "düşük aktivite — bekliyor", MUTE
-    canvas.blit(F_BIG.render(st, True, sc), (p5.x + 16, p5.y + 4))
-    canvas.blit(F_S.render(
-        "Bu satır bir kuraldan değil, hangi inen nöronun ateşlediğinden geliyor. "
-        "Veri: MaleCNS v1.0 (Janelia/Cambridge/MRC LMB/Google) CC BY 4.0",
-        True, MUTE), (p5.x + 16, p5.y + 29))
     ev = getattr(brain, "sign_evidence", {}) or {}
-    canvas.blit(F_MS.render(
-        "dönüş işareti %+.0f (fototaksi: %.1f, optomotor: %.1f) | duyu: LIF + graded | motor: DNp20/DNpe017"
-        % (getattr(brain, "steer_sign", 1.0),
-           ev.get("phototaxis_effect", 0.0),
-           ev.get("optomotor_effect", 0.0)),
-        True, (140, 185, 165)), (p5.x + 16, p5.y + 42))
+    if is_tr:
+        if gf > 6:
+            st, sc = "GIANT FIBER — acil sıçrama", ALERT
+        elif rates["backward"] > 9:
+            st, sc = "MDN — geri yürüyor", (255, 180, 60)
+        elif rates["fast"] > 10:
+            st, sc = "DNp09 — hızlı kaçış", (255, 150, 200)
+        elif rates["forward"] > 12:
+            st, sc = "DNpe017 — ileri yürüyor", GREEN
+        elif abs(motor["steering_torque"]) > 0.25:
+            st, sc = "DNp20 — dönüyor", (120, 200, 255)
+        else:
+            st, sc = "düşük aktivite — bekliyor", MUTE
+        sub_p5 = ("Bu satır bir kuraldan değil, hangi inen nöronun ateşlediğinden geliyor. "
+                  "Veri: MaleCNS v1.0 (Janelia/Cambridge/MRC LMB/Google) CC BY 4.0")
+        sign_p5 = ("dönüş işareti %+.0f (fototaksi: %.1f, optomotor: %.1f) | duyu: LIF + graded | motor: DNp20/DNpe017"
+                   % (getattr(brain, "steer_sign", 1.0),
+                      ev.get("phototaxis_effect", 0.0),
+                      ev.get("optomotor_effect", 0.0)))
+    else:
+        if gf > 6:
+            st, sc = "GIANT FIBER — emergency jump", ALERT
+        elif rates["backward"] > 9:
+            st, sc = "MDN — backward crawling", (255, 180, 60)
+        elif rates["fast"] > 10:
+            st, sc = "DNp09 — fast sprint", (255, 150, 200)
+        elif rates["forward"] > 12:
+            st, sc = "DNpe017 — walking forward", GREEN
+        elif abs(motor["steering_torque"]) > 0.25:
+            st, sc = "DNp20 — steering", (120, 200, 255)
+        else:
+            st, sc = "low activity — hovering/idle", MUTE
+        sub_p5 = ("Behavior decoded directly from descending neuron spikes (no hardcoded rules). "
+                  "Data: MaleCNS v1.0 (Janelia/Cambridge/MRC LMB/Google) CC BY 4.0")
+        sign_p5 = ("steering sign %+.0f (phototaxis: %.1f, optomotor: %.1f) | senses: LIF + graded | motor: DNp20/DNpe017"
+                   % (getattr(brain, "steer_sign", 1.0),
+                      ev.get("phototaxis_effect", 0.0),
+                      ev.get("optomotor_effect", 0.0)))
+
+    canvas.blit(F_BIG.render(st, True, sc), (p5.x + 16, p5.y + 4))
+    canvas.blit(F_S.render(sub_p5, True, MUTE), (p5.x + 16, p5.y + 29))
+    canvas.blit(F_MS.render(sign_p5, True, (140, 185, 165)), (p5.x + 16, p5.y + 42))
 
     if _ov:
-        draw_neural_overlay(brain, motor, extra)
+        draw_neural_overlay(brain, motor, extra, lang=lang)
 
     cur_size = screen.get_size()
     if cur_size == (CANVAS_W, CANVAS_H):
@@ -651,16 +818,23 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
         or ""
     ).strip()
     uri = f"ws://{ws_host}:{ws_port}?token={AUTH_TOKEN}" if AUTH_TOKEN else f"ws://{ws_host}:{ws_port}"
+    current_lang = os.environ.get("FLY_LANG", "en").lower().strip()
+    if current_lang not in ("en", "tr"):
+        current_lang = "en"
 
     if IS_HEADLESS:
-        print("[GerçekBeyin] 🖥️ Sadece Terminal Modu (--no-gui) devrede.")
+        print("[RealBrain] 🖥️ Headless Terminal Mode (--no-gui) active."
+              if current_lang != "tr" else "[GerçekBeyin] 🖥️ Sadece Terminal Modu (--no-gui) devrede.")
 
     if as_server:
-        print("[GerçekBeyin] 🌐 WebSocket Sunucusu dinliyor: 0.0.0.0:%d" % ws_port)
-        print("              Minecraft Paper/Spigot sunucusundaki FruitFly eklentisi buraya bağlanacak.")
+        print("[RealBrain] 🌐 WebSocket Server listening: 0.0.0.0:%d" % ws_port
+              if current_lang != "tr" else "[GerçekBeyin] 🌐 WebSocket Sunucusu dinliyor: 0.0.0.0:%d" % ws_port)
+        print("              FruitFly plugin will connect to this address."
+              if current_lang != "tr" else "              Minecraft Paper/Spigot sunucusundaki FruitFly eklentisi buraya bağlanacak.")
         if not IS_HEADLESS:
             screen.fill(BG)
-            t = F_LBL.render("FruitFly eklentisi bekleniyor (0.0.0.0:%d)..." % ws_port, True, ALERT)
+            msg = "Waiting for FruitFly plugin (0.0.0.0:%d)..." % ws_port if current_lang != "tr" else "FruitFly eklentisi bekleniyor (0.0.0.0:%d)..." % ws_port
+            t = F_LBL.render(msg, True, ALERT)
             screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
             pygame.display.flip()
 
@@ -682,7 +856,8 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
     else:
         if not IS_HEADLESS:
             screen.fill(BG)
-            t = F_LBL.render(f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})...", True, ALERT)
+            msg = f"Waiting for Minecraft server ({ws_host}:{ws_port})..." if current_lang != "tr" else f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})..."
+            t = F_LBL.render(msg, True, ALERT)
             screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
             pygame.display.flip()
 
@@ -691,15 +866,18 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
         try:
             if as_server:
                 ws = await incoming_queue.get()
-                remote_ip = str(getattr(ws, 'remote_address', None) or 'istemci')
-                print("[GerçekBeyin] ✅ Arı / Paper Eklentisi bağlandı: %s" % remote_ip)
-                log.event("BAĞLANTI", "arı bağlandı: %s" % remote_ip)
+                remote_ip = str(getattr(ws, 'remote_address', None) or 'client')
+                print("[RealBrain] ✅ FruitFly plugin connected: %s" % remote_ip
+                      if current_lang != "tr" else "[GerçekBeyin] ✅ FruitFly eklentisi bağlandı: %s" % remote_ip)
+                log.event("BAĞLANTI", "fruitfly connected: %s" % remote_ip)
             else:
                 if not waiting_logged:
-                    print(f"[GerçekBeyin] ⏳ Minecraft Paper Sunucusu bekleniyor: ws://{ws_host}:{ws_port}")
+                    print(f"[RealBrain] ⏳ Waiting for Minecraft Server: ws://{ws_host}:{ws_port}"
+                          if current_lang != "tr" else f"[GerçekBeyin] ⏳ Minecraft Paper Sunucusu bekleniyor: ws://{ws_host}:{ws_port}")
                     waiting_logged = True
                 ws = await websockets.connect(uri, max_size=2 ** 24)
-                print(f"[GerçekBeyin] ✅ Minecraft Paper Sunucusuna bağlandı: {ws_host}:{ws_port}")
+                print(f"[RealBrain] ✅ Connected to Minecraft Server: {ws_host}:{ws_port}"
+                      if current_lang != "tr" else f"[GerçekBeyin] ✅ Minecraft Paper Sunucusuna bağlandı: {ws_host}:{ws_port}")
                 waiting_logged = False
                 log.event("BAĞLANTI", f"sunucuya bağlandı: {ws_host}:{ws_port}")
 
@@ -751,8 +929,9 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                                   and SES_BTN.collidepoint((_mx, _my)))
                         if _tikla or (ev.type == pygame.KEYDOWN
                                       and ev.key == pygame.K_s):
-                            print("[Ses] kanat + kulak %s"
-                                  % ("AÇIK" if wing.toggle() else "kapalı"))
+                            is_on = wing.toggle()
+                            print("[Audio] wing + ear %s" % ("ON" if is_on else "off")
+                                  if current_lang != "tr" else "[Ses] kanat + kulak %s" % ("AÇIK" if is_on else "kapalı"))
 
                         _tikla_neural = (ev.type == pygame.MOUSEBUTTONDOWN
                                          and ev.button == 1
@@ -760,7 +939,8 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                         if _tikla_neural or (ev.type == pygame.KEYDOWN
                                              and ev.key in (pygame.K_TAB, pygame.K_SPACE)):
                             show_neural_overlay = not show_neural_overlay
-                            print("[Nöral Harita] %s" % ("AÇIK" if show_neural_overlay else "kapalı"))
+                            print("[Neural Map] %s" % ("ON" if show_neural_overlay else "off")
+                                  if current_lang != "tr" else "[Nöral Harita] %s" % ("AÇIK" if show_neural_overlay else "kapalı"))
 
                     # Yeni kare bekle. Okuyucu görev bu arada soketi
                     # boşaltmaya devam ediyor; biz uyandığımızda elimizde
@@ -782,11 +962,14 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                     fps_tick()
                     tnow = pygame.time.get_ticks() / 1000.0
                     data = json.loads(raw)
+                    if data.get("lang") in ("en", "tr"):
+                        current_lang = data["lang"]
 
                     # --- AUTH TOKEN GÜVENLİK DOĞRULAMASI ---
                     client_token = data.get("auth_token")
                     if AUTH_TOKEN and client_token and client_token != AUTH_TOKEN:
-                        print("[GerçekBeyin] ⚠️ Yetkisiz token (%s) — bağlantı reddedildi." % client_token)
+                        print("[RealBrain] ⚠️ Unauthorized auth token — connection rejected."
+                              if current_lang != "tr" else "[GerçekBeyin] ⚠️ Yetkisiz token — bağlantı reddedildi.")
                         await ws.close(1008, "Invalid auth token")
                         break
 
@@ -795,14 +978,16 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                     if cmd == "bottle" or data.get("bottled") is True:
                         _target_id = str(data.get("fly_id") or label)
                         is_bottled = True
-                        print("[GerçekBeyin] 🍾 '%s' şişeye alındı! Simülasyon donduruldu (0 CPU)." % _target_id)
-                        log.event("ŞİŞELENDİ", "%s şişeye alındı" % _target_id)
+                        print("[RealBrain] 🍾 '%s' bottled! Simulation paused (0 CPU)." % _target_id
+                              if current_lang != "tr" else "[GerçekBeyin] 🍾 '%s' şişeye alındı! Simülasyon donduruldu (0 CPU)." % _target_id)
+                        log.event("ŞİŞELENDİ", "%s bottled" % _target_id)
                         continue
                     elif cmd == "unbottle":
                         _target_id = str(data.get("fly_id") or label)
                         is_bottled = False
-                        print("[GerçekBeyin] 🐝 '%s' şişeden salındı! MaleCNS beyni uyandı." % _target_id)
-                        log.event("SALINDI", "%s şişeden salındı" % _target_id)
+                        print("[RealBrain] 🐝 '%s' unbottled! MaleCNS brain awakened." % _target_id
+                              if current_lang != "tr" else "[GerçekBeyin] 🐝 '%s' şişeden salındı! MaleCNS beyni uyandı." % _target_id)
+                        log.event("SALINDI", "%s unbottled" % _target_id)
                         continue
 
                     if is_bottled:
@@ -825,7 +1010,8 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                         _target_id = str(data.get("fly_id") or label)
                         _target_mem = os.path.join(mem_dir, "memory_%s.npz" % _target_id)
                         brain.reset_memory(_target_mem)
-                        print("[GerçekBeyin] 🔄 '%s' sineğinin hafızası sıfırlandı (taban konektoma döndü)." % _target_id)
+                        print("[RealBrain] 🔄 '%s' brain memory reset (reverted to baseline connectome)." % _target_id
+                              if current_lang != "tr" else "[GerçekBeyin] 🔄 '%s' sineğinin hafızası sıfırlandı (taban konektoma döndü)." % _target_id)
                         log.event("SIFIRLANDI", "hafıza sıfırlandı: %s" % _target_id)
                         if "distances" not in data:
                             await ws.send(json.dumps({"status": "ok", "action": "memory_reset"}))
@@ -1109,7 +1295,8 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                             "ocellus_l": ocellus_l,
                             "ocellus_r": ocellus_r,
                             "water_ahead": water_ahead, "water_below": water_below,
-                            "water_dist": water_dist, "humidity": humidity})
+                            "water_dist": water_dist, "humidity": humidity},
+                           lang=current_lang)
 
                     # Kanat vuruşu sesi
                     wing.update(motor["rates"], jump=motor["jump"],
@@ -1312,59 +1499,102 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                         ppl = brain.rate(brain.ppl1_idx)
                         mbo = brain.rate(brain.mbon_idx)
                         gl2, gr2 = getattr(brain, "ocelli_lr", (0.0, 0.0))
-                        yn = lambda x: "EVET" if x else "hayır"
-                        cmd = ("GERİ" if motor["back"] else
-                               ("İLERİ" if cmd_forward else "DUR"))
-                        if motor["jump"]:
-                            cmd += "+ZIPLA"
-                        if motor["sprint"]:
-                            cmd += " +KOŞU"
+                        is_tr = (current_lang == "tr")
+                        yn = (lambda x: "EVET" if x else "hayır") if is_tr else (lambda x: "YES" if x else "no")
+                        if is_tr:
+                            cmd = ("GERİ" if motor["back"] else
+                                   ("İLERİ" if cmd_forward else "DUR"))
+                            if motor["jump"]:
+                                cmd += "+ZIPLA"
+                            if motor["sprint"]:
+                                cmd += " +KOŞU"
+                        else:
+                            cmd = ("BACK" if motor["back"] else
+                                   ("FWD" if cmd_forward else "STOP"))
+                            if motor["jump"]:
+                                cmd += "+JUMP"
+                            if motor["sprint"]:
+                                cmd += " +SPRINT"
+
                         print("\n" + "─" * 78)
-                        print("🪰 %-16s t=%6.1fs  %4.1f FPS  beyin %2.0f ms  ışın %s"
-                              % (label, now, fps_now(), brain_ms,
-                                 ("%.0f ms" % cast_ms_v) if cast_ms_v else "-"))
-                        print("GÖRME   R1-R6 %5.1f  L1 %5.1f  L2 %5.1f  Mi1 %5.1f  "
-                              "Mi9 %5.1f  Tm3 %5.1f  Tm9 %5.1f"
-                              % (brain.rate_of_type("R1-R6"), brain.rate_of_type("L1"),
-                                 brain.rate_of_type("L2"), brain.rate_of_type("Mi1"),
-                                 brain.rate_of_type("Mi9"), brain.rate_of_type("Tm3"),
-                                 brain.rate_of_type("Tm9")))
-                        print("        T4a %5.1f  T5a %5.1f  LC4 %5.1f  LPLC2 %5.1f  "
-                              "APL %5.1f     (Hz)"
-                              % (brain.rate_of_type("T4a"), brain.rate_of_type("T5a"),
-                                 brain.rate_of_type("LC4"), brain.rate_of_type("LPLC2"),
-                                 brain.rate_of_type("APL")))
-                        print("OCELLI  ışık sol %.2f sağ %.2f   OCG01 sol %5.1f sağ %5.1f Hz"
-                              % (gl2, gr2, brain.rate(brain.ocg_L), brain.rate(brain.ocg_R)))
-                        _ph = getattr(brain, "odor_phasic", (0.0, 0.0))
-                        _phs = sum(_ph)
-                        print("KOKU    anten sol %.2f sağ %.2f  (%s %.1f m)   "
-                              "ORN %4.1f  PN %4.1f  LH %4.1f Hz"
-                              % (odor_l, odor_r,
-                                 data.get("dropped_food_name") or "yok", dropped,
-                                 brain.rate(np.concatenate([brain.orn_L, brain.orn_R]))
-                                 if len(brain.orn_L) + len(brain.orn_R) else 0.0,
-                                 brain.rate(brain.pn_idx), brain.rate(brain.lh_idx)))
-                        # Sineğin kokuyu bulmak için kullandığı asıl sinyal YÖN değil
-                        # ZAMAN: reseptör uyum sağlar, çıktısı konsantrasyonun
-                        # değişimini izler. + = koku artıyor (yaklaşıyor),
-                        # - = koku azalıyor (uzaklaşıyor).
-                        print("        fazik sol %+.2f sağ %+.2f  ->  %s"
-                              % (_ph[0], _ph[1],
-                                 "YAKLAŞIYOR" if _phs > 0.08 else
-                                 "UZAKLAŞIYOR" if _phs < -0.08 else "sabit/koku yok"))
-                        # Kokuya yanıt veren inen nöronlar -> uyarılmışlık.
-                        # Sinek kokunun YÖNÜNÜ bilmez; bulduğu yol, koku varken
-                        # hızlanıp düzleşmek, kaybedince yavaşlayıp dönmektir.
-                        _aro = motor.get("arousal", 0.0)
-                        print("        Kenyon %5.2f Hz -> koku %.2f | değişim "
-                              "%+.3f | arama %.2f  ->  uyarılmışlık %+.2f  %s"
-                              % (motor.get("kc_rate", 0.0),
-                                 motor.get("odor_now", 0.0),
-                                 motor.get("odor_d", 0.0),
-                                 motor.get("odor_lost", 0.0), _aro,
-                                 "HIZLAN+DÜZLEŞ" if _aro > 0.12 else
-                                 "YAVAŞLA+TARA" if _aro < -0.12 else "normal"))
+                        if is_tr:
+                            print("🪰 %-16s t=%6.1fs  %4.1f FPS  beyin %2.0f ms  ışın %s"
+                                  % (label, now, fps_now(), brain_ms,
+                                     ("%.0f ms" % cast_ms_v) if cast_ms_v else "-"))
+                            print("GÖRME   R1-R6 %5.1f  L1 %5.1f  L2 %5.1f  Mi1 %5.1f  "
+                                  "Mi9 %5.1f  Tm3 %5.1f  Tm9 %5.1f"
+                                  % (brain.rate_of_type("R1-R6"), brain.rate_of_type("L1"),
+                                     brain.rate_of_type("L2"), brain.rate_of_type("Mi1"),
+                                     brain.rate_of_type("Mi9"), brain.rate_of_type("Tm3"),
+                                     brain.rate_of_type("Tm9")))
+                            print("        T4a %5.1f  T5a %5.1f  LC4 %5.1f  LPLC2 %5.1f  "
+                                  "APL %5.1f     (Hz)"
+                                  % (brain.rate_of_type("T4a"), brain.rate_of_type("T5a"),
+                                     brain.rate_of_type("LC4"), brain.rate_of_type("LPLC2"),
+                                     brain.rate_of_type("APL")))
+                            print("OCELLI  ışık sol %.2f sağ %.2f   OCG01 sol %5.1f sağ %5.1f Hz"
+                                  % (gl2, gr2, brain.rate(brain.ocg_L), brain.rate(brain.ocg_R)))
+                            _ph = getattr(brain, "odor_phasic", (0.0, 0.0))
+                            _phs = sum(_ph)
+                            print("KOKU    anten sol %.2f sağ %.2f  (%s %.1f m)   "
+                                  "ORN %4.1f  PN %4.1f  LH %4.1f Hz"
+                                  % (odor_l, odor_r,
+                                     data.get("dropped_food_name") or "yok", dropped,
+                                     brain.rate(np.concatenate([brain.orn_L, brain.orn_R]))
+                                     if len(brain.orn_L) + len(brain.orn_R) else 0.0,
+                                     brain.rate(brain.pn_idx), brain.rate(brain.lh_idx)))
+                            print("        fazik sol %+.2f sağ %+.2f  ->  %s"
+                                  % (_ph[0], _ph[1],
+                                     "YAKLAŞIYOR" if _phs > 0.08 else
+                                     "UZAKLAŞIYOR" if _phs < -0.08 else "sabit/koku yok"))
+                            _aro = motor.get("arousal", 0.0)
+                            print("        Kenyon %5.2f Hz -> koku %.2f | değişim "
+                                  "%+.3f | arama %.2f  ->  uyarılmışlık %+.2f  %s"
+                                  % (motor.get("kc_rate", 0.0),
+                                     motor.get("odor_now", 0.0),
+                                     motor.get("odor_d", 0.0),
+                                     motor.get("odor_lost", 0.0), _aro,
+                                     "HIZLAN+DÜZLEŞ" if _aro > 0.12 else
+                                     "YAVAŞLA+TARA" if _aro < -0.12 else "normal"))
+                        else:
+                            print("🪰 %-16s t=%6.1fs  %4.1f FPS  brain %2.0f ms  ray %s"
+                                  % (label, now, fps_now(), brain_ms,
+                                     ("%.0f ms" % cast_ms_v) if cast_ms_v else "-"))
+                            print("VISION  R1-R6 %5.1f  L1 %5.1f  L2 %5.1f  Mi1 %5.1f  "
+                                  "Mi9 %5.1f  Tm3 %5.1f  Tm9 %5.1f"
+                                  % (brain.rate_of_type("R1-R6"), brain.rate_of_type("L1"),
+                                     brain.rate_of_type("L2"), brain.rate_of_type("Mi1"),
+                                     brain.rate_of_type("Mi9"), brain.rate_of_type("Tm3"),
+                                     brain.rate_of_type("Tm9")))
+                            print("        T4a %5.1f  T5a %5.1f  LC4 %5.1f  LPLC2 %5.1f  "
+                                  "APL %5.1f     (Hz)"
+                                  % (brain.rate_of_type("T4a"), brain.rate_of_type("T5a"),
+                                     brain.rate_of_type("LC4"), brain.rate_of_type("LPLC2"),
+                                     brain.rate_of_type("APL")))
+                            print("OCELLI  light L %.2f R %.2f   OCG01 L %5.1f R %5.1f Hz"
+                                  % (gl2, gr2, brain.rate(brain.ocg_L), brain.rate(brain.ocg_R)))
+                            _ph = getattr(brain, "odor_phasic", (0.0, 0.0))
+                            _phs = sum(_ph)
+                            print("ODOR    antenna L %.2f R %.2f  (%s %.1f m)   "
+                                  "ORN %4.1f  PN %4.1f  LH %4.1f Hz"
+                                  % (odor_l, odor_r,
+                                     data.get("dropped_food_name") or "none", dropped,
+                                     brain.rate(np.concatenate([brain.orn_L, brain.orn_R]))
+                                     if len(brain.orn_L) + len(brain.orn_R) else 0.0,
+                                     brain.rate(brain.pn_idx), brain.rate(brain.lh_idx)))
+                            print("        phasic L %+.2f R %+.2f  ->  %s"
+                                  % (_ph[0], _ph[1],
+                                     "APPROACHING" if _phs > 0.08 else
+                                     "LEAVING" if _phs < -0.08 else "steady/no odor"))
+                            _aro = motor.get("arousal", 0.0)
+                            print("        Kenyon %5.2f Hz -> odor %.2f | change "
+                                  "%+.3f | search %.2f  ->  arousal %+.2f  %s"
+                                  % (motor.get("kc_rate", 0.0),
+                                     motor.get("odor_now", 0.0),
+                                     motor.get("odor_d", 0.0),
+                                     motor.get("odor_lost", 0.0), _aro,
+                                     "SPEEDUP+SURGE" if _aro > 0.12 else
+                                     "SLOWDOWN+CAST" if _aro < -0.12 else "normal"))
                         # ENVANTER DOLUYSA yerdeki yemek ALINAMAZ. Sinek
                         # elmanın tam üstünden geçse bile hiçbir şey olmaz;
                         # bu beynin değil, oyunun kuralı.
@@ -1374,81 +1604,158 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                         # KC sessizse yazılacak bir ipucu yoktur. Bunu
                         # yazdırıyoruz ki kullanıcı ne zaman ödül vereceğini
                         # bilsin: koku/sahne varken ver.
-                        if _cr > 0.02 or _cp > 0.02:
-                            _kcv = brain.rate(brain.kc_idx)
-                            print("SOHBET  %s (%.2f)  KC %.2f Hz -> %s   RPE %+.3f"
-                                  % ("ÖDÜL/PAM" if _cr > _cp else "CEZA/PPL1",
-                                     max(_cr, _cp), _kcv,
-                                     "ipucu var, ÖĞRENİYOR" if _kcv > 1.2
-                                     else "KC sessiz — yazacak ipucu yok",
+                        if is_tr:
+                            if _cr > 0.02 or _cp > 0.02:
+                                _kcv = brain.rate(brain.kc_idx)
+                                print("SOHBET  %s (%.2f)  KC %.2f Hz -> %s   RPE %+.3f"
+                                      % ("ÖDÜL/PAM" if _cr > _cp else "CEZA/PPL1",
+                                         max(_cr, _cp), _kcv,
+                                         "ipucu var, ÖĞRENİYOR" if _kcv > 1.2
+                                         else "KC sessiz — yazacak ipucu yok",
+                                         motor.get("rpe", 0.0)))
+                            _inv = int(data.get("inv_empty", -1))
+                            if _inv == 0:
+                                print("        >> ENVANTER DOLU (boş slot 0) — sinek "
+                                      "yemeği ALAMAZ, üstünden geçse bile. "
+                                      "Envanteri boşalt!")
+                            elif _inv > 0 and dropped < 3.0:
+                                print("        yerdeki yemek %.1f m — alması için "
+                                      "~1 m'ye girmeli (boş slot %d)" % (dropped, _inv))
+                            if heat > 0.02:
+                                print("SICAKLIK %.2f -> termo PN %.1f Hz"
+                                      % (heat, motor.get("thermo_rate", 0.0)))
+                            print("MOB     tehdit %s  looming %.2f  ->  DNp04 %5.1f  "
+                                  "DNp11 %4.1f  DNp01 %4.1f Hz"
+                                  % (("%.1f m" % td) if td < 90 else "yok", loom,
+                                     motor["rates"].get("loom", 0.0),
+                                     motor["rates"].get("loom2", 0.0),
+                                     motor["rates"].get("escape", 0.0)))
+                            print("İŞİTME  \"%s\"  şiddet %.2f  yön %+.2f  ->  Johnston "
+                                  "organı %4.1f Hz  (rüzgâr %.2f)"
+                                  % (str(data.get("sound_name") or "sessiz")[:28],
+                                     sound, sound_bearing,
+                                     brain.rate(brain.jo_idx), wind))
+                            print("BAĞLAM  görsel yol: LoVP %4.1f Hz -> KCg-d %4.1f Hz "
+                                  "(yer hafızası buradan geçer)"
+                                  % (brain.rate(getattr(brain, "lovp_idx", [])),
+                                     brain.rate(getattr(brain, "kcd_idx", []))))
+                            print("ÖĞRENME KC %4.1f Hz sessiz %%%2.0f | MBON %4.1f | "
+                                  "PAM %4.1f | PPL1 %4.1f | hata sinyali %+.3f"
+                                  % (brain.rate(brain.kc_idx),
+                                     100 * float((kcq == 0).mean()), mbo, pam, ppl,
                                      motor.get("rpe", 0.0)))
-                        _inv = int(data.get("inv_empty", -1))
-                        if _inv == 0:
-                            print("        >> ENVANTER DOLU (boş slot 0) — sinek "
-                                  "yemeği ALAMAZ, üstünden geçse bile. "
-                                  "Envanteri boşalt!")
-                        elif _inv > 0 and dropped < 3.0:
-                            print("        yerdeki yemek %.1f m — alması için "
-                                  "~1 m'ye girmeli (boş slot %d)" % (dropped, _inv))
-                        if heat > 0.02:
-                            print("SICAKLIK %.2f -> termo PN %.1f Hz"
-                                  % (heat, motor.get("thermo_rate", 0.0)))
-                        print("MOB     tehdit %s  looming %.2f  ->  DNp04 %5.1f  "
-                              "DNp11 %4.1f  DNp01 %4.1f Hz"
-                              % (("%.1f m" % td) if td < 90 else "yok", loom,
-                                 motor["rates"].get("loom", 0.0),
-                                 motor["rates"].get("loom2", 0.0),
-                                 motor["rates"].get("escape", 0.0)))
-                        print("İŞİTME  \"%s\"  şiddet %.2f  yön %+.2f  ->  Johnston "
-                              "organı %4.1f Hz  (rüzgâr %.2f)"
-                              % (str(data.get("sound_name") or "sessiz")[:28],
-                                 sound, sound_bearing,
-                                 brain.rate(brain.jo_idx), wind))
-                        print("BAĞLAM  görsel yol: LoVP %4.1f Hz -> KCg-d %4.1f Hz "
-                              "(yer hafızası buradan geçer)"
-                              % (brain.rate(getattr(brain, "lovp_idx", [])),
-                                 brain.rate(getattr(brain, "kcd_idx", []))))
-                        print("ÖĞRENME KC %4.1f Hz sessiz %%%2.0f | MBON %4.1f | "
-                              "PAM %4.1f | PPL1 %4.1f | hata sinyali %+.3f"
-                              % (brain.rate(brain.kc_idx),
-                                 100 * float((kcq == 0).mean()), mbo, pam, ppl,
-                                 motor.get("rpe", 0.0)))
-                        _lbl, _sev = brain.state_label(motor, _hunger)
-                        _bars = brain.state_bars(motor, _hunger)
-                        print("► DURUM  %s   [şiddet %%%.0f]" % (_lbl, 100 * _sev))
-                        print("         " + "  ".join(
-                            "%s %s %%%.0f" % (k, "█" * int(v * 8) + "·" * (8 - int(v * 8)),
-                                              100 * v) for k, v in _bars.items()))
-                        print("        iştah %+.2f  kaçınma %+.2f  kaçış %.2f  |  "
-                              "can %.0f/20  açlık %.0f/20  besin %d"
-                              % (motor.get("pam_dev_s", 0.0), motor.get("ppl_dev_s", 0.0),
-                                 min(1.0, r["escape"] / 20.0),
-                                 health, food, food_items))
-                        print("MOTOR   DNp20 sol %5.1f sağ %5.1f | DNpe017 %5.1f | "
-                              "MDN %5.1f | DNp09 %5.1f | DNp01 %5.1f"
-                              % (motor["DNp20_L"], motor["DNp20_R"], r["forward"],
-                                 r["backward"], r["fast"], r["escape"]))
-                        print("        tork %+.3f  itiş %+.2f   ->  %s" % (
-                              motor["steering_torque"], motor["forward_thrust"], cmd))
-                        print("ÇEVRE   duvar:%s tehlike:%s su:%s suda:%s "
-                              "basamak:%s takılma:%d"
-                              % (yn(data.get("wall_ahead")),
-                                 yn(data.get("hazard_ahead")), yn(data.get("water_ahead")),
-                                 yn(data.get("in_water")), yn(data.get("step_up_ahead")),
-                                 stuck))
-                        print("        mekano %.2f (ham %.2f) engel %.2f (ham %.2f) "
-                              "yük %.2f  acı %.0f"
-                              % (mech, mech_raw, obst, obst_raw, load, pain))
-                        print("        kaçış yönü %s  (kilit %s)"
-                              % (("%+.2f" % hazard_bearing)
-                                 if hazard_bearing is not None else "yok",
-                                 {0: "serbest", 1: "SOL", -1: "SAĞ"}[esc_dir]))
-                        print("        konum %.0f/%.0f/%.0f  yön %.0f°  ağ %.2f Hz  "
-                              "| atlanan eski kare: %d (bu karede %d)"
-                              % (float(data.get("pos_x", 0)), float(data.get("pos_y", 0)),
-                                 float(data.get("pos_z", 0)),
-                                 math.degrees(heading) % 360, brain.mean_rate,
-                                 stale_total, stale_now))
+                            _lbl, _sev = brain.state_label(motor, _hunger, lang="tr")
+                            _bars = brain.state_bars(motor, _hunger, lang="tr")
+                            print("► DURUM  %s   [şiddet %%%.0f]" % (_lbl, 100 * _sev))
+                            print("         " + "  ".join(
+                                "%s %s %%%.0f" % (k, "█" * int(v * 8) + "·" * (8 - int(v * 8)),
+                                                  100 * v) for k, v in _bars.items()))
+                            print("        iştah %+.2f  kaçınma %+.2f  kaçış %.2f  |  "
+                                  "can %.0f/20  açlık %.0f/20  besin %d"
+                                  % (motor.get("pam_dev_s", 0.0), motor.get("ppl_dev_s", 0.0),
+                                     min(1.0, r["escape"] / 20.0),
+                                     health, food, food_items))
+                            print("MOTOR   DNp20 sol %5.1f sağ %5.1f | DNpe017 %5.1f | "
+                                  "MDN %5.1f | DNp09 %5.1f | DNp01 %5.1f"
+                                  % (motor["DNp20_L"], motor["DNp20_R"], r["forward"],
+                                     r["backward"], r["fast"], r["escape"]))
+                            print("        tork %+.3f  itiş %+.2f   ->  %s" % (
+                                  motor["steering_torque"], motor["forward_thrust"], cmd))
+                            print("ÇEVRE   duvar:%s tehlike:%s su:%s suda:%s "
+                                  "basamak:%s takılma:%d"
+                                  % (yn(data.get("wall_ahead")),
+                                     yn(data.get("hazard_ahead")), yn(data.get("water_ahead")),
+                                     yn(data.get("in_water")), yn(data.get("step_up_ahead")),
+                                     stuck))
+                            print("        mekano %.2f (ham %.2f) engel %.2f (ham %.2f) "
+                                  "yük %.2f  acı %.0f"
+                                  % (mech, mech_raw, obst, obst_raw, load, pain))
+                            print("        kaçış yönü %s  (kilit %s)"
+                                  % (("%+.2f" % hazard_bearing)
+                                     if hazard_bearing is not None else "yok",
+                                     {0: "serbest", 1: "SOL", -1: "SAĞ"}[esc_dir]))
+                            print("        konum %.0f/%.0f/%.0f  yön %.0f°  ağ %.2f Hz  "
+                                  "| atlanan eski kare: %d (bu karede %d)"
+                                  % (float(data.get("pos_x", 0)), float(data.get("pos_y", 0)),
+                                     float(data.get("pos_z", 0)),
+                                     math.degrees(heading) % 360, brain.mean_rate,
+                                     stale_total, stale_now))
+                        else:
+                            if _cr > 0.02 or _cp > 0.02:
+                                _kcv = brain.rate(brain.kc_idx)
+                                print("CHAT    %s (%.2f)  KC %.2f Hz -> %s   RPE %+.3f"
+                                      % ("REWARD/PAM" if _cr > _cp else "PUNISH/PPL1",
+                                         max(_cr, _cp), _kcv,
+                                         "cue present, LEARNING" if _kcv > 1.2
+                                         else "KC silent — no cue to write",
+                                         motor.get("rpe", 0.0)))
+                            _inv = int(data.get("inv_empty", -1))
+                            if _inv == 0:
+                                print("        >> INVENTORY FULL (0 empty slots) — fly "
+                                      "CANNOT pick up food even when walking over it. "
+                                      "Empty inventory!")
+                            elif _inv > 0 and dropped < 3.0:
+                                print("        dropped food %.1f m — needs to be "
+                                      "<1 m to pick up (empty slots %d)" % (dropped, _inv))
+                            if heat > 0.02:
+                                print("THERMO   %.2f -> thermo PN %.1f Hz"
+                                      % (heat, motor.get("thermo_rate", 0.0)))
+                            print("MOB     threat %s  looming %.2f  ->  DNp04 %5.1f  "
+                                  "DNp11 %4.1f  DNp01 %4.1f Hz"
+                                  % (("%.1f m" % td) if td < 90 else "none", loom,
+                                     motor["rates"].get("loom", 0.0),
+                                     motor["rates"].get("loom2", 0.0),
+                                     motor["rates"].get("escape", 0.0)))
+                            print("HEARING \"%s\"  volume %.2f  bearing %+.2f  ->  Johnston's "
+                                  "organ %4.1f Hz  (wind %.2f)"
+                                  % (str(data.get("sound_name") or "silent")[:28],
+                                     sound, sound_bearing,
+                                     brain.rate(brain.jo_idx), wind))
+                            print("CONTEXT visual path: LoVP %4.1f Hz -> KCg-d %4.1f Hz "
+                                  "(place memory passes here)"
+                                  % (brain.rate(getattr(brain, "lovp_idx", [])),
+                                     brain.rate(getattr(brain, "kcd_idx", []))))
+                            print("LEARN   KC %4.1f Hz silent %2.0f%% | MBON %4.1f | "
+                                  "PAM %4.1f | PPL1 %4.1f | error signal %+.3f"
+                                  % (brain.rate(brain.kc_idx),
+                                     100 * float((kcq == 0).mean()), mbo, pam, ppl,
+                                     motor.get("rpe", 0.0)))
+                            _lbl, _sev = brain.state_label(motor, _hunger, lang="en")
+                            _bars = brain.state_bars(motor, _hunger, lang="en")
+                            print("► STATE  %s   [intensity %%%.0f]" % (_lbl, 100 * _sev))
+                            print("         " + "  ".join(
+                                "%s %s %%%.0f" % (k, "█" * int(v * 8) + "·" * (8 - int(v * 8)),
+                                                  100 * v) for k, v in _bars.items()))
+                            print("        appetite %+.2f  aversion %+.2f  escape %.2f  |  "
+                                  "health %.0f/20  hunger %.0f/20  food %d"
+                                  % (motor.get("pam_dev_s", 0.0), motor.get("ppl_dev_s", 0.0),
+                                     min(1.0, r["escape"] / 20.0),
+                                     health, food, food_items))
+                            print("MOTOR   DNp20 L %5.1f R %5.1f | DNpe017 %5.1f | "
+                                  "MDN %5.1f | DNp09 %5.1f | DNp01 %5.1f"
+                                  % (motor["DNp20_L"], motor["DNp20_R"], r["forward"],
+                                     r["backward"], r["fast"], r["escape"]))
+                            print("        torque %+.3f  thrust %+.2f   ->  %s" % (
+                                  motor["steering_torque"], motor["forward_thrust"], cmd))
+                            print("ENV     wall:%s hazard:%s water:%s in_water:%s "
+                                  "step:%s stuck:%d"
+                                  % (yn(data.get("wall_ahead")),
+                                     yn(data.get("hazard_ahead")), yn(data.get("water_ahead")),
+                                     yn(data.get("in_water")), yn(data.get("step_up_ahead")),
+                                     stuck))
+                            print("        mechano %.2f (raw %.2f) obst %.2f (raw %.2f) "
+                                  "load %.2f  pain %.0f"
+                                  % (mech, mech_raw, obst, obst_raw, load, pain))
+                            print("        escape dir %s  (lock %s)"
+                                  % (("%+.2f" % hazard_bearing)
+                                     if hazard_bearing is not None else "none",
+                                     {0: "free", 1: "LEFT", -1: "RIGHT"}[esc_dir]))
+                            print("        pos %.0f/%.0f/%.0f  heading %.0f°  net %.2f Hz  "
+                                  "| dropped stale frames: %d (this frame %d)"
+                                  % (float(data.get("pos_x", 0)), float(data.get("pos_y", 0)),
+                                     float(data.get("pos_z", 0)),
+                                     math.degrees(heading) % 360, brain.mean_rate,
+                                     stale_total, stale_now))
                         print("─" * 78)
 
         except Exception as _e:

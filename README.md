@@ -1,4 +1,283 @@
-# 🪰 Drosophila — Gerçek Meyve Sineği Beyni Minecraft'ta
+# 🪰 Drosophila — Real Fruit Fly Brain in Minecraft
+
+[![Minecraft](https://img.shields.io/badge/Minecraft-Paper%20%7C%20Bukkit%20%7C%20Spigot%20%7C%20Purpur%20(1.20--1.21.x)-brightgreen)](https://papermc.io)
+[![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.oracle.com/java/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![Connectome](https://img.shields.io/badge/Connectome-MaleCNS%20v1.0%20(13k%2B%20neurons)-blueviolet)](https://codex.flywire.ai/)
+[![Discord](https://img.shields.io/badge/Discord-Join%20Our%20Community-5865F2?logo=discord&logoColor=white)](https://discord.gg/TQHAm67DmX)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+An advanced neurobiological simulation that integrates the **real MaleCNS v1.0 biological fruit fly (*Drosophila melanogaster*) connectome**—electron-microscopy mapped neuron-by-neuron by the **Janelia Research Campus**, **University of Cambridge**, **MRC LMB**, and **Google Research** consortium, containing **13,000+ neurons** and **5,000,000+ synapses**—directly into Minecraft.
+
+The simulation runs a Leaky Integrate-and-Fire (LIF) biophysical neural model. It commands a physical body (Bee) within Minecraft; seeing through 1,536-ommatidia compound eyes, smelling airborne odor molecules, hearing acoustic shocks and wind via Johnston's organ, and experiencing pain, taste, and hunger.
+
+---
+
+## 🌟 Vision and Philosophy
+
+When examining existing connectome experiments and alternative projects, two common approaches emerge:
+
+1. **Extreme Pruning and Dynamic Loss:** Some projects prune the ~1 GB biological dataset down to 20–22 MB. We believe a drastically amputated network can never exhibit genuine fruit fly neurodynamics or organic decision-making. Our goal is **to preserve the full biological connectome weights without structural compromise.**
+2. **Artificial Task Forcing (Crypto Trading / Flying Airplanes):** Many try to force connectome models to fly airplanes or trade cryptocurrency using external reinforcement learning (RL). That is not biological intelligence—it is standard machine learning. Any generic artificial neural network can be trained on crypto. Forcing a fruit fly through artificial rewards and dopamine overrides destroys its biological authenticity.
+
+> ### 🎯 Core Principle
+> Our purpose is not to train the fly on artificial tasks. We provide authentic biological sensory inputs (1,536 compound eye raytracing, olfactory gradient diffusion, air currents, Johnston's organ acoustic shocks, nociception, and hunger) and **observe how an authentic 13,000-neuron connectome survives, navigates, and reacts organically in a Minecraft ecosystem without artificial interference.**
+
+---
+
+## 🏗️ Distributed Architecture
+
+The project decouples the physical body from the biological brain through a high-performance distributed architecture:
+
+```
+[ Minecraft Server (Java) ]                      [ Biological Neural Engine (Python) ]
+  Paper / Bukkit / Spigot / Purpur                 MaleCNS v1.0 LIF Simulation
+  ├── 1,536 Ommatidia Compound Eye                 ├── 13,000+ Biological Neurons
+  ├── Olfactory Diffusion (Fruits, Leaves)         ├── 5,000,000+ Synaptic Connections
+  ├── Johnston's Organ (Sound & Wind)   ◀======▶   ├── Pygame Real-Time Telemetry Dashboard
+  └── 3D Aerodynamics & Flight Motor   WebSocket   └── Smart Sleep / Power Management
+      (Listens on 0.0.0.0:8765)                        (Connects as zero-config client)
+```
+
+* **Server Platform Support:** **Paper, Bukkit, Spigot, Purpur (1.20 - 1.21.x+)** are fully supported as plugins. No client-side mods (*Forge/Fabric*) required.
+* **Decoupled Execution:** The neural engine can run locally on your machine or on an external server, connecting over WebSocket to your Minecraft server anywhere in the world.
+
+---
+
+## 💻 System Requirements
+
+| Component | Requirement | Details |
+|---|---|---|
+| **Python** | 3.10 or newer | For the connectome LIF engine and telemetry bridge |
+| **Java JDK** | 17 or newer | For the Minecraft server plugin |
+| **Minecraft Server** | Paper / Bukkit / Spigot / Purpur 1.20 - 1.21.x+ | Server where FruitFly plugin runs |
+| **RAM** | ~2 GB | Sufficient for the Python connectome simulation |
+| **GPU** | **NOT REQUIRED!** | Simulation is heavily CPU-vectorized (NumPy/SciPy) |
+| **Disk Space** | ~1.5 GB | For raw connectome data (~1.1 GB) and compiled behavior cache |
+
+---
+
+## 🚀 Installation & Quick Start
+
+### 1. Download Release Files
+From the [GitHub Releases](../../releases) page:
+* For Minecraft server: **`FruitFly.jar`**
+* For Python brain simulation: **`drosophila-brain-vX.X.X.zip`** (Windows) or **`drosophila-brain-vX.X.X.tar.gz`** (Linux/macOS)
+
+---
+
+### 2. Minecraft Server Setup (Body)
+1. Place `FruitFly.jar` into your Minecraft server's `plugins/` directory.
+2. Start the server or run `/fruitfly reload`.
+3. The plugin automatically starts a WebSocket listener on `0.0.0.0:8765`. Zero complex network configuration required on the server side!
+
+---
+
+### 3. Python Brain Setup (Brain)
+
+#### 🪟 Windows:
+```cmd
+# Step 1: Run the automated wizard (creates venv, installs requirements, sets IP & token):
+setup.bat
+
+# Step 2: Launch:
+start.bat
+```
+
+#### 🐧 Linux / macOS:
+```bash
+# Extract archive and navigate into directory:
+tar -xzf drosophila-brain-*.tar.gz
+cd drosophila-brain-*
+
+# Grant permissions and run setup:
+chmod +x setup.sh start.sh
+./setup.sh
+
+# Launch:
+./start.sh
+```
+
+---
+
+### ⚙️ Runner Options & Parameters
+
+`setup.bat` (and `setup.sh`) prompts for your Minecraft server address (`localhost` or remote IP) and auth token on first run, saving them to `config.json` and `.env`.
+
+You can also launch with custom arguments:
+
+```cmd
+# 1. Start with saved configuration (config.json / .env):
+start.bat
+
+# 2. Headless Terminal Mode (no Pygame GUI, minimal CPU usage for servers):
+start.bat --no-gui
+
+# 3. Specify custom IP or IP:Port (uses saved password):
+start.bat 1.2.3.4
+start.bat 1.2.3.4:8765
+
+# 4. Specify custom IP:Port and password explicitly:
+start.bat 1.2.3.4:8765 "mypassword"
+start.bat 1.2.3.4:8765 "mypassword" --no-gui
+```
+
+*(Linux/macOS users can pass the same arguments to `./start.sh`).*
+
+---
+
+### 📄 Configuration Files & Environment Variables (`.env`)
+
+You can configure connection parameters via `.env`:
+
+```env
+# ================================================================
+# Drosophila Simulation - Environment Variables (.env)
+# ================================================================
+
+# Target Minecraft server address (default: localhost)
+# Supports IP or IP:Port (e.g. 1.2.3.4:8765)
+MINECRAFT_HOST=1.2.3.4
+
+# Target WebSocket port (default: 8765)
+MINECRAFT_PORT=8765
+
+# Security Password / Auth Token (Must match brain.auth-token in plugins/FruitFly/config.yml)
+MINECRAFT_PASSWORD=drosophila_secret_token_123
+FLY_AUTH_TOKEN=drosophila_secret_token_123
+```
+
+Or via `config.json`:
+```json
+{
+  "minecraft_host": "1.2.3.4",
+  "minecraft_port": 8765,
+  "auth_token": "drosophila_secret_token_123"
+}
+```
+
+---
+
+### 🔄 What Happens on First Launch?
+When `run_real.py` (or `start.bat`) runs for the first time:
+1. `connectome/weights.feather` (~1 GB) is automatically fetched from [codex.flywire.ai](https://codex.flywire.ai) if missing.
+2. The behavioral sub-graph (`malecns_behavior.*`) compiles and caches locally.
+3. Spontaneous firing rates and motor tonic levels calibrate (~1-2 minutes).
+4. **Dashboard:** Pygame opens a real-time HUD displaying the 1,536-pixel compound eye view, olfactory vectors, dopamine/state indicators, and descending motor neurons. (Use `--no-gui` to run headless).
+
+---
+
+## 🔧 Server Plugin Configuration (`config.yml`)
+
+The plugin creates `plugins/FruitFly/config.yml` on first launch:
+
+```yaml
+# Language selection ("en" for English, "tr" for Turkish, or custom in languages/)
+language: "en"
+
+# Python Brain WebSocket Server (listens on 0.0.0.0)
+brain:
+  port: 8765                  # WebSocket listening port
+  auth-token: "drosophila_secret_token_123"  # Shared security password / token
+  smart-sleep:
+    enabled: true             # Skips heavy sensory raytracing when no players are nearby (0% CPU)
+    player-distance: 48.0     # Player proximity threshold in blocks
+
+# Entity Settings
+bee:
+  auto-spawn: true            # Spawns automatically on server start and on death
+  display-name: ""            # Custom display name (leave empty for language default)
+  invulnerable: false         # God mode toggle
+  speed-multiplier: 1.0       # Flight speed multiplier
+  odor-range: 16.0            # Olfactory perception radius in blocks
+
+# Vision System
+vision:
+  max-ray-range: 16.0         # 1,536-ray compound eye raytracing range in blocks
+```
+
+---
+
+## 🎮 In-Game Commands
+
+All commands require **OP permission** (`drosophila.admin`).  
+Command Alias: `/fruitfly` or `/fluitfly`
+
+| Command | Description |
+|---|---|
+| `/fruitfly help` | Displays list of all available commands |
+| `/fruitfly tp` | Teleports you directly to the fruit fly |
+| `/fruitfly come` | Summons the fruit fly to your position |
+| `/fruitfly feed` | Drops an apple in front of the fruit fly |
+| `/fruitfly feed full` | Instantly satiates the fly (Satiety level → 20) |
+| `/fruitfly hungry` | Instantly starves the fly (Triggers dNPF hunger hormone) |
+| `/fruitfly food [amount]` | Views or adjusts the fly's satiety level (3–20) |
+| `/fruitfly spawnpoint` | Sets your current location as the fly's permanent home |
+| `/fruitfly home` | Sends the fly back to its home spawnpoint |
+| `/fruitfly status` | Shows real-time telemetry (health, satiety, odor, dopamine mood, heading) |
+| `/fruitfly clear` | Resets Mushroom Body memory cache back to baseline connectome |
+| `/fruitfly reload` | Hot-reloads `config.yml`, language files, and auth tokens without restart |
+
+---
+
+## 📁 Repository Structure
+
+```
+Drosophila/
+├── connectome/                     # Raw connectome weights (~1.1 GB, omitted from git)
+│   ├── weights.feather             # Synaptic connection weights (1 GB)
+│   ├── annotations.feather         # Neuron annotations and side tags (14 MB)
+│   ├── neurotransmitters.feather   # Neurotransmitter classifications (41 MB)
+│   └── malecns_behavior.*          # Cached compiled behavior subgraph
+│
+├── drosophila-paper/               # Minecraft Paper/Bukkit/Spigot Plugin (Java 17)
+│   ├── src/main/java/org/drosophila/
+│   │   ├── DrosophilaPlugin.java          # Main plugin class and command handlers
+│   │   ├── controller/BeeController.java  # Bee entity physics and 3D flight motor
+│   │   ├── network/BrainServer.java       # WebSocket server and telemetry broadcaster
+│   │   ├── vision/CompoundEyeRaytracer.java # 1,536-ommatidia compound eye raytracing
+│   │   ├── olfaction/OdorDiffusion.java   # Olfactory scent diffusion & source tracking
+│   │   ├── auditory/AuditoryWindSampler.java # Johnston's organ (acoustic & wind shocks)
+│   │   ├── item/BottleManager.java        # Bottle capture and rest mechanic
+│   │   └── i18n/LanguageManager.java      # Dynamic multilingual (en/tr) subsystem
+│   └── src/main/resources/
+│       ├── config.yml                     # Main plugin configuration
+│       ├── plugin.yml                     # Bukkit/Spigot plugin manifest
+│       └── languages/                     # Language packs (messages_en.yml, messages_tr.yml)
+│
+├── fly_brain_real.py               # 🧠 MaleCNS LIF biological connectome simulation
+├── minecraft_real_bridge.py        # 🌉 WebSocket bridge + Pygame HUD dashboard
+├── connectome_loader.py            # Connectome importer and subgraph compiler
+├── fly_log.py                      # Real-time neural event & telemetry logger
+├── fly_sound.py                    # Wingbeat synthesis & auditory playback
+├── run_real.py                     # ▶️ Main Python launcher & configuration wizard
+├── setup.bat                       # 🪟 Windows automated setup script
+├── start.bat                       # 🪟 Windows runner script
+├── setup.sh                        # 🐧 Linux/macOS automated setup script
+├── start.sh                        # 🐧 Linux/macOS runner script
+├── requirements.txt                # Python dependencies
+├── config.json.example             # JSON configuration template
+└── .env.example                    # Environment variable template
+```
+
+---
+
+## 💬 Community & Support
+
+Need assistance, want to share ideas, or discuss the simulation? Join our Discord server:  
+👉 **Discord Community:** [https://discord.gg/TQHAm67DmX](https://discord.gg/TQHAm67DmX)
+
+---
+
+## 📜 Citations & License
+
+* **Biological Connectome Data:** [MaleCNS v1.0](https://codex.flywire.ai/) — [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)  
+  *(Janelia Research Campus / University of Cambridge / MRC Laboratory of Molecular Biology / Google Research)*
+* **Project Source Code:** **MIT License** © [DeveloperKubilay](https://github.com/DeveloperKubilay)
+
+---
+
+# 🪰 Drosophila — Gerçek Meyve Sineği Beyni Minecraft'ta (Türkçe)
 
 [![Minecraft](https://img.shields.io/badge/Minecraft-Paper%20%7C%20Bukkit%20%7C%20Spigot%20%7C%20Purpur%20(1.20--1.21.x)-brightgreen)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.oracle.com/java/)
@@ -59,8 +338,6 @@ Proje, fiziksel beden ile biyolojik beyni birbirinden ayıran modern bir dağıt
 
 ## 🚀 Kurulum ve Başlatma
 
-> 📹 *Çok yakında detaylı videolu kurulum rehberi eklenecektir!*
-
 ### 1. Dosyaları İndirme
 [GitHub Releases](../../releases) sayfasından en güncel sürümü indirin:
 * Minecraft sunucusu için: **`FruitFly.jar`**
@@ -70,7 +347,7 @@ Proje, fiziksel beden ile biyolojik beyni birbirinden ayıran modern bir dağıt
 
 ### 2. Minecraft Sunucu Kurulumu (Beden)
 1. `FruitFly.jar` dosyasını Minecraft sunucunuzun `plugins/` klasörüne atın.
-2. Sunucuyu başlatın veya `/reload` yapın.
+2. Sunucuyu başlatın veya `/fruitfly reload` yapın.
 3. Eklenti otomatik olarak `0.0.0.0:8765` portunda tak-çalıştır bir WebSocket sunucusu başlatır. Sunucu tarafında hiçbir karmaşık IP yapılandırmasına gerek yoktur!
 
 ---
@@ -206,7 +483,7 @@ Tüm komutlar sunucuda **OP yetkisi** (`drosophila.admin`) gerektirir.
 Kısayol (Alias): `/fruitfly` veya `/fluitfly`
 
 | Komut | Açıklama |
-|-------|----------|
+|---|---|
 | `/fruitfly help` | Tüm komutların listesini ve açıklamalarını gösterir |
 | `/fruitfly tp` | Sineğin yanına anında ışınlanmanızı sağlar |
 | `/fruitfly come` | Sineği bulunduğunuz konuma çağırır |
@@ -218,6 +495,7 @@ Kısayol (Alias): `/fruitfly` veya `/fluitfly`
 | `/fruitfly home` | Sineği belirlenen ev/doğma noktasına gönderir |
 | `/fruitfly status` | Ayrıntılı canlı telemetri (can, tokluk, koku mesafesi, baş açısı, tehdit seviyesi) |
 | `/fruitfly clear` | Sineğin mantar cisimciği (öğrenme/hafıza) önbelleğini sıfırlar |
+| `/fruitfly reload` | config.yml ve dil dosyalarını sunucuyu kapatmadan yeniler |
 
 ---
 
@@ -228,7 +506,7 @@ Drosophila/
 ├── connectome/                     # Konektom ham verileri (~1.1 GB, git'e dahil değildir)
 │   ├── weights.feather             # Sinaptik bağlantı ağırlıkları (1 GB)
 │   ├── annotations.feather         # Nöron kimlikleri ve bölge etiketleri (14 MB)
-│   ├── neurotransmitters.feather    # Nörotransmitter türleri (41 MB)
+│   ├── neurotransmitters.feather   # Nörotransmitter türleri (41 MB)
 │   └── malecns_behavior.*          # Derlenmiş davranış alt-grafiği (önbellek)
 │
 ├── drosophila-paper/               # Minecraft Paper/Bukkit/Spigot eklentisi (Java 17)

@@ -70,6 +70,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
         int port = getConfig().getInt("brain.port", 8765);
         this.brainServer = new BrainServer(port, beeController, getLogger());
         this.brainServer.setAuthToken(getConfig().getString("brain.auth-token", "drosophila_secret_token_123"));
+        this.brainServer.setLanguage(this.languageManager.getCurrentLang());
         this.brainServer.start();
 
         this.bottleManager = new org.drosophila.item.BottleManager(this, beeController, brainServer);
@@ -221,10 +222,24 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
             sender.sendMessage(languageManager.get("commands.help.home", cmdName));
             sender.sendMessage(languageManager.get("commands.help.status", cmdName));
             sender.sendMessage(languageManager.get("commands.help.clear", cmdName));
+            sender.sendMessage(languageManager.get("commands.help.reload", cmdName));
             return true;
         }
 
         String sub = args[0].toLowerCase();
+
+        if (sub.equals("reload") || sub.equals("rl")) {
+            reloadConfig();
+            String newLang = getConfig().getString("language", "en");
+            languageManager.init(newLang);
+            if (brainServer != null) {
+                brainServer.setAuthToken(getConfig().getString("brain.auth-token", "drosophila_secret_token_123"));
+                brainServer.setLanguage(languageManager.getCurrentLang());
+            }
+            loadConfiguration();
+            sender.sendMessage(languageManager.get("commands.reload.success"));
+            return true;
+        }
 
         if (sub.equals("hungry") || sub.equals("starve") || sub.equals("aciktir")) {
             beeController.setFoodLevel(BeeController.MIN_FOOD);
@@ -456,7 +471,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             List<String> subcommands = Arrays.asList(
-                    "tp", "come", "feed", "hungry", "food", "clear", "spawnpoint", "home", "status", "help"
+                    "tp", "come", "feed", "hungry", "food", "clear", "spawnpoint", "home", "status", "reload", "help"
             );
             String input = args[0].toLowerCase();
             for (String sub : subcommands) {

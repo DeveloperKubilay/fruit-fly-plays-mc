@@ -62,16 +62,16 @@ def check_data():
     annot_path = os.path.join(HERE, "connectome", "annotations.feather")
     if os.path.exists(graph):
         if not os.path.exists(annot_path):
-            print("[run_real] annotations.feather eksik, indiriliyor (14 MB)...")
+            print("[run_real] annotations.feather missing, downloading (14 MB)...")
             try:
                 import urllib.request
                 os.makedirs(os.path.join(HERE, "connectome"), exist_ok=True)
                 url = "%s/%s" % (BASE, "body-annotations-male-cns-v1.0-minconf-0.5.feather")
                 urllib.request.urlretrieve(url, annot_path)
-                print("[run_real] annotations.feather başarıyla indirildi.")
+                print("[run_real] annotations.feather downloaded successfully.")
             except Exception as e:
-                print("[run_real] Otomatik indirme hatası: %s" % e)
-                print("Lütfen şu komutu çalıştırın:\n  curl -L -o connectome/annotations.feather %s/body-annotations-male-cns-v1.0-minconf-0.5.feather" % BASE)
+                print("[run_real] Automatic download error: %s" % e)
+                print("Please run manually:\n  curl -L -o connectome/annotations.feather %s/body-annotations-male-cns-v1.0-minconf-0.5.feather" % BASE)
                 return False
         return True
 
@@ -79,15 +79,15 @@ def check_data():
                if not os.path.exists(os.path.join(HERE, p))]
     if missing:
         print("=" * 72)
-        print("  KONEKTOM VERİSİ EKSİK — MaleCNS v1.0 (CC BY 4.0, hesap gerekmez)")
+        print("  CONNECTOME DATA MISSING — MaleCNS v1.0 (CC BY 4.0, no account needed)")
         print("=" * 72)
         for p, f in missing:
             print("  curl -L -o %s %s/%s" % (p, BASE, f))
         print()
-        print("  Toplam ~1,1 GB. Sonra:  python connectome_loader.py")
+        print("  Total ~1.1 GB. Then run:  python connectome_loader.py")
         print("=" * 72)
         return False
-    print("[run_real] Alt-grafik kuruluyor (ilk çalıştırmada birkaç dakika)...")
+    print("[run_real] Compiling behavior subgraph (first run takes a few minutes)...")
     import connectome_loader
     connectome_loader.build_behavior_graph()
     return True
@@ -132,19 +132,18 @@ def load_config():
 
 
 def interactive_setup():
-    """setup.bat ve setup.sh tarafından çağrılan etkileşimli yapılandırma sihirbazı."""
+    """Interactive configuration wizard invoked by setup.bat and setup.sh."""
     print("\n" + "=" * 64)
-    print("  [4/4] BAĞLANTI VE GÜVENLİK AYARLARI / CONFIGURATION")
+    print("  [4/4] CONNECTION & SECURITY SETTINGS / YAPILANDIRMA")
     print("=" * 64)
-    print("\nMinecraft Sunucu Adresi (IP veya IP:Port):")
-    print("  - Başka bir sunucuya bağlamak istiyorsanız IP veya IP:Port yazın.")
-    print("  - Örnek: 1.2.3.4 veya 1.2.3.4:8765")
-    print("  - Aynı makinedeki sunucu için doğrudan [ENTER] tuşuna basın (localhost).")
+    print("\nMinecraft Server Address (IP or IP:Port):")
+    print("  - To connect to another server, enter IP or IP:Port (e.g. 1.2.3.4 or 1.2.3.4:8765)")
+    print("  - For local server on this machine, press [ENTER] directly (localhost).")
 
     try:
-        host_input = input("Sunucu IP [localhost]: ").strip()
+        host_input = input("Server IP [localhost]: ").strip()
     except (KeyboardInterrupt, EOFError):
-        print("\n[İptal Edildi]")
+        print("\n[Cancelled / İptal]")
         return
 
     if not host_input:
@@ -158,17 +157,16 @@ def interactive_setup():
             port = int(parts[1])
 
     while True:
-        print("\nMinecraft Güvenlik Şifresi / Token (ZORUNLU):")
-        print("(Minecraft sunucunuzdaki plugins/FruitFly/config.yml dosyasındaki")
-        print(" brain.auth-token değeri ile birebir aynı olmalıdır)")
+        print("\nMinecraft Security Password / Token (REQUIRED):")
+        print("(Must match the brain.auth-token in plugins/FruitFly/config.yml on your server)")
         try:
-            password = input("Şifre / Token: ").strip()
+            password = input("Password / Token: ").strip()
         except (KeyboardInterrupt, EOFError):
-            print("\n[İptal Edildi]")
+            print("\n[Cancelled / İptal]")
             return
         if password:
             break
-        print("\n[UYARI / WARNING] Şifre zorunludur, boş bırakılamaz!")
+        print("\n[WARNING / UYARI] Password is required, cannot be blank!")
 
     cfg = {
         "minecraft_host": host_input,
@@ -182,14 +180,14 @@ def interactive_setup():
     env_path = os.path.join(HERE, ".env")
     with open(env_path, "w", encoding="utf-8") as f:
         f.write(
-            f"# Drosophila Otomatik Yapılandırma\n"
+            f"# Drosophila Configuration\n"
             f"MINECRAFT_HOST={host_input}\n"
             f"MINECRAFT_PORT={port}\n"
             f"MINECRAFT_PASSWORD={password}\n"
             f"FLY_AUTH_TOKEN={password}\n"
         )
 
-    print(f"\n[OK] Yapılandırma başarıyla kaydedildi! (config.json, .env)")
+    print(f"\n[OK] Configuration successfully saved! (config.json, .env)")
 
 
 def main():
@@ -238,7 +236,7 @@ def main():
         if a in ("--server", "--sunucu"):
             as_server = True
         elif a in ("--token", "--password", "-p"):
-            if i + 1 < len(sys.argv):
+            if i + 1 < len(sys.argv) and not sys.argv[i + 1].startswith("--"):
                 auth_token = sys.argv[i + 1]
                 i += 1
         elif a.startswith("--token="):
@@ -266,7 +264,7 @@ def main():
         else:
             ws_host = arg_host
 
-    if len(positional) >= 2:
+    if len(positional) >= 2 and not positional[1].startswith("--"):
         auth_token = positional[1]
 
     if auth_token:
@@ -274,18 +272,17 @@ def main():
         os.environ["MINECRAFT_PASSWORD"] = auth_token
 
     print("=" * 72)
-    print("  🪰 DROSOPHILA — GERÇEK MaleCNS v1.0 KONEKTOMU")
+    print("  🪰 DROSOPHILA — REAL MaleCNS v1.0 CONNECTOME")
     if as_server:
-        print("  🌐 WebSocket Sunucusu: 0.0.0.0:%d (FruitFly bekleniyor)" % ws_port)
+        print("  🌐 WebSocket Server: 0.0.0.0:%d (Waiting for FruitFly)" % ws_port)
     else:
-        print("  🌐 Hedef Minecraft Sunucusu: ws://%s:%d" % (ws_host, ws_port))
+        print("  🌐 Target Minecraft Server: ws://%s:%d" % (ws_host, ws_port))
     if no_gui:
-        print("  🖥️ Arayüz Modu: Sadece Terminal Modu (--no-gui)")
+        print("  🖥️ Interface Mode: Headless Terminal Only (--no-gui)")
     if auth_token:
-        masked = auth_token[:2] + "*" * max(1, len(auth_token) - 4) + auth_token[-2:] if len(auth_token) > 4 else "***"
-        print("  🔑 Güvenlik Şifresi: %s" % masked)
+        print("  🔑 Auth Token: [OK] Configured (Protected)")
     else:
-        print("  ⚠️ Güvenlik Şifresi: Belirtilmedi")
+        print("  ⚠️ Auth Token: Not set (Connection may be rejected)")
     print("=" * 72)
 
     if not check_data():
@@ -297,13 +294,13 @@ def main():
         if _done["v"]:
             return
         _done["v"] = True
-        print("\n[ÇIKIŞ] Kapatılıyor...")
+        print("\n[EXIT] Shutting down...")
         sys.exit(0)
 
     signal.signal(signal.SIGINT, cleanup)
     signal.signal(signal.SIGTERM, cleanup)
 
-    print("[1/1] 🧠 Gerçek konektom beyni başlatılıyor...")
+    print("[1/1] 🧠 Starting real connectome brain...")
     import minecraft_real_bridge
 
     # Ses ayarları

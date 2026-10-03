@@ -43,6 +43,9 @@ commands:
     success: "&a[Drosophila] 🔄 Fruit fly brain memory reset! Mushroom body memories returned to base connectome weights."
     not_connected: "&c[Drosophila] Python brain is not connected, reset command could not be delivered."
 
+  reload:
+    success: "&a[FruitFly] 🔄 Configuration and language files reloaded successfully!"
+
   help:
     header: "&6=== Fruit Fly (Drosophila MaleCNS) Commands ==="
     tp: "&e/{0} tp &7- Teleport to the fruit fly."
@@ -54,6 +57,7 @@ commands:
     home: "&e/{0} home &7- Sends the fly back to its home."
     status: "&e/{0} status &7- Displays brain model, dopamine mood, health, satiety & senses."
     clear: "&e/{0} clear &7- Resets memory back to baseline MaleCNS connectome."
+    reload: "&e/{0} reload &7- Reloads config.yml and language files without restarting."
 
 status:
   header: "&6================= &e🪰 Fruit Fly Status &6================="

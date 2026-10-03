@@ -1,130 +1,104 @@
 # ==============================================================================
-#                      🪰 FRUITFLY YAPILANDIRMASI
+#                      🪰 FRUITFLY CONFIGURATION / YAPILANDIRMASI
 #    MaleCNS v1.0 Biological Connectome Interface for Minecraft Paper/Spigot
 # ==============================================================================
-# Bu dosya sineğin biyolojik parametrelerini, dilini, WebSocket sunucusunu
-# ve Minecraft dünyasındaki davranışlarını yapılandırır.
+# This configuration file defines the biological parameters, localization,
+# WebSocket bridge server, and physical behaviors of the Fruit Fly entity.
 #
-# Ayarların yanında [ZORUNLU] veya [OPSİYONEL] olduğu ve [VARSAYILAN] değeri belirtilmiştir.
-# Değişikliklerin geçerli olması için sunucuyu yeniden başlatmanız gerekir.
+# Changes take effect after '/fruitfly reload' or server restart.
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. DİL AYARI / LOCALIZATION
+# 1. LANGUAGE / LOCALIZATION
 # ------------------------------------------------------------------------------
-# [OPSİYONEL] - Varsayılan: "en"
-# Oyun içi komutlar, sinek ismi, şişe eşyası ve durum telemetrisi için aktif dil.
+# [OPTIONAL] - Default: "en"
+# Active language for in-game commands, entity name, messages, and telemetry.
 #
-# Seçenekler:
-#   "en" -> English (Varsayılan)
+# Options:
+#   "en" -> English (Default)
 #   "tr" -> Türkçe
 #
-# Özel Dil Ekleme:
-#   'plugins/FruitFly/languages/' klasörüne dilediğiniz dilde dosya ekleyebilirsiniz
-#   (örn: messages_de.yml, messages_es.yml) ve kodunu buraya yazabilirsiniz.
-#   Eğer özel dil dosyanızda eksik bir anahtar kalırsa sistem çökmez,
-#   otomatik olarak İngilizce ("en") karşılığını kullanır (Fallback).
+# Custom Languages:
+#   Add your custom language file under 'plugins/FruitFly/languages/'
+#   (e.g., messages_de.yml, messages_es.yml) and set its code here.
+#   Missing keys will safely fallback to English ("en").
 language: "en"
 
 # ------------------------------------------------------------------------------
-# 2. PYTHON BEYİN BAĞLANTISI / BRAIN WEBSOCKET SERVER
+# 2. PYTHON BRAIN WEBSOCKET SERVER / BEYİN BAĞLANTISI
 # ------------------------------------------------------------------------------
-# Minecraft Paper eklentisi bir WebSocket sunucusu açar.
-# Python tarafındaki MaleCNS beyin simülasyonu ('start.sh') bu sunucuya bağlanır.
+# The Minecraft plugin runs a high-performance WebSocket server.
+# The Python MaleCNS connectome engine connects to this server.
 brain:
 
-  # [ZORUNLU] - Varsayılan: 8765
-  # Eklentinin dinleyeceği TCP portu.
-  # ÖNEMLİ: Python tarafındaki 'start.sh' veya köprü bu porta bağlanır.
-  # Python ile Minecraft aynı makinedeyse yereldir. Farklı makinelerdeyse
-  # güvenlik duvarınızdan (firewall) bu porta izin verilmelidir.
+  # [REQUIRED] - Default: 8765
+  # TCP Port to listen for Python brain connections.
+  # Open this port in your firewall if Python runs on a separate machine.
   port: 8765
 
-  # [ZORUNLU] - Varsayılan: "drosophila_secret_token_123"
-  # Güvenlik Anahtarı (Authentication Secret).
-  # Yetkisiz kişilerin veya botların porta bağlanıp sineği ele geçirmesini önler.
-  # ÖNEMLİ: Python tarafındaki token ile buradaki değer BİREBİR AYNI olmalıdır.
+  # [REQUIRED] - Default: "drosophila_secret_token_123"
+  # Security Authentication Secret / Password.
+  # MUST match the FLY_AUTH_TOKEN / auth_token in Python's config.json / .env.
   auth-token: "drosophila_secret_token_123"
 
-  # [OPSİYONEL] Akıllı Dinlenme Modu (Smart Sleep / Circadian LOD)
+  # [OPTIONAL] Smart Sleep Mode (Circadian LOD / Güç Tasarrufu)
   smart-sleep:
-    # [OPSİYONEL] - Varsayılan: false
-    # false -> Sinek 7/24 uyanık kalır, sürekli dünyayı gezer ve yaşar (Tavsiye edilen).
-    # true  -> Etrafta hiç oyuncu yoksa duyusal ışın izleme durdurulur (0 CPU tasarrufu).
+    # [OPTIONAL] - Default: false
+    # false -> Fly stays active 24/7 exploring the world (Recommended).
+    # true  -> When no players are nearby, sensory raytracing is paused (virtually 0% CPU usage).
     enabled: false
 
-    # [OPSİYONEL] - Varsayılan: 48.0
-    # Oyuncu mesafe eşiği (blok). Eğer bütün oyuncular bu mesafeden uzaktaysa
-    # ve 4 güvenlik şartı sağlanıyorsa sinek uyku moduna geçer.
-    # Güvenlik kuralları: Canavar/tehdit varsa, ışık değişirse, yüksek ses duyulursa
-    # veya sineğin canı azsa ASLA UYUMAZ.
+    # [OPTIONAL] - Default: 48.0
+    # Player distance threshold (blocks). If all players are farther than this
+    # and safety conditions are met, the fly enters resting mode.
+    # Safety rules: NEVER sleeps if monsters/threats are near, light changes,
+    # loud sound is heard, or health is low.
     player-distance: 48.0
 
 # ------------------------------------------------------------------------------
-# 3. MEYVE SİNEĞİ VARLIK AYARLARI / ENTITY SETTINGS
+# 3. FRUIT FLY ENTITY SETTINGS / VARLIK AYARLARI
 # ------------------------------------------------------------------------------
 bee:
 
-  # [OPSİYONEL] - Varsayılan: true
-  # OTOMATİK DOĞMA VE DİRİLME (Auto-Spawn):
-  #   true  -> Sunucu her açıldığında sinek otomatik olarak evinde (veya spawn'da) doğar.
-  #            Ayrıca sinek lav, kaktüs vb. sebeplerle ölürse 2 saniye sonra otomatik dirilir.
-  #            (Sineğin sunucuda 7/24 yaşayan bağımsız bir canlı olması için ideal moddur)
-  #   false -> Sinek sunucu açıldığında KENDİLİĞİNDEN DOĞMAZ ve ölürse otomatik dirilmez.
-  #            Sadece bir yönetici oyundan '/fruitfly come' veya '/fruitfly home'
-  #            yazdığında sahneye çağrılır.
+  # [OPTIONAL] - Default: true
+  # AUTO-SPAWN & RESPAWN:
+  #   true  -> Automatically spawns when server starts and respawns 2s after death.
+  #   false -> Only spawns when an admin calls '/fruitfly come' or '/fruitfly home'.
   auto-spawn: true
 
-  # [OPSİYONEL] - Varsayılan: "" (Boş)
-  # Sineğin kafasının üstünde gözükecek özel isim.
-  # Renk kodları desteklenir (örn: '&e', '&a', '&6').
-  # Eğer BOŞ bırakılırsa (""), seçilen dil dosyasındaki isim dinamik kullanılır:
-  #   language: "en" ise -> "Fruit Fly"
-  #   language: "tr" ise -> "Meyve Sineği"
-  # Özel isim örneği: "&6Drosophila &7[MaleCNS]"
+  # [OPTIONAL] - Default: "" (Empty)
+  # Custom display name above fly. Supports color codes (e.g. '&e', '&a', '&6').
+  # If left empty (""), dynamically uses the localized name from messages file.
   display-name: ""
 
-  # [OPSİYONEL] - Varsayılan: false
-  # ÖLÜMSÜZLÜK / DOKUNULMAZLIK (God Mode):
-  #   false -> Sinek gerçekçi biyolojiye sahiptir; lav, düşme, boğulma veya mob saldırısıyla
-  #            hasar alabilir. Tehlike anında DNp01 dev nöron kaçış refleksiyle kaçar.
-  #   true  -> Sinek hiçbir şekilde hasar almaz, vurulamaz ve ölemez.
+  # [OPTIONAL] - Default: false
+  # INVULNERABILITY (God Mode):
+  #   false -> Realistic biology; susceptible to lava, drowning, monsters. Escapes via Giant Fiber (DNp01).
+  #   true  -> Fly cannot be damaged or killed.
   invulnerable: false
 
-  # [OPSİYONEL] - Varsayılan: 1.0
-  # Uçuş Hızı Çarpanı (Speed Multiplier):
-  #   1.0 = Doğal biyolojik böcek seyir hızı (Gerçekçi hız).
-  #   1.3 = Daha seri ve hızlı keşif modu.
-  #   0.7 = Yavaş, gözlem amaçlı sakin süzülme.
+  # [OPTIONAL] - Default: 1.0
+  # Flight Speed Multiplier:
+  #   1.0 = Natural biological cruising speed.
+  #   1.3 = Fast exploration mode.
+  #   0.7 = Slow, calm observation mode.
   speed-multiplier: 1.0
 
-  # [OPSİYONEL] - Varsayılan: 16.0
-  # Koku Algılama Menzili (Odor Detection Radius - Blok):
-  # Sineğin yerdeki elmaları, şeker kaynaklarını, çiçekleri ve ağaç yapraklarını
-  # algılayabildiği maksimum koku mesafesi.
+  # [OPTIONAL] - Default: 16.0
+  # Olfactory Odor Detection Radius (Blocks):
+  # Maximum distance the fly can detect apples, sugar, flowers, and tree leaves.
   odor-range: 16.0
 
-  # [OTOMATİK KAYDEDİLİR] Kalıcı Doğma Noktası (Home Spawnpoint):
-  # Bu alanı elle doldurmanıza gerek yoktur!
-  # Oyunda istediğiniz konuma gidip '/fruitfly spawnpoint' yazdığınızda koordinatlar
-  # buraya otomatik yazılır ve sunucu yeniden başlasa bile korunur.
-  # Sıfırlamak için: '/fruitfly spawnpoint clear'
-  # Örnek kaydedilmiş çıktı:
-  # spawnpoint:
-  #   world: "world"
-  #   x: 105.5
-  #   y: 68.0
-  #   z: -214.5
-  #   yaw: 180.0
-  #   pitch: 0.0
+  # [SAVED AUTOMATICALLY] Home Spawnpoint:
+  # Automatically saved when '/fruitfly spawnpoint' is used in-game.
+  # Reset with: '/fruitfly spawnpoint clear'
 
 # ------------------------------------------------------------------------------
-# 4. PETEK GÖZ IŞIN İZLEME / COMPOUND EYE RAYTRACING
+# 4. COMPOUND EYE VISION / PETEK GÖZ
 # ------------------------------------------------------------------------------
-# Sinek Minecraft dünyasını doğal biyolojisine uygun olarak 64 sütun x 24 satır
-# = 1536 ommatidium (petek göz merceği) ile tarar ve MaleCNS optik lobuna aktarır.
+# Raytraces the Minecraft world with 64 cols x 24 rows = 1536 ommatidia.
 vision:
 
-  # [OPSİYONEL] - Varsayılan: 16.0
-  # Petek gözün görebildiği maksimum engel ve tehdit mesafesi (blok).
+  # [OPTIONAL] - Default: 16.0
+  # Maximum visual distance for obstacles and hazards (blocks).
   max-ray-range: 16.0

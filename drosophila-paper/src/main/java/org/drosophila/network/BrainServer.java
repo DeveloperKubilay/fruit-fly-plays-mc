@@ -38,6 +38,16 @@ public class BrainServer extends WebSocketServer {
         setTcpNoDelay(true);
     }
 
+    private String language = "en";
+
+    public void setLanguage(String lang) {
+        this.language = (lang != null && !lang.isEmpty()) ? lang : "en";
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
     public void setAuthToken(String token) {
         this.authToken = (token != null) ? token : "";
     }
@@ -65,8 +75,8 @@ public class BrainServer extends WebSocketServer {
 
     @Override
     public void onStart() {
-        logger.info("[Drosophila-Paper] WebSocket server started on 0.0.0.0:" + getPort());
-        logger.info("[Drosophila-Paper] Waiting for Python brain (run_real.py)...");
+        logger.info("[FruitFly] WebSocket server started on 0.0.0.0:" + getPort());
+        logger.info("[FruitFly] Waiting for Python connectome brain (run_real.py)...");
     }
 
     @Override
@@ -78,11 +88,20 @@ public class BrainServer extends WebSocketServer {
         if (authToken != null && !authToken.isEmpty()) {
             if (descriptor != null && descriptor.contains("token=")) {
                 String tokenParam = extractParam(descriptor, "token");
+                if (tokenParam != null) {
+                    try {
+                        tokenParam = java.net.URLDecoder.decode(tokenParam, java.nio.charset.StandardCharsets.UTF_8.name());
+                    } catch (Exception ignored) {}
+                }
                 if (!authToken.equals(tokenParam)) {
-                    logger.warning("[Drosophila-Paper] Unauthorized connection attempt from " + remote + " (invalid token)!");
+                    logger.warning("[FruitFly] Unauthorized connection attempt from " + remote + " (invalid token)! Connection rejected.");
                     conn.close(1008, "Invalid auth token");
                     return;
                 }
+            } else {
+                logger.warning("[FruitFly] Unauthorized connection attempt from " + remote + " (no token provided in URL ?token=...)! Connection rejected.");
+                conn.close(1008, "Auth token required");
+                return;
             }
         }
 
@@ -93,20 +112,20 @@ public class BrainServer extends WebSocketServer {
             } catch (Exception ignored) {}
         }
 
-        logger.info("[Drosophila-Paper] Python brain connected: " + remote + " (MaleCNS v1.0 active)");
+        logger.info("[FruitFly] Python brain connected: " + remote + " (MaleCNS v1.0 active)");
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         if (activeConn.compareAndSet(conn, null)) {
-            logger.warning("[Drosophila-Paper] Python brain disconnected (" + reason + ").");
+            logger.warning("[FruitFly] Python brain disconnected (" + reason + ").");
         }
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
         if (ex != null) {
-            logger.warning("[Drosophila-Paper] WebSocket error: " + ex.getMessage());
+            logger.warning("[FruitFly] WebSocket error: " + ex.getMessage());
         }
     }
 
@@ -118,7 +137,7 @@ public class BrainServer extends WebSocketServer {
         if (authToken != null && !authToken.isEmpty() && message.contains("\"auth_token\"")) {
             String token = extractString(message, "\"auth_token\":\"", "\"");
             if (token != null && !token.equals(authToken)) {
-                logger.warning("[Drosophila-Paper] Invalid auth_token in message! Closing connection.");
+                logger.warning("[FruitFly] Invalid auth_token in message! Closing connection.");
                 conn.close(1008, "Invalid auth token");
                 activeConn.compareAndSet(conn, null);
                 return;
@@ -143,6 +162,7 @@ public class BrainServer extends WebSocketServer {
         sb.append("{");
         sb.append("\"auth_token\":\"").append(authToken).append("\",");
         sb.append("\"fly_id\":\"").append(flyId).append("\",");
+        sb.append("\"lang\":\"").append(language).append("\",");
         sb.append("\"is_sleeping\":").append(isSleeping).append(",");
         sb.append("\"hd_cols\":64,\"hd_rows\":24,");
         sb.append("\"heading\":").append(String.format(java.util.Locale.US, "%.2f", heading)).append(",");

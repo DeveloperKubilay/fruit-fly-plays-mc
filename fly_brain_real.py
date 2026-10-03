@@ -1682,57 +1682,70 @@ class RealFlyBrain:
         m["esc_dev_s"] = max(0.0, self.esc_dev_s)
         return m
 
-    def state_label(self, motor, hunger=0.0):
-        """Tek cümlelik "şu an ne halde" özeti — hepsi gerçek nöronlardan.
-
-        Bir sinek "mutlu" olmaz; ama ölçülebilir içsel durumları vardır ve
-        her biri gerçek bir nöron kümesinden okunuyor. Sıra ÖNEM sırasıdır:
-        kaçış her şeyi bastırır (gerçek sinekte de öyle).
-        """
+    def state_label(self, motor, hunger=0.0, lang="en"):
+        """Summary of current internal state decoded from biological neurons."""
         r = motor.get("rates", {})
         loom = motor.get("loom_rate", 0.0)
         gf = r.get("escape", 0.0)
         c = lambda x: float(min(1.0, max(0.0, x)))
+        is_tr = (lang == "tr")
+
         if gf > 6.0:
-            return "KAÇIŞ — Giant Fiber ateşledi, sıçrıyor", c(gf / 20.0)
+            msg = "KAÇIŞ — Giant Fiber ateşledi, sıçrıyor" if is_tr else "ESCAPE — Giant Fiber fired, jumping"
+            return msg, c(gf / 20.0)
         if loom > 14.0:
-            return "TEHLİKE — üzerine bir şey geliyor (DNp04)", c((loom - 14.0) / 12.0)
+            msg = "TEHLİKE — üzerine bir şey geliyor (DNp04)" if is_tr else "DANGER — Looming object approaching (DNp04)"
+            return msg, c((loom - 14.0) / 12.0)
         p = motor.get("ppl_dev_s", 0.0)
         if p > 1.2:
-            return "KAÇINMA — ceza dopamini tabanın üstünde (PPL1)", c(p / 6.0)
+            msg = "KAÇINMA — ceza dopamini tabanın üstünde (PPL1)" if is_tr else "AVOIDANCE — Punishment dopamine above baseline (PPL1)"
+            return msg, c(p / 6.0)
         q = motor.get("pam_dev_s", 0.0)
         if q > 1.2:
-            return "ÖDÜL — ödül dopamini tabanın üstünde (PAM)", c(q / 6.0)
+            msg = "ÖDÜL — ödül dopamini tabanın üstünde (PAM)" if is_tr else "REWARD — Reward dopamine above baseline (PAM)"
+            return msg, c(q / 6.0)
         if r.get("backward", 0.0) > 9.0:
-            return "GERİ ÇEKİLME — MDN sürüyor", c(r["backward"] / 30.0)
-        # Koku uyarımı: DNc01/DNc02/DNb05/DNp29 tabanın üstünde. Bu, "sinek
-        # yiyeceğin YERİNİ biliyor" demek DEĞİL — yön bu ağda kodlanmıyor
-        # (ölçüldü, README). "Burada yiyecek kokusu var, hızlan ve düz git"
-        # demek; gerçek sineğin kokuyu bulma yolu da budur.
+            msg = "GERİ ÇEKİLME — MDN sürüyor" if is_tr else "RETREAT — MDN driving backward walk"
+            return msg, c(r["backward"] / 30.0)
+        # Koku uyarımı: DNc01/DNc02/DNb05/DNp29 tabanın üstünde.
         _ar = motor.get("arousal", 0.0)
         if _ar > 0.12:
-            return "KOKU ALDI — yiyecek kokusu var, hızlanıyor", c(_ar)
+            msg = "KOKU ALDI — yiyecek kokusu var, hızlanıyor" if is_tr else "ODOR DETECTED — Food odor present, accelerating"
+            return msg, c(_ar)
         if motor.get("odor_lost", 0.0) > 0.25:
-            return ("ARIYOR — kokuyu kaybetti, sağa sola tarıyor",
-                    c(motor["odor_lost"]))
+            msg = "ARIYOR — kokuyu kaybetti, sağa sola tarıyor" if is_tr else "SEARCHING — Odor lost, casting left/right"
+            return msg, c(motor["odor_lost"])
         if hunger > 0.55:
-            return "AÇ — yiyecek arıyor", c(hunger)
+            msg = "AÇ — yiyecek arıyor" if is_tr else "HUNGRY — Searching for food"
+            return msg, c(hunger)
         if r.get("forward", 0.0) > 14.0:
-            return "SAKİN YÜRÜYÜŞ — tehlike yok", c(r["forward"] / 30.0)
-        return "DURGUN — belirgin bir sürücü yok", 0.0
+            msg = "SAKİN YÜRÜYÜŞ — tehlike yok" if is_tr else "CRUISING — Calm exploration, no threat"
+            return msg, c(r["forward"] / 30.0)
+        msg = "DURGUN — belirgin bir sürücü yok" if is_tr else "IDLE — No prominent behavioral driver"
+        return msg, 0.0
 
-    def state_bars(self, motor, hunger=0.0):
-        """Tüm içsel sürücüler 0..1 arası — hepsi TABANDAN SAPMA."""
+    def state_bars(self, motor, hunger=0.0, lang="en"):
+        """All internal drivers normalized (0..1) relative to baseline."""
         r = motor.get("rates", {})
         c = lambda x: float(min(1.0, max(0.0, x)))
+        if lang == "tr":
+            return {
+                "KOKU": c(motor.get("arousal", 0.0)),
+                "ARAMA": c(motor.get("odor_lost", 0.0)),
+                "ÖDÜL": c(motor.get("pam_dev_s", 0.0) / 4.0),
+                "KAÇINMA": c(motor.get("ppl_dev_s", 0.0) / 4.0),
+                "TEHLİKE": c(motor.get("esc_dev_s", 0.0) / 6.0),
+                "AÇLIK": c(hunger),
+                "HAREKET": c(r.get("forward", 0.0) / 30.0),
+            }
         return {
-            "KOKU": c(motor.get("arousal", 0.0)),
-            "ARAMA": c(motor.get("odor_lost", 0.0)),
-            "ÖDÜL": c(motor.get("pam_dev_s", 0.0) / 4.0),
-            "KAÇINMA": c(motor.get("ppl_dev_s", 0.0) / 4.0),
-            "TEHLİKE": c(motor.get("esc_dev_s", 0.0) / 6.0),
-            "AÇLIK": c(hunger),
-            "HAREKET": c(r.get("forward", 0.0) / 30.0),
+            "ODOR": c(motor.get("arousal", 0.0)),
+            "SEARCH": c(motor.get("odor_lost", 0.0)),
+            "REWARD": c(motor.get("pam_dev_s", 0.0) / 4.0),
+            "AVOID": c(motor.get("ppl_dev_s", 0.0) / 4.0),
+            "DANGER": c(motor.get("esc_dev_s", 0.0) / 6.0),
+            "HUNGER": c(hunger),
+            "FORWARD": c(r.get("forward", 0.0) / 30.0),
         }
 
     def decode_motor(self):
