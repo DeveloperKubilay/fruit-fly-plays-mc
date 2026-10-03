@@ -228,7 +228,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
 
         String sub = args[0].toLowerCase();
 
-        if (sub.equals("reload") || sub.equals("rl")) {
+        if (sub.equals("reload")) {
             reloadConfig();
             String newLang = getConfig().getString("language", "en");
             languageManager.init(newLang);

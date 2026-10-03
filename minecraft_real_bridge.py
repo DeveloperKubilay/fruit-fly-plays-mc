@@ -818,9 +818,8 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
         or ""
     ).strip()
     uri = f"ws://{ws_host}:{ws_port}?token={AUTH_TOKEN}" if AUTH_TOKEN else f"ws://{ws_host}:{ws_port}"
-    current_lang = os.environ.get("FLY_LANG", "en").lower().strip()
-    if current_lang not in ("en", "tr"):
-        current_lang = "en"
+    current_lang = "en"
+    lang_synced = False
 
     if IS_HEADLESS:
         print("[RealBrain] 🖥️ Headless Terminal Mode (--no-gui) active."
@@ -962,8 +961,10 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                     fps_tick()
                     tnow = pygame.time.get_ticks() / 1000.0
                     data = json.loads(raw)
-                    if data.get("lang") in ("en", "tr"):
-                        current_lang = data["lang"]
+                    if not lang_synced:
+                        if data.get("lang") == "tr":
+                            current_lang = "tr"
+                        lang_synced = True
 
                     # --- AUTH TOKEN GÜVENLİK DOĞRULAMASI ---
                     client_token = data.get("auth_token")
