@@ -31,7 +31,7 @@ Biological fruit fly (*Drosophila melanogaster*) connectome simulation powered b
 
 **🪟 Windows:**
 ```cmd
-# Create an empty directory, open Command Prompt (CMD), and download:
+# Create an empty folder, open Command Prompt (CMD), and paste this code (paste by right-clicking):
 curl -L -o drosophila-brain-__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.zip
 tar -xf drosophila-brain-__VERSION__.zip
 cd drosophila-brain-__VERSION__
@@ -43,14 +43,14 @@ setup.bat
 start.bat
 
 # Optional runner arguments:
-start.bat --no-gui
-start.bat 1.2.3.4:8765 "mypassword"
-start.bat 1.2.3.4:8765 "mypassword" --no-gui
+# start.bat --no-gui
+# start.bat 1.2.3.4:8765 "mypassword"
+# start.bat 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
 **🐧 Linux / macOS:**
 ```bash
-# Create an empty directory, open terminal, and download:
+# Create an empty directory, open terminal, and paste this code (paste with Ctrl + Shift + V):
 curl -L -o drosophila-brain-__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.tar.gz
 tar -xzf drosophila-brain-__VERSION__.tar.gz
 cd drosophila-brain-__VERSION__
@@ -63,8 +63,8 @@ chmod +x setup.sh start.sh
 ./start.sh
 
 # Optional runner arguments:
-./start.sh --no-gui
-./start.sh 1.2.3.4:8765 "mypassword" --no-gui
+# ./start.sh --no-gui
+# ./start.sh 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
 ### 🎮 Specifications
@@ -109,7 +109,7 @@ MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simül
 
 **🪟 Windows İçin:**
 ```cmd
-# Boş bir klasör açın ve içerisinde CMD (Komut İstemi) açarak indirin:
+# Boş bir klasör açın, içerisinde CMD (Komut İstemi) açarak bu kodu kopyalayıp yapıştırın (sağ tıklamayla yapıştırılır):
 curl -L -o drosophila-brain-__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.zip
 tar -xf drosophila-brain-__VERSION__.zip
 cd drosophila-brain-__VERSION__
@@ -121,14 +121,14 @@ setup.bat
 start.bat
 
 # İsteğe bağlı alternatif başlatma seçenekleri:
-start.bat --no-gui
-start.bat 1.2.3.4:8765 "mypassword"
-start.bat 1.2.3.4:8765 "mypassword" --no-gui
+# start.bat --no-gui
+# start.bat 1.2.3.4:8765 "mypassword"
+# start.bat 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
 **🐧 Linux / macOS İçin:**
 ```bash
-# Boş bir dizin oluşturup terminalde indirin:
+# Boş bir dizin oluşturup terminalde bu kodu yapıştırın (Ctrl + Shift + V ile yapıştırılır):
 curl -L -o drosophila-brain-__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.tar.gz
 tar -xzf drosophila-brain-__VERSION__.tar.gz
 cd drosophila-brain-__VERSION__
@@ -141,8 +141,8 @@ chmod +x setup.sh start.sh
 ./start.sh
 
 # İsteğe bağlı alternatif başlatma seçenekleri:
-./start.sh --no-gui
-./start.sh 1.2.3.4:8765 "mypassword" --no-gui
+# ./start.sh --no-gui
+# ./start.sh 1.2.3.4:8765 "mypassword" --no-gui
 ```
 
 ### 🎮 Uyumluluk
