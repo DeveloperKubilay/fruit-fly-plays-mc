@@ -1,9 +1,9 @@
-name: DrosophilaBee
+name: FruitFly
 version: 1.0.0
 main: org.drosophila.DrosophilaPlugin
 api-version: '1.20'
 authors: [Kubilay]
-description: MaleCNS v1.0 Biological Drosophila Connectome controlling a 3D flying Bee entity.
+description: MaleCNS v1.0 Biological Drosophila Connectome controlling a 3D flying Fruit Fly entity.
 
 commands:
   fruitfly:

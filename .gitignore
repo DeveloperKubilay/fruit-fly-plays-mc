@@ -27,3 +27,8 @@ drosophila-paper/lib/
 sunucu/
 *.zip
 *.tar.gz
+
+# --- Ortam, Yapılandırma ve Sanal Ortam ---
+venv/
+.env
+config.json

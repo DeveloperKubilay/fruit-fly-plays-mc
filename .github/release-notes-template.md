@@ -21,7 +21,7 @@ MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simül
 
 | Dosya / File | Açıklama / Description | Kurulum / Installation |
 |---|---|---|
-| **`DrosophilaBee-v__VERSION__.jar`** | Minecraft Sunucu Eklentisi (Beden) | Sunucunun `plugins/` klasörüne atın |
+| **`FruitFly-v__VERSION__.jar`** | Minecraft Sunucu Eklentisi (Beden) | Sunucunun `plugins/` klasörüne atın |
 | **`drosophila-brain-v__VERSION__.zip`** | Python Beyin Simülasyonu (Windows) | `setup.bat` -> `start.bat` |
 | **`drosophila-brain-v__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux/macOS) | `./setup.sh` -> `./start.sh` |
 
@@ -30,9 +30,9 @@ MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simül
 ### 🚀 Hızlı Kurulum & Başlatma / Quick Start
 
 #### 1. Minecraft Sunucusu (Beden):
-1. `DrosophilaBee-v__VERSION__.jar` dosyasını sunucunuzun `plugins/` klasörüne atın.
+1. `FruitFly-v__VERSION__.jar` dosyasını sunucunuzun `plugins/` klasörüne atın.
 2. Sunucunuzu başlatın veya `/reload` yapın (otomatik olarak `0.0.0.0:8765` üzerinde dinlemeye başlar).
-3. `plugins/DrosophilaBee/config.yml` dosyasından dilinizi (`en` / `tr`) seçebilirsiniz.
+3. `plugins/FruitFly/config.yml` dosyasından dilinizi (`en` / `tr`) seçebilirsiniz.
 
 ---
 

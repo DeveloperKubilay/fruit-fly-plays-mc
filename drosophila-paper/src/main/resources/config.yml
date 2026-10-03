@@ -1,5 +1,5 @@
 # ==============================================================================
-#                      🪰 DROSOPHILABEE YAPILANDIRMASI
+#                      🪰 FRUITFLY YAPILANDIRMASI
 #    MaleCNS v1.0 Biological Connectome Interface for Minecraft Paper/Spigot
 # ==============================================================================
 # Bu dosya sineğin biyolojik parametrelerini, dilini, WebSocket sunucusunu
@@ -20,7 +20,7 @@
 #   "tr" -> Türkçe
 #
 # Özel Dil Ekleme:
-#   'plugins/DrosophilaBee/languages/' klasörüne dilediğiniz dilde dosya ekleyebilirsiniz
+#   'plugins/FruitFly/languages/' klasörüne dilediğiniz dilde dosya ekleyebilirsiniz
 #   (örn: messages_de.yml, messages_es.yml) ve kodunu buraya yazabilirsiniz.
 #   Eğer özel dil dosyanızda eksik bir anahtar kalırsa sistem çökmez,
 #   otomatik olarak İngilizce ("en") karşılığını kullanır (Fallback).

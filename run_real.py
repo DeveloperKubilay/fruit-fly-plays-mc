@@ -16,7 +16,7 @@ Ortam Değişkenleri (.env veya export / set):
     MINECRAFT_HOST=1.2.3.4                 -> Hedef sunucu IP / domain (varsayılan: localhost)
     MINECRAFT_PORT=8765                    -> Hedef port (varsayılan: 8765)
 
-Minecraft Paper / Spigot sunucusundaki DrosophilaBee eklentisi 0.0.0.0:8765 üzerinde
+Minecraft Paper / Spigot sunucusundaki FruitFly eklentisi 0.0.0.0:8765 üzerinde
 WebSocket sunucusunu açar; bu script istemci olarak Minecraft'a bağlanır.
 Konektom dosyaları eksikse indirme komutlarını gösterir.
 """
@@ -131,7 +131,72 @@ def load_config():
             pass
 
 
+def interactive_setup():
+    """setup.bat ve setup.sh tarafından çağrılan etkileşimli yapılandırma sihirbazı."""
+    print("\n" + "=" * 64)
+    print("  [4/4] BAĞLANTI VE GÜVENLİK AYARLARI / CONFIGURATION")
+    print("=" * 64)
+    print("\nMinecraft Sunucu Adresi (IP veya IP:Port):")
+    print("  - Başka bir sunucuya bağlamak istiyorsanız IP veya IP:Port yazın.")
+    print("  - Örnek: 1.2.3.4 veya 1.2.3.4:8765")
+    print("  - Aynı makinedeki sunucu için doğrudan [ENTER] tuşuna basın (localhost).")
+
+    try:
+        host_input = input("Sunucu IP [localhost]: ").strip()
+    except (KeyboardInterrupt, EOFError):
+        print("\n[İptal Edildi]")
+        return
+
+    if not host_input:
+        host_input = "localhost"
+
+    port = 8765
+    if ":" in host_input:
+        parts = host_input.split(":", 1)
+        host_input = parts[0]
+        if parts[1].isdigit():
+            port = int(parts[1])
+
+    while True:
+        print("\nMinecraft Güvenlik Şifresi / Token (ZORUNLU):")
+        print("(Minecraft sunucunuzdaki plugins/FruitFly/config.yml dosyasındaki")
+        print(" brain.auth-token değeri ile birebir aynı olmalıdır)")
+        try:
+            password = input("Şifre / Token: ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\n[İptal Edildi]")
+            return
+        if password:
+            break
+        print("\n[UYARI / WARNING] Şifre zorunludur, boş bırakılamaz!")
+
+    cfg = {
+        "minecraft_host": host_input,
+        "minecraft_port": port,
+        "auth_token": password
+    }
+    cfg_path = os.path.join(HERE, "config.json")
+    with open(cfg_path, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+
+    env_path = os.path.join(HERE, ".env")
+    with open(env_path, "w", encoding="utf-8") as f:
+        f.write(
+            f"# Drosophila Otomatik Yapılandırma\n"
+            f"MINECRAFT_HOST={host_input}\n"
+            f"MINECRAFT_PORT={port}\n"
+            f"MINECRAFT_PASSWORD={password}\n"
+            f"FLY_AUTH_TOKEN={password}\n"
+        )
+
+    print(f"\n[OK] Yapılandırma başarıyla kaydedildi! (config.json, .env)")
+
+
 def main():
+    if "--setup" in sys.argv:
+        interactive_setup()
+        return
+
     load_config()
 
     # Varsayılan: localhost:8765 (modüler ortam değişkenleri: MINECRAFT_HOST, TARGET, SERVER_HOST)
@@ -211,7 +276,7 @@ def main():
     print("=" * 72)
     print("  🪰 DROSOPHILA — GERÇEK MaleCNS v1.0 KONEKTOMU")
     if as_server:
-        print("  🌐 WebSocket Sunucusu: 0.0.0.0:%d (DrosophilaBee bekleniyor)" % ws_port)
+        print("  🌐 WebSocket Sunucusu: 0.0.0.0:%d (FruitFly bekleniyor)" % ws_port)
     else:
         print("  🌐 Hedef Minecraft Sunucusu: ws://%s:%d" % (ws_host, ws_port))
     if no_gui:
@@ -256,7 +321,7 @@ def main():
 
     try:
         asyncio.run(minecraft_real_bridge.bridge_loop(
-            ws_host=ws_host, ws_port=ws_port, label="DrosophilaBee", as_server=as_server,
+            ws_host=ws_host, ws_port=ws_port, label="FruitFly", as_server=as_server,
             logging=debug_mode, debug=debug_mode
         ))
     except KeyboardInterrupt:

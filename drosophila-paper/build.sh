@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# DrosophilaBee Linux/macOS Build Script
+# FruitFly Linux/macOS Build Script
 set -e
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -9,7 +9,7 @@ cd "$DIR"
 if command -v mvn >/dev/null 2>&1; then
     echo "[Build] Maven bulundu, derleme başlatılıyor..."
     mvn clean package
-    echo "[Build] Başarılı! Çıktı: target/DrosophilaBee.jar"
+    echo "[Build] Başarılı! Çıktı: target/FruitFly.jar"
     exit 0
 fi
 
@@ -52,9 +52,9 @@ echo "[Build] Java-WebSocket kütüphanesi ekleniyor (fat jar)..."
 (cd build/classes && jar -xf "../../$WS_JAR" && rm -rf META-INF/maven* META-INF/MANIFEST.MF)
 
 echo "[Build] JAR paketleniyor..."
-jar --create --file target/DrosophilaBee.jar -C build/classes .
+jar --create --file target/FruitFly.jar -C build/classes .
 
 echo "========================================="
-echo "BAŞARILI: target/DrosophilaBee.jar oluşturuldu!"
-ls -lh target/DrosophilaBee.jar
+echo "BAŞARILI: target/FruitFly.jar oluşturuldu!"
+ls -lh target/FruitFly.jar
 echo "========================================="

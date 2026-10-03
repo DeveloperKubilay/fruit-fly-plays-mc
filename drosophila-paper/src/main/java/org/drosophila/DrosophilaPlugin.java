@@ -97,7 +97,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
         }
 
         getLogger().info("=================================================");
-        getLogger().info("🪰 DrosophilaBee (MaleCNS v1.0) enabled!");
+        getLogger().info("🪰 FruitFly (MaleCNS v1.0) enabled!");
         getLogger().info("Language: " + languageManager.getCurrentLang());
         getLogger().info("Commands: /fruitfly tp | /fruitfly come | /fruitfly status");
         getLogger().info("=================================================");
@@ -118,7 +118,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
         if (beeController != null) {
             beeController.despawnBee();
         }
-        getLogger().info("DrosophilaBee plugin disabled.");
+        getLogger().info("FruitFly plugin disabled.");
     }
 
     private void loadConfiguration() {

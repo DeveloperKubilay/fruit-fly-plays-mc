@@ -63,13 +63,13 @@ Proje, fiziksel beden ile biyolojik beyni birbirinden ayıran modern bir dağıt
 
 ### 1. Dosyaları İndirme
 [GitHub Releases](../../releases) sayfasından en güncel sürümü indirin:
-* Minecraft sunucusu için: **`DrosophilaBee.jar`**
+* Minecraft sunucusu için: **`FruitFly.jar`**
 * Python beyin simülasyonu için: **`drosophila-brain-vX.X.X.zip`** (Windows) veya **`drosophila-brain-vX.X.X.tar.gz`** (Linux/macOS)
 
 ---
 
 ### 2. Minecraft Sunucu Kurulumu (Beden)
-1. `DrosophilaBee.jar` dosyasını Minecraft sunucunuzun `plugins/` klasörüne atın.
+1. `FruitFly.jar` dosyasını Minecraft sunucunuzun `plugins/` klasörüne atın.
 2. Sunucuyu başlatın veya `/reload` yapın.
 3. Eklenti otomatik olarak `0.0.0.0:8765` portunda tak-çalıştır bir WebSocket sunucusu başlatır. Sunucu tarafında hiçbir karmaşık IP yapılandırmasına gerek yoktur!
 
@@ -171,7 +171,7 @@ Aynı şekilde `config.json` dosyası da desteklenir:
 
 ## 🔧 Eklenti Konfigürasyonu (`config.yml`)
 
-Sunucu ilk açıldığında `plugins/DrosophilaBee/config.yml` dosyasını otomatik oluşturur:
+Sunucu ilk açıldığında `plugins/FruitFly/config.yml` dosyasını otomatik oluşturur:
 
 ```yaml
 # Dil Ayarı ("en" İngilizce, "tr" Türkçe veya languages/ altındaki özel dil)

@@ -62,16 +62,16 @@ jobs:
           ver="${{ steps.vars.outputs.version_number }}"
           mkdir -p dist
 
-          echo "Building DrosophilaBee JAR with Maven..."
+          echo "Building FruitFly JAR with Maven..."
           mvn -B clean package --file drosophila-paper/pom.xml
 
-          target_jar="drosophila-paper/target/DrosophilaBee.jar"
+          target_jar="drosophila-paper/target/FruitFly.jar"
           if [[ ! -f "$target_jar" ]]; then
             echo "Error: $target_jar not found!"
             exit 1
           fi
 
-          cp "$target_jar" "dist/DrosophilaBee-v${ver}.jar"
+          cp "$target_jar" "dist/FruitFly-v${ver}.jar"
 
           echo "Plugin build successful:"
           ls -lh dist/*.jar

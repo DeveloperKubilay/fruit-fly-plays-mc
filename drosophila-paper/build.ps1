@@ -1,4 +1,4 @@
-# DrosophilaBee Local Build Script
+# FruitFly Local Build Script
 $ErrorActionPreference = "Stop"
 Push-Location $PSScriptRoot
 
@@ -76,7 +76,7 @@ Remove-Item -Force "META-INF\MANIFEST.MF" -ErrorAction SilentlyContinue
 Pop-Location
 
 # JAR paketle
-$jarPath = "$targetDir\DrosophilaBee.jar"
+$jarPath = "$targetDir\FruitFly.jar"
 & "$jdkPath\jar.exe" --create --file "$jarPath" -C "$buildDir" .
 
 if ($LASTEXITCODE -ne 0) {

@@ -1,9 +1,9 @@
 @echo off
-chcp 65001 >nul
+setlocal EnableDelayedExpansion
 cd /d "%~dp0"
 
 if exist "venv\Scripts\activate.bat" goto VENV_OK
-echo [HATA / ERROR] venv bulunamadı! Lütfen önce setup.bat çalıştırın.
+echo [HATA / ERROR] venv bulunamadi! Lutfen once setup.bat calistirin.
 echo.
 pause
 exit /b 1
@@ -11,7 +11,7 @@ exit /b 1
 :VENV_OK
 call "venv\Scripts\activate.bat"
 
-rem 1. Varsa config.json dosyasından ayarları oku
+rem 1. Varsa config.json dosyasindan ayarlari oku
 set "CFG_HOST="
 set "CFG_PORT=8765"
 set "CFG_PASS="
@@ -25,7 +25,7 @@ if exist "config.json" (
     )
 )
 
-rem 2. Varsa .env dosyasından ayarları oku
+rem 2. Varsa .env dosyasindan ayarlari oku
 if exist ".env" (
     for /f "usebackq tokens=1* delims==" %%a in (".env") do (
         if /i "%%a"=="MINECRAFT_HOST" if not defined CFG_HOST set "CFG_HOST=%%~b"
@@ -38,7 +38,7 @@ if exist ".env" (
     )
 )
 
-rem 3. Komut satırı parametrelerini ayrıştır: [IP veya IP:PORT] [PASSWORD] [--no-gui]
+rem 3. Komut satiri parametrelerini ayristir: [IP veya IP:PORT] [PASSWORD] [--no-gui]
 set "ARG_HOST="
 set "ARG_PASS="
 set "NO_GUI="
@@ -57,23 +57,20 @@ for %%a in (%*) do (
     )
 )
 
-rem Hedef Sunucu: Argüman > config.json / .env > localhost
+rem Hedef Sunucu: Arguman > config.json / .env > localhost
 set "TARGET_HOST=%ARG_HOST%"
 if not defined TARGET_HOST set "TARGET_HOST=%CFG_HOST%"
 if not defined TARGET_HOST set "TARGET_HOST=%MINECRAFT_HOST%"
 if not defined TARGET_HOST set "TARGET_HOST=%TARGET%"
 if not defined TARGET_HOST set "TARGET_HOST=localhost"
 
-rem IP:Port ayrıştırma desteği (örnek: 1.2.3.4:8765 veya localhost:8765)
-echo %TARGET_HOST% | findstr ":" >nul
-if %ERRORLEVEL% equ 0 (
-    for /f "tokens=1,2 delims=:" %%h in ("%TARGET_HOST%") do (
-        set "TARGET_HOST=%%~h"
-        if not "%%~i"=="" set "CFG_PORT=%%~i"
-    )
+rem IP:Port ayristirma destegi
+for /f "tokens=1,2 delims=:" %%a in ("%TARGET_HOST%") do (
+    set "TARGET_HOST=%%a"
+    if not "%%b"=="" set "CFG_PORT=%%b"
 )
 
-rem Güvenlik Şifresi: Argüman > config.json / .env > FLY_AUTH_TOKEN > Kullanıcıya sor
+rem Guvenlik Sifresi: Arguman > config.json / .env > FLY_AUTH_TOKEN > Kullaniciya sor
 set "TARGET_PASS=%ARG_PASS%"
 if not defined TARGET_PASS set "TARGET_PASS=%CFG_PASS%"
 if not defined TARGET_PASS set "TARGET_PASS=%FLY_AUTH_TOKEN%"
@@ -84,13 +81,13 @@ if defined TARGET_PASS (
 
 :PROMPT_PASSWORD
 echo ================================================================
-echo   GÜVENLİK ŞİFRESİ GEREKLİ / PASSWORD REQUIRED
+echo   GUVENLIK SIFRESI GEREKLI / PASSWORD REQUIRED
 echo ================================================================
-echo Minecraft sunucusuyla bağlantı için şifre (token) gereklidir.
-echo (Minecraft sunucunuzdaki plugins/DrosophilaBee/config.yml dosyasındaki
-echo  brain.auth-token değeri ile birebir aynı olmalıdır)
+echo Minecraft sunucusuyla baglanti icin sifre (token) gereklidir.
+echo (Minecraft sunucunuzdaki plugins/FruitFly/config.yml dosyasindaki
+echo  brain.auth-token degeri ile birebir ayni olmalidir)
 echo.
-set /p "TARGET_PASS=Şifre / Token: "
+set /p "TARGET_PASS=Sifre / Token: "
 if not defined TARGET_PASS goto PROMPT_PASSWORD
 if "%TARGET_PASS%"=="" goto PROMPT_PASSWORD
 echo.
@@ -102,9 +99,9 @@ set "MINECRAFT_PASSWORD=%TARGET_PASS%"
 echo ================================================================
 echo   Hedef Minecraft Sunucusu: ws://%TARGET_HOST%:%CFG_PORT%
 if defined NO_GUI (
-    echo   Arayüz: Sadece Terminal Modu (--no-gui)
+    echo   Arayuz: Sadece Terminal Modu (--no-gui)
 ) else (
-    echo   Arayüz: Grafik Dashboard (Pygame)
+    echo   Arayuz: Grafik Dashboard (Pygame)
 )
 echo ================================================================
 

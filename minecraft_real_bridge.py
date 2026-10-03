@@ -657,10 +657,10 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
 
     if as_server:
         print("[GerçekBeyin] 🌐 WebSocket Sunucusu dinliyor: 0.0.0.0:%d" % ws_port)
-        print("              Minecraft Paper/Spigot sunucusundaki DrosophilaBee eklentisi buraya bağlanacak.")
+        print("              Minecraft Paper/Spigot sunucusundaki FruitFly eklentisi buraya bağlanacak.")
         if not IS_HEADLESS:
             screen.fill(BG)
-            t = F_LBL.render("DrosophilaBee eklentisi bekleniyor (0.0.0.0:%d)..." % ws_port, True, ALERT)
+            t = F_LBL.render("FruitFly eklentisi bekleniyor (0.0.0.0:%d)..." % ws_port, True, ALERT)
             screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
             pygame.display.flip()
 
@@ -1467,7 +1467,7 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
             log.event("KOPTU", "bağlantı kesildi: %s" % type(_e).__name__)
             if not IS_HEADLESS:
                 screen.fill(BG)
-                msg = f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})..." if not as_server else f"DrosophilaBee eklentisi bekleniyor (0.0.0.0:{ws_port})..."
+                msg = f"Minecraft sunucusu bekleniyor ({ws_host}:{ws_port})..." if not as_server else f"FruitFly eklentisi bekleniyor (0.0.0.0:{ws_port})..."
                 t = F_LBL.render(msg, True, ALERT)
                 screen.blit(t, (screen.get_width() // 2 - t.get_width() // 2, screen.get_height() // 2))
                 pygame.display.flip()

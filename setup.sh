@@ -80,53 +80,7 @@ else
 fi
 
 # 5. Bağlantı ve Güvenlik Yapılandırması
-echo_color ""
-echo_color "${CYAN}================================================================${NC}"
-echo_color "${CYAN}  [4/4] BAĞLANTI VE GÜVENLİK AYARLARI / CONFIGURATION           ${NC}"
-echo_color "${CYAN}================================================================${NC}"
-echo_color "Minecraft Sunucu Adresi (IP veya IP:Port):"
-echo_color "  - Başka bir sunucuya bağlamak istiyorsanız IP veya IP:Port yazın (örn: 1.2.3.4 veya 1.2.3.4:8765)."
-echo_color "  - Yerel sunucu için doğrudan [ENTER]'a basın (varsayılan: localhost)."
-read -r -p "Sunucu IP [localhost]: " INPUT_HOST
-[ -z "$INPUT_HOST" ] && INPUT_HOST="localhost"
-
-INPUT_PORT="8765"
-if [[ "$INPUT_HOST" == *":"* ]]; then
-    INPUT_PORT="${INPUT_HOST##*:}"
-    INPUT_HOST="${INPUT_HOST%:*}"
-fi
-
-while true; do
-    echo_color ""
-    echo_color "Minecraft Güvenlik Şifresi / Token (ZORUNLU):"
-    echo_color "(Minecraft sunucusundaki plugins/DrosophilaBee/config.yml dosyasındaki"
-    echo_color " brain.auth-token değeri ile birebir aynı olmalıdır)"
-    read -r -p "Şifre / Token: " INPUT_PASS
-    if [ -n "$INPUT_PASS" ]; then
-        break
-    fi
-    echo_color "${RED}[UYARI / WARNING] Şifre zorunludur, boş bırakılamaz!${NC}"
-done
-
-echo_color "${CYAN}[BİLGİ] Ayarlar config.json ve .env dosyalarına kaydediliyor...${NC}"
-
-cat <<EOF > config.json
-{
-  "minecraft_host": "${INPUT_HOST}",
-  "minecraft_port": ${INPUT_PORT},
-  "auth_token": "${INPUT_PASS}"
-}
-EOF
-
-cat <<EOF > .env
-# Drosophila Otomatik Yapılandırma
-MINECRAFT_HOST=${INPUT_HOST}
-MINECRAFT_PORT=${INPUT_PORT}
-MINECRAFT_PASSWORD=${INPUT_PASS}
-FLY_AUTH_TOKEN=${INPUT_PASS}
-EOF
-
-echo_color "${GREEN}[OK] Yapılandırma başarıyla kaydedildi! (config.json, .env)${NC}"
+python run_real.py --setup
 
 # 6. Başlatıcı izinleri
 chmod +x start.sh 2>/dev/null || true
@@ -146,5 +100,4 @@ echo_color "     ${YELLOW}./start.sh 1.2.3.4${NC}"
 echo_color "     ${YELLOW}./start.sh 1.2.3.4:8765${NC}"
 echo_color "     ${YELLOW}./start.sh 1.2.3.4:8765 mypassword${NC}"
 echo_color "     ${YELLOW}./start.sh 1.2.3.4:8765 mypassword --no-gui${NC}"
-echo_color "     ${YELLOW}./start.sh 1.2.3.4 mypassword --no-gui${NC}"
 echo_color "${CYAN}================================================================${NC}"
