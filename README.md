@@ -1,5 +1,9 @@
 # 🪰 Drosophila — Real Fruit Fly Brain in Minecraft
 
+![](https://raw.githubusercontent.com/DeveloperKubilay/fruit-fly-plays-mc/refs/heads/main/assets/1.png)
+![](https://raw.githubusercontent.com/DeveloperKubilay/fruit-fly-plays-mc/refs/heads/main/assets/2.png)
+![](https://raw.githubusercontent.com/DeveloperKubilay/fruit-fly-plays-mc/refs/heads/main/assets/3.png)
+
 [![Minecraft](https://img.shields.io/badge/Minecraft-Paper%20%7C%20Bukkit%20%7C%20Spigot%20%7C%20Purpur%20(1.20--1.21.x)-brightgreen)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-17%2B-orange)](https://www.oracle.com/java/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
