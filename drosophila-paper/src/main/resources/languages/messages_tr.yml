@@ -26,11 +26,6 @@ commands:
   hungry:
     success: "&a[Drosophila] 🪰 Meyve sineği acıktırıldı! (Tokluk: 3.0/20.0 • dNPF hormonu aktifleşti)"
 
-  food:
-    set: "&a[Drosophila] 🪰 Meyve sineği tokluk seviyesi ayarlandı: {0}/20.0"
-    invalid: "&cLütfen 3 ile 20 arasında geçerli bir sayı girin. Örn: /{0} food 10"
-    status: "&e[Drosophila] 🪰 Meyve sineği tokluk: &f{0}/20.0 &7({1})"
-
   spawnpoint:
     set: "&a[Drosophila] 🪰 Meyve sineğinin kalıcı doğma noktası (spawnpoint) ayarlandı: [{0}, {1}, {2}]"
     reset: "&a[Drosophila] 🪰 Sinek spawnpoint sıfırlandı (varsayılan dünya doğma noktası kullanılacak)."
@@ -49,39 +44,38 @@ commands:
     come: "&e/{0} come &7- Sineği kendi yanına çağırırsın."
     feed: "&e/{0} feed [full] &7- Sineğin önüne elma bırakır (veya full ile anında doyurur)."
     hungry: "&e/{0} hungry &7(veya /{0} starve) - Sineği anında acıktırır (dNPF aktifleşir)."
-    food: "&e/{0} food [miktar] &7- Sineğin tokluk seviyesini (3-20) ayarlar veya gösterir."
     spawnpoint: "&e/{0} spawnpoint &7(veya /{0} setspawn) - Bulunduğun yeri sineğin kalıcı evi yapar."
     home: "&e/{0} home &7- Sineği evine gönderir."
     status: "&e/{0} status &7- Beyin, ruh hali (dopamin), can, tokluk ve çevre algısını gösterir."
     clear: "&e/{0} clear &7- Sineğin hafızasını sıfırlar (taban konektoma döner)."
 
 status:
-  header: "&6─── &e🪰 Meyve Sineği Durumu &6───"
-  brain_connected: "&e🧠 Beyin Modeli: &aBAĞLI &7(MaleCNS v1.0 • 13.000+ Nöron • 5M Sinaps)"
-  brain_disconnected: "&e🧠 Beyin Modeli: &cKOPUK &7(Python beyni bekleniyor...)"
+  header: "&6── &e🪰 Meyve Sineği Durumu &6──"
+  brain_connected: "&e🧠 Beyin: &aBAĞLI &7(MaleCNS v1.0)"
+  brain_disconnected: "&e🧠 Beyin: &cKOPUK &7(Python bekleniyor)"
   mood_title: "&e🎭 Ruh Hali: "
   mood:
-    eating: "&6🍎 Besleniyor &7(Şeker Ödülü • PAM Dopamin Patlaması)"
-    scared: "&c😨 Korkmuş / Kaçıyor &7(Dev Nöron DNp01 Kaçış Refleksi!)"
-    sad: "&d😢 Stresli / Aç &7(PPL1 Negatif Pekiştirme • Mor Gözyaşı)"
-    happy: "&a💚 Mutlu / Huzurlu &7(PAM Dopamin Tatmini)"
-    neutral: "&b🟢 Sakin &7(Doğal Keşif & Uçuş Modu)"
-  stats_line: "&e❤️ Can: &c{0}&7/20.0  &8|  &e🍗 Tokluk: &f{1}&7/20.0 &7({2})"
+    eating: "&6🍎 Besleniyor &7(PAM Ödülü)"
+    scared: "&c😨 Kaçıyor &7(DNp01 Refleksi)"
+    sad: "&d😢 Stresli/Aç &7(PPL1 Uyarısı)"
+    happy: "&a💚 Huzurlu &7(PAM Tatmini)"
+    neutral: "&b🟢 Sakin &7(Keşif Uçuşu)"
+  stats_line: "&e❤️ Can: &c{0}  &8|  &e🍗 Tokluk: &f{1} &7({2})"
   satiety:
-    satiated: "&aTok &7(Serbest Keşif & Işık Odaklı)"
-    normal: "&eNormal &7(Hafif İştahlı)"
-    hungry: "&cÇok Aç &7(dNPF Hormonu Tavan Yaptı • Yiyecek Arıyor)"
-  location: "&e📍 Konum: &f[{0}, {1}, {2}] &7(Yön: {3}°, Pitch: {4}°)"
-  odor_source: "&e👃 Koku Kaynağı: &6{0} &7(Mesafe: {1} blok, Sol: {2} / Sağ: {3})"
-  odor_none: "&e👃 Koku Kaynağı: &7Yok (Açık hava / Koku sahası dışında)"
-  scan: "&e👁️ Çevre Taraması: &7Yerdeki Eşyalar: &f{0} &7| Oyuncular: &f{1} &7| Tehdit: {2}"
+    satiated: "&aTok"
+    normal: "&eNormal"
+    hungry: "&cAç"
+  location: "&e📍 Konum: &f[{0}, {1}, {2}] &7({3}°)"
+  odor_source: "&e👃 Koku: &6{0} &7({1}b, L:{2}/R:{3})"
+  odor_none: "&e👃 Koku: &7Yok (Temiz hava)"
+  scan: "&e👁️ Çevre: &7Eşya: &f{0} &8| &7Oyuncu: &f{1} &8| &7Tehdit: {2}"
   threat:
-    none: "&aYok (Güvende)"
-    detected: "&c{0} ({1} blok)"
-  home_set: "&e🏠 Ev (Spawnpoint): &a[{0}, {1}, {2}]"
-  home_none: "&e🏠 Ev (Spawnpoint): &7Yok (Varsayılan Dünya Doğuşu)"
-  spawning: "&eDurum: &aOtomatik doğum / dirilme sürecinde..."
-  footer: "&6──────────────────────────────────────"
+    none: "&aYok"
+    detected: "&c{0} ({1}b)"
+  home_set: "&e🏠 Ev: &a[{0}, {1}, {2}]"
+  home_none: "&e🏠 Ev: &7Yok (Dünya Doğuşu)"
+  spawning: "&eDurum: &aDoğum sürecinde..."
+  footer: "&6──────────────────────────────"
 
 bottle:
   item_name: "&aŞişede Meyve Sineği &e[{0}]"

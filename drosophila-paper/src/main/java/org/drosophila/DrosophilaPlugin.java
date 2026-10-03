@@ -84,6 +84,32 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
             }
         }
 
+        // Bukkit'in otomatik eklediği 'fruitfly:fruitfly' isim alanı komutunu kaldır
+        try {
+            java.lang.reflect.Method getCommandMapMethod = Bukkit.getServer().getClass().getMethod("getCommandMap");
+            Object commandMap = getCommandMapMethod.invoke(Bukkit.getServer());
+            java.lang.reflect.Field knownCommandsField = null;
+            Class<?> clazz = commandMap.getClass();
+            while (clazz != null && knownCommandsField == null) {
+                try {
+                    knownCommandsField = clazz.getDeclaredField("knownCommands");
+                } catch (NoSuchFieldException ignored) {
+                    clazz = clazz.getSuperclass();
+                }
+            }
+            if (knownCommandsField != null) {
+                knownCommandsField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                java.util.Map<String, Command> knownCommands = (java.util.Map<String, Command>) knownCommandsField.get(commandMap);
+                if (knownCommands != null) {
+                    knownCommands.remove("fruitfly:fruitfly");
+                    knownCommands.remove("fruitfly:fluitfly");
+                }
+            }
+        } catch (Throwable ignored) {
+            // Bukkit command map temizliği opsiyoneldir
+        }
+
         // Ana Tick Döngüsü: Her Minecraft tick'inde (20 Hz = 50 ms) çalışır
         this.tickTask = Bukkit.getScheduler().runTaskTimer(this, this::onTick, 20L, 1L);
 
@@ -234,25 +260,6 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
                 b.getWorld().spawnParticle(org.bukkit.Particle.FALLING_OBSIDIAN_TEAR, b.getLocation().add(0, 0.35, 0), 6, 0.1, 0.1, 0.1, 0.02);
             }
             sender.sendMessage(languageManager.get("commands.hungry.success"));
-            return true;
-        }
-
-        if (sub.equals("food") || sub.equals("hunger") || sub.equals("tokluk")) {
-            if (args.length > 1) {
-                try {
-                    double val = Double.parseDouble(args[1]);
-                    beeController.setFoodLevel(val);
-                    sender.sendMessage(languageManager.get("commands.food.set", String.format(Locale.US, "%.1f", beeController.getFoodLevel())));
-                } catch (NumberFormatException e) {
-                    sender.sendMessage(languageManager.get("commands.food.invalid", cmdName));
-                }
-            } else {
-                double f = beeController.getFoodLevel();
-                String state = (f >= 15.0) ? languageManager.get("status.satiety.satiated")
-                        : (f >= 8.0) ? languageManager.get("status.satiety.normal")
-                        : languageManager.get("status.satiety.hungry");
-                sender.sendMessage(languageManager.get("commands.food.status", String.format(Locale.US, "%.1f", f), state));
-            }
             return true;
         }
 
@@ -457,7 +464,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
         List<String> list = new ArrayList<>();
         if (args.length == 1) {
             List<String> subcommands = Arrays.asList(
-                    "tp", "come", "feed", "hungry", "food", "clear", "spawnpoint", "home", "status", "help"
+                    "tp", "come", "feed", "hungry", "clear", "spawnpoint", "home", "status", "help"
             );
             String input = args[0].toLowerCase();
             for (String sub : subcommands) {
@@ -471,10 +478,6 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
             String input = args[1].toLowerCase();
             if (sub.equals("feed")) {
                 if ("full".startsWith(input)) list.add("full");
-            } else if (sub.equals("food")) {
-                list.add("3");
-                list.add("10");
-                list.add("20");
             } else if (sub.equals("spawnpoint") || sub.equals("setspawn")) {
                 if ("clear".startsWith(input)) list.add("clear");
             }

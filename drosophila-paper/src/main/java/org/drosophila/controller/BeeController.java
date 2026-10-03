@@ -45,7 +45,7 @@ public class BeeController implements Listener {
 
     // Metabolik Açlık & Enerji (Drosophila dNPF Modülasyonu)
     public static final double MAX_FOOD = 20.0;
-    public static final double MIN_FOOD = 3.0; // Biyolojik taban: açlıktan ölmez, sadece arama dürtüsü tavan yapar
+    public static final double MIN_FOOD = 8.0; // Açlık tabanı: 8.0 altına asla inmez, sinek açlık ızdırabı çekmez
     private double foodLevel = MAX_FOOD;
     private int flowerSipCooldown = 0; // Çiçek nektarı yudumlama aralığı
     private int leafRestCooldown = 0;   // Ağaç yaprağında dinlenme aralığı
@@ -292,9 +292,9 @@ public class BeeController implements Listener {
         beeEntity.setRotation(newYaw, targetPitch);
 
         // Metabolik enerji harcaması (Uçuş maliyeti):
-        // Havada süzülürken saniyede ~0.016 tokluk harcanır, sprintte/kaçışta ~0.032
-        // MIN_FOOD (3.0) altına inmez; sinek açlıktan ölmez, sadece yemek arama/dNPF duyarlılığı tavan yapar.
-        double burnPerTick = (cmd.sprint || cmd.is_escaping) ? 0.0016 : 0.0008;
+        // Havada süzülürken ~50 saniyede bir sadece 0.1 tokluk harcanır (dakikada ~0.12)
+        // MIN_FOOD (8.0) altına inmez; sinek asla aşırı açlık ızdırabı çekmez.
+        double burnPerTick = (cmd.sprint || cmd.is_escaping) ? 0.0002 : 0.0001;
         this.foodLevel = Math.max(MIN_FOOD, this.foodLevel - burnPerTick);
 
         if (flowerSipCooldown > 0) {

@@ -221,7 +221,6 @@ Command Alias: `/fruitfly` or `/fluitfly`
 | `/fruitfly feed` | Drops an apple in front of the fruit fly |
 | `/fruitfly feed full` | Instantly satiates the fly (Satiety level → 20) |
 | `/fruitfly hungry` | Instantly starves the fly (Triggers dNPF hunger hormone) |
-| `/fruitfly food [amount]` | Views or adjusts the fly's satiety level (3–20) |
 | `/fruitfly spawnpoint` | Sets your current location as the fly's permanent home |
 | `/fruitfly home` | Sends the fly back to its home spawnpoint |
 | `/fruitfly status` | Shows real-time telemetry (health, satiety, odor, dopamine mood, heading) |
@@ -509,7 +508,6 @@ Kısayol (Alias): `/fruitfly` veya `/fluitfly`
 | `/fruitfly feed` | Sineğin önüne anında bir elma bırakır |
 | `/fruitfly feed full` | Sineği anında tamamen doyurur (Tokluk seviyesi → 20) |
 | `/fruitfly hungry` | Sineği acıktırır (Tokluk seviyesi → 3) |
-| `/fruitfly food [miktar]` | Sineğin anlık tokluk seviyesini görüntüler veya ayarlar |
 | `/fruitfly spawnpoint` | Bulunduğunuz konumu sineğin kalıcı yuvası/evi (spawnpoint) yapar |
 | `/fruitfly home` | Sineği belirlenen ev/doğma noktasına gönderir |
 | `/fruitfly status` | Ayrıntılı canlı telemetri (can, tokluk, koku mesafesi, baş açısı, tehdit seviyesi) |
