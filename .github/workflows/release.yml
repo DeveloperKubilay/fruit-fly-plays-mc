@@ -46,8 +46,8 @@ jobs:
           fi
 
           echo "version_number=$version_number" >> "$GITHUB_OUTPUT"
-          echo "release_tag=v${version_number}" >> "$GITHUB_OUTPUT"
-          echo "release_title=Drosophila v${version_number}" >> "$GITHUB_OUTPUT"
+          echo "release_tag=${version_number}" >> "$GITHUB_OUTPUT"
+          echo "release_title=Drosophila ${version_number}" >> "$GITHUB_OUTPUT"
           echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
 
       - name: Set up Java 17
@@ -71,7 +71,7 @@ jobs:
             exit 1
           fi
 
-          cp "$target_jar" "dist/FruitFly-v${ver}.jar"
+          cp "$target_jar" "dist/FruitFly-${ver}.jar"
 
           echo "Plugin build successful:"
           ls -lh dist/*.jar
@@ -80,7 +80,7 @@ jobs:
         shell: bash
         run: |
           ver="${{ steps.vars.outputs.version_number }}"
-          pkg_name="drosophila-brain-v${ver}"
+          pkg_name="drosophila-brain-${ver}"
           mkdir -p "$pkg_name"
 
           cp run_real.py "$pkg_name/"

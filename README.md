@@ -62,13 +62,13 @@ The project decouples the physical body from the biological brain through a high
 ### 1. Download Release Files
 From the [GitHub Releases](../../releases) page:
 * For Minecraft server: **`FruitFly.jar`**
-* For Python brain simulation: **`drosophila-brain-vX.X.X.zip`** (Windows) or **`drosophila-brain-vX.X.X.tar.gz`** (Linux/macOS)
+* For Python brain simulation: **`drosophila-brain-X.X.X.zip`** (Windows) or **`drosophila-brain-X.X.X.tar.gz`** (Linux/macOS)
 
 ---
 
 ### 2. Minecraft Server Setup (Body)
 1. Place `FruitFly.jar` into your Minecraft server's `plugins/` directory.
-2. Start the server or run `/fruitfly reload`.
+2. Start the server or run `/reload`.
 3. The plugin automatically starts a WebSocket listener on `0.0.0.0:8765`. Zero complex network configuration required on the server side!
 
 ---
@@ -216,7 +216,6 @@ Command Alias: `/fruitfly` or `/fluitfly`
 | `/fruitfly home` | Sends the fly back to its home spawnpoint |
 | `/fruitfly status` | Shows real-time telemetry (health, satiety, odor, dopamine mood, heading) |
 | `/fruitfly clear` | Resets Mushroom Body memory cache back to baseline connectome |
-| `/fruitfly reload` | Hot-reloads `config.yml`, language files, and auth tokens without restart |
 
 ---
 
@@ -341,13 +340,13 @@ Proje, fiziksel beden ile biyolojik beyni birbirinden ayıran modern bir dağıt
 ### 1. Dosyaları İndirme
 [GitHub Releases](../../releases) sayfasından en güncel sürümü indirin:
 * Minecraft sunucusu için: **`FruitFly.jar`**
-* Python beyin simülasyonu için: **`drosophila-brain-vX.X.X.zip`** (Windows) veya **`drosophila-brain-vX.X.X.tar.gz`** (Linux/macOS)
+* Python beyin simülasyonu için: **`drosophila-brain-X.X.X.zip`** (Windows) veya **`drosophila-brain-X.X.X.tar.gz`** (Linux/macOS)
 
 ---
 
 ### 2. Minecraft Sunucu Kurulumu (Beden)
 1. `FruitFly.jar` dosyasını Minecraft sunucunuzun `plugins/` klasörüne atın.
-2. Sunucuyu başlatın veya `/fruitfly reload` yapın.
+2. Sunucuyu başlatın veya `/reload` yapın.
 3. Eklenti otomatik olarak `0.0.0.0:8765` portunda tak-çalıştır bir WebSocket sunucusu başlatır. Sunucu tarafında hiçbir karmaşık IP yapılandırmasına gerek yoktur!
 
 ---
@@ -495,7 +494,6 @@ Kısayol (Alias): `/fruitfly` veya `/fluitfly`
 | `/fruitfly home` | Sineği belirlenen ev/doğma noktasına gönderir |
 | `/fruitfly status` | Ayrıntılı canlı telemetri (can, tokluk, koku mesafesi, baş açısı, tehdit seviyesi) |
 | `/fruitfly clear` | Sineğin mantar cisimciği (öğrenme/hafıza) önbelleğini sıfırlar |
-| `/fruitfly reload` | config.yml ve dil dosyalarını sunucuyu kapatmadan yeniler |
 
 ---
 

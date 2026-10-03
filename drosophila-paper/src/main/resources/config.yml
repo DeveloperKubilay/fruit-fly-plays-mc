@@ -5,7 +5,7 @@
 # This configuration file defines the biological parameters, localization,
 # WebSocket bridge server, and physical behaviors of the Fruit Fly entity.
 #
-# Changes take effect after '/fruitfly reload' or server restart.
+# Changes take effect after server restart or '/reload'.
 # ==============================================================================
 
 # ------------------------------------------------------------------------------

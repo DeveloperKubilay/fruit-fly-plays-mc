@@ -1,4 +1,4 @@
-# 🪰 Drosophila v__VERSION__ — Real MaleCNS v1.0 Fruit Fly Connectome for Minecraft
+# 🪰 Drosophila __VERSION__ — Real MaleCNS v1.0 Fruit Fly Connectome for Minecraft
 
 Biological fruit fly (*Drosophila melanogaster*) connectome simulation powered by MaleCNS v1.0. Controls a living 3D entity in Minecraft Paper/Bukkit/Spigot/Purpur servers with 13,000+ biological neurons and 5,000,000+ synapses.
 
@@ -16,14 +16,14 @@ Biological fruit fly (*Drosophila melanogaster*) connectome simulation powered b
 
 | File | Description | Installation |
 |---|---|---|
-| **`FruitFly-v__VERSION__.jar`** | Minecraft Server Plugin (Body) | Place into server `plugins/` directory |
-| **`drosophila-brain-v__VERSION__.zip`** | Python Brain Simulation (Windows) | `setup.bat` -> `start.bat` |
-| **`drosophila-brain-v__VERSION__.tar.gz`** | Python Brain Simulation (Linux/macOS) | `./setup.sh` -> `./start.sh` |
+| **`FruitFly-__VERSION__.jar`** | Minecraft Server Plugin (Body) | Place into server `plugins/` directory |
+| **`drosophila-brain-__VERSION__.zip`** | Python Brain Simulation (Windows) | `setup.bat` -> `start.bat` |
+| **`drosophila-brain-__VERSION__.tar.gz`** | Python Brain Simulation (Linux/macOS) | `./setup.sh` -> `./start.sh` |
 
 ### 🚀 Quick Start Guide
 
 #### 1. Minecraft Server (Body):
-1. Copy `FruitFly-v__VERSION__.jar` into your Minecraft server's `plugins/` folder.
+1. Copy `FruitFly-__VERSION__.jar` into your Minecraft server's `plugins/` folder.
 2. Start the server or run `/reload` (WebSocket server automatically starts on `0.0.0.0:8765`).
 3. You can set your preferred language (`en` / `tr`) in `plugins/FruitFly/config.yml`.
 
@@ -32,9 +32,9 @@ Biological fruit fly (*Drosophila melanogaster*) connectome simulation powered b
 **🪟 Windows:**
 ```cmd
 # Create an empty directory, open Command Prompt (CMD), and download:
-curl -L -o drosophila-brain-v__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/v__VERSION__/drosophila-brain-v__VERSION__.zip
-tar -xf drosophila-brain-v__VERSION__.zip
-cd drosophila-brain-v__VERSION__
+curl -L -o drosophila-brain-__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.zip
+tar -xf drosophila-brain-__VERSION__.zip
+cd drosophila-brain-__VERSION__
 
 # 1. Setup (Creates virtual environment, installs dependencies, configures IP & token):
 setup.bat
@@ -51,9 +51,9 @@ start.bat 1.2.3.4:8765 "mypassword" --no-gui
 **🐧 Linux / macOS:**
 ```bash
 # Create an empty directory, open terminal, and download:
-curl -L -o drosophila-brain-v__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/v__VERSION__/drosophila-brain-v__VERSION__.tar.gz
-tar -xzf drosophila-brain-v__VERSION__.tar.gz
-cd drosophila-brain-v__VERSION__
+curl -L -o drosophila-brain-__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.tar.gz
+tar -xzf drosophila-brain-__VERSION__.tar.gz
+cd drosophila-brain-__VERSION__
 
 # Set execute permissions and run setup:
 chmod +x setup.sh start.sh
@@ -76,7 +76,7 @@ chmod +x setup.sh start.sh
 
 ---
 
-# 🪰 Drosophila v__VERSION__ — Minecraft İçin Gerçek MaleCNS v1.0 Biyolojik Meyve Sineği Konektomu (Türkçe)
+# 🪰 Drosophila __VERSION__ — Minecraft İçin Gerçek MaleCNS v1.0 Biyolojik Meyve Sineği Konektomu (Türkçe)
 
 MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simülasyonu. 13.000+ nöron ve 5.000.000+ sinaps ile Minecraft Paper/Bukkit/Spigot/Purpur sunucularında yaşayan gerçek bir 3D sinek varlığı kontrolü.
 
@@ -94,14 +94,14 @@ MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simül
 
 | Dosya | Açıklama | Kurulum |
 |---|---|---|
-| **`FruitFly-v__VERSION__.jar`** | Minecraft Sunucu Eklentisi (Beden) | Sunucunun `plugins/` klasörüne atın |
-| **`drosophila-brain-v__VERSION__.zip`** | Python Beyin Simülasyonu (Windows) | `setup.bat` -> `start.bat` |
-| **`drosophila-brain-v__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux/macOS) | `./setup.sh` -> `./start.sh` |
+| **`FruitFly-__VERSION__.jar`** | Minecraft Sunucu Eklentisi (Beden) | Sunucunun `plugins/` klasörüne atın |
+| **`drosophila-brain-__VERSION__.zip`** | Python Beyin Simülasyonu (Windows) | `setup.bat` -> `start.bat` |
+| **`drosophila-brain-__VERSION__.tar.gz`** | Python Beyin Simülasyonu (Linux/macOS) | `./setup.sh` -> `./start.sh` |
 
 ### 🚀 Hızlı Kurulum & Başlatma
 
 #### 1. Minecraft Sunucusu (Beden):
-1. `FruitFly-v__VERSION__.jar` dosyasını sunucunuzun `plugins/` klasörüne atın.
+1. `FruitFly-__VERSION__.jar` dosyasını sunucunuzun `plugins/` klasörüne atın.
 2. Sunucunuzu başlatın veya `/reload` yapın (otomatik olarak `0.0.0.0:8765` üzerinde dinlemeye başlar).
 3. `plugins/FruitFly/config.yml` dosyasından dilinizi (`en` / `tr`) seçebilirsiniz.
 
@@ -110,9 +110,9 @@ MaleCNS v1.0 biyolojik meyve sineği (*Drosophila melanogaster*) konektom simül
 **🪟 Windows İçin:**
 ```cmd
 # Boş bir klasör açın ve içerisinde CMD (Komut İstemi) açarak indirin:
-curl -L -o drosophila-brain-v__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/v__VERSION__/drosophila-brain-v__VERSION__.zip
-tar -xf drosophila-brain-v__VERSION__.zip
-cd drosophila-brain-v__VERSION__
+curl -L -o drosophila-brain-__VERSION__.zip https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.zip
+tar -xf drosophila-brain-__VERSION__.zip
+cd drosophila-brain-__VERSION__
 
 # 1. Kurulum (Sanal ortamı hazırlar, kütüphaneleri kurar ve IP/şifre sorar):
 setup.bat
@@ -129,9 +129,9 @@ start.bat 1.2.3.4:8765 "mypassword" --no-gui
 **🐧 Linux / macOS İçin:**
 ```bash
 # Boş bir dizin oluşturup terminalde indirin:
-curl -L -o drosophila-brain-v__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/v__VERSION__/drosophila-brain-v__VERSION__.tar.gz
-tar -xzf drosophila-brain-v__VERSION__.tar.gz
-cd drosophila-brain-v__VERSION__
+curl -L -o drosophila-brain-__VERSION__.tar.gz https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases/download/__VERSION__/drosophila-brain-__VERSION__.tar.gz
+tar -xzf drosophila-brain-__VERSION__.tar.gz
+cd drosophila-brain-__VERSION__
 
 # İzinleri verin ve kurulumu çalıştırın:
 chmod +x setup.sh start.sh

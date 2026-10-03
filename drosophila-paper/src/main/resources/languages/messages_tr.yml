@@ -43,9 +43,6 @@ commands:
     success: "&a[Drosophila] 🔄 Meyve sineğinin beyni sıfırlandı! Mantar cisimciği anıları taban konektom ağırlıklarına döndü."
     not_connected: "&c[Drosophila] Python beyni bağlı değil, sıfırlama komutu gönderilemedi."
 
-  reload:
-    success: "&a[FruitFly] 🔄 Yapılandırma ve dil dosyaları başarıyla yenilendi!"
-
   help:
     header: "&6=== Meyve Sineği (Drosophila MaleCNS) Komutları ==="
     tp: "&e/{0} tp &7- Sineğin yanına ışınlanırsın."
@@ -57,7 +54,6 @@ commands:
     home: "&e/{0} home &7- Sineği evine gönderir."
     status: "&e/{0} status &7- Beyin, ruh hali (dopamin), can, tokluk ve çevre algısını gösterir."
     clear: "&e/{0} clear &7- Sineğin hafızasını sıfırlar (taban konektoma döner)."
-    reload: "&e/{0} reload &7- config.yml ve dil dosyalarını sunucuyu kapatmadan yeniler."
 
 status:
   header: "&6================= &e🪰 Meyve Sineği Durumu &6================="
