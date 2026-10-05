@@ -274,6 +274,33 @@ Drosophila/
 
 ---
 
+### Purple Droplets / Tears (FALLING_OBSIDIAN_TEAR):
+Biological Source: The PPL1 dopaminergic neuron cluster in the *Drosophila* brain (punishment, pain, danger, negative reinforcement).
+What Does It Mean?: It indicates that the fly is unhappy, hungry, trapped, or in pain. When the fly goes hungry (foodLevel < 5.0), crashes into a wall, comes into contact with water and risks drowning, or is left in the dark, PPL1 neurons are stimulated (sad mode), and purple droplets of sorrow fall from the fly's eyes.
+
+### Red Hearts (HEART):
+Biological Source: The PAM dopaminergic neuron cluster in the *Drosophila* brain (sugar reward, satiety, positive reinforcement).
+What Does It Mean?: When the fly eats an apple on the ground, tastes sugar, or becomes fully satiated, PAM neurons fire (happy and eating mode), and hearts appear.
+
+### Black Ink / Escape Smoke (SQUID_INK):
+Biological Source: *Drosophila*'s famous Giant Neuron (Giant Fiber / DNp01).
+What Does It Mean?: When a zombie, creeper, or player suddenly approaches the fly rapidly (visual approach/looming) or when it takes a hit, the fly performs a sudden escape jump (saccade jump) and leaves behind black escape smoke (scared mode).
+
+### Green Sparks (HAPPY_VILLAGER):
+Appears the moment the fly is released from the bottle or while it is resting gently on a tree leaf. 
+
+### Red Line / Damage (DAMAGE_INDICATOR):
+Indicates that the fly is taking physical damage.
+
+# ⚠️ Important note
+
+Since it runs an actual AI model, you need Python 3.10+ and must download the model separately:
+https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases
+
+It does not need to be run on the same machine as the server; it operates using WebSockets.
+
+---
+
 ## 💬 Community & Support
 
 Need assistance, want to share ideas, or discuss the simulation? Join our Discord server:  
@@ -558,6 +585,33 @@ Drosophila/
 ├── config.json.example             # JSON bağlantı şablonu
 └── .env.example                    # Ortam değişkenleri şablonu
 ```
+
+---
+
+### Mor Damlalar / Gözyaşları (FALLING_OBSIDIAN_TEAR):
+Biyolojik Kaynak: *Drosophila* beynindeki PPL1 dopaminerjik nöron kümesi (ceza, acı, tehlike, negatif pekiştirme).
+Ne Anlama Gelir?: Sineğin mutsuz, aç, kapana kısılmış veya acı içinde olduğunu gösterir. Sinek acıktığında (foodLevel < 5.0), bir duvara çarptığında, suyla temas edip boğulma tehlikesi yaşadığında veya karanlıkta bırakıldığında PPL1 nöronları uyarılır (üzgün modu) ve sineğin gözlerinden mor hüzün damlaları dökülür.
+
+### Kırmızı Kalpler (HEART):
+Biyolojik Kaynak: *Drosophila* beynindeki PAM dopaminerjik nöron kümesi (şeker ödülü, tokluk, pozitif pekiştirme).
+Ne Anlama Gelir?: Sinek yerdeki bir elmayı yediğinde, şekerin tadını aldığında veya tamamen doyduğunda PAM nöronları ateşlenir (mutlu ve yeme modu) ve kalpler belirir.
+
+### Siyah Mürekkep / Kaçış Dumanı (SQUID_INK):
+Biyolojik Kaynak: *Drosophila*'nın ünlü Dev Nöronu (Giant Fiber / DNp01).
+Ne Anlama Gelir?: Bir zombi, creeper veya oyuncu sineğe aniden ve hızla yaklaştığında (görsel yaklaşma/üzerine doğru gelme) ya da sinek hasar aldığında, sinek ani bir kaçış sıçraması (sakkadik sıçrama) yapar ve arkasında siyah bir kaçış dumanı bırakır (korku modu).
+
+### Yeşil Kıvılcımlar (HAPPY_VILLAGER):
+Sinek şişeden serbest bırakıldığı anda veya bir ağaç yaprağı üzerinde sakince dinlenirken belirir.
+
+### Kırmızı Çizgi / Hasar (DAMAGE_INDICATOR):
+Sineğin fiziksel hasar aldığını gösterir.
+
+# ⚠️ Önemli not
+
+Gerçek bir yapay zeka modeli çalıştırdığı için Python 3.10+ sürümüne ihtiyacınız vardır ve modeli ayrıca indirmeniz gerekir:
+https://github.com/DeveloperKubilay/fruit-fly-plays-mc/releases
+
+Sunucuyla aynı makinede çalıştırılması gerekmez; WebSocket'ler aracılığıyla işlev görür.
 
 ---
 
