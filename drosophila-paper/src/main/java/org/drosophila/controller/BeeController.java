@@ -20,6 +20,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.drosophila.compat.Compat;
 import org.drosophila.olfaction.OdorDiffusion;
@@ -40,6 +41,7 @@ public class BeeController implements Listener {
     private String displayName = "§eFruit Fly";
     private double speedMultiplier = 1.0;
     private boolean invulnerable = false;
+    private BukkitTask respawnTask = null;
     private boolean respawnScheduled = false;
     private boolean isBottled = false;
 
@@ -117,8 +119,8 @@ public class BeeController implements Listener {
     }
 
     public Bee spawnBee(Location loc) {
+        cancelRespawn();
         despawnBee();
-        respawnScheduled = false;
         World w = loc.getWorld();
         if (w == null) return null;
 
@@ -171,6 +173,7 @@ public class BeeController implements Listener {
     }
 
     public void bringToPlayer(Player p) {
+        cancelRespawn();
         Bee bee = getBee();
         if (bee == null) {
             respawnDefault();
@@ -235,18 +238,44 @@ public class BeeController implements Listener {
 
     public void setBottled(boolean bottled) {
         this.isBottled = bottled;
+        if (bottled) {
+            cancelRespawn();
+        }
+    }
+
+    public void cancelRespawn() {
+        if (respawnTask != null) {
+            try {
+                respawnTask.cancel();
+            } catch (Exception ignored) {}
+            respawnTask = null;
+        }
+        respawnScheduled = false;
+    }
+
+    public boolean isRespawnScheduled() {
+        return respawnScheduled;
     }
 
     public void scheduleRespawn() {
         if (respawnScheduled || isBottled) return;
+        if (beeEntity != null && beeEntity.isValid() && !beeEntity.isDead()) return;
         if (!plugin.getConfig().getBoolean("bee.auto-spawn", true)) return;
         respawnScheduled = true;
         plugin.getLogger().info("[Drosophila] " + displayName + " will respawn in 2 seconds...");
-        Bukkit.getScheduler().runTaskLater(plugin, this::respawnDefault, 40L);
+        respawnTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            respawnTask = null;
+            respawnScheduled = false;
+            respawnDefault();
+        }, 40L);
     }
 
     public void respawnDefault() {
-        respawnScheduled = false;
+        cancelRespawn();
+        if (isBottled) return;
+        if (beeEntity != null && beeEntity.isValid() && !beeEntity.isDead()) {
+            return;
+        }
         Location spawnLoc = null;
         Location custom = getCustomSpawnLocation();
         if (custom != null && custom.getWorld() != null) {

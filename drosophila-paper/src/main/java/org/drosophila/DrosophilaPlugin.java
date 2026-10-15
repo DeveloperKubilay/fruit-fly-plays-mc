@@ -110,18 +110,18 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
             // Bukkit command map temizliği opsiyoneldir
         }
 
-        // Ana Tick Döngüsü: Her Minecraft tick'inde (20 Hz = 50 ms) çalışır
-        this.tickTask = Bukkit.getScheduler().runTaskTimer(this, this::onTick, 20L, 1L);
-
         // Sunucu açıldığında sineği otomatik oluştur (bee.auto-spawn ayarı)
         boolean autoSpawn = getConfig().getBoolean("bee.auto-spawn", true);
         if (autoSpawn) {
             Bukkit.getScheduler().runTaskLater(this, () -> {
-                if (beeController.getBee() == null) {
+                if (beeController.getBee() == null && !beeController.isBottled()) {
                     beeController.respawnDefault();
                 }
-            }, 30L);
+            }, 20L);
         }
+
+        // Ana Tick Döngüsü: Açılış spawn'ından sonra başlar (25 tick = 1.25s)
+        this.tickTask = Bukkit.getScheduler().runTaskTimer(this, this::onTick, 25L, 1L);
 
         getLogger().info("=================================================");
         getLogger().info("🪰 FruitFly (MaleCNS v1.0) enabled!");
@@ -143,6 +143,7 @@ public class DrosophilaPlugin extends JavaPlugin implements CommandExecutor, Tab
             }
         }
         if (beeController != null) {
+            beeController.cancelRespawn();
             beeController.despawnBee();
         }
         getLogger().info("FruitFly plugin disabled.");
