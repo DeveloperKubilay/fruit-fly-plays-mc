@@ -1,0 +1,87 @@
+# ==============================================================================
+# FruitFly Language File: Français / French (fr)
+# ==============================================================================
+
+entity:
+  name: "&eMouche du Vinaigre"
+
+commands:
+  no_permission: "&c[Drosophila] Vous devez avoir la permission OP pour utiliser cette commande."
+  player_only: "&cSeul un joueur en jeu peut utiliser cette commande."
+  unknown: "&cCommande inconnue. Tapez &e/{0} help&c pour voir les commandes disponibles."
+  fly_not_found: "&c[Drosophila] Mouche du vinaigre introuvable dans ce monde !"
+  fly_spawning: "&c[Drosophila] La mouche apparait actuellement, veuillez reessayer dans un instant."
+
+  tp:
+    success: "&a[Drosophila] 🪰 Teleporte a la mouche du vinaigre."
+    console_loc: "&a[Drosophila] Position de la mouche : [{0}, {1}, {2}]"
+
+  come:
+    success: "&a[Drosophila] 🪰 Mouche du vinaigre amenee a votre position !"
+
+  feed:
+    apple_dropped: "&a[Drosophila] 🍎 Pomme deposee a [{0}, {1}, {2}] ! Observez la descente olfactive."
+    instantly_fed: "&a[Drosophila] 🍎 Mouche du vinaigre rassasiee ! (Satiete: 20.0/20.0, Vie restauree)"
+
+  hungry:
+    success: "&a[Drosophila] 🪰 Mouche affamee ! (Satiete: 3.0/20.0 • Hormone dNPF activee)"
+
+  spawnpoint:
+    set: "&a[Drosophila] 🪰 Point d'apparition defini sur : [{0}, {1}, {2}]"
+    reset: "&a[Drosophila] 🪰 Point d'apparition reinitialise (le spawn du monde sera utilise)."
+
+  home:
+    sent: "&a[Drosophila] 🪰 Mouche renvoyee a son point d'apparition !"
+    spawned: "&a[Drosophila] 🪰 Mouche apparue a son domicile !"
+
+  clear:
+    success: "&a[Drosophila] 🔄 Memoire cerebrale reinitialisee ! Les souvenirs sont revenus aux poids du connectome de base."
+    not_connected: "&c[Drosophila] Le cerveau Python n'est pas connecte, la commande n'a pas pu etre envoyee."
+
+  help:
+    header: "&6─── &eCommandes de la Mouche du Vinaigre (MaleCNS) &6───"
+    tp: "&e/{0} tp &7- Se teleporter a la mouche."
+    come: "&e/{0} come &7- Amener la mouche a vous."
+    feed: "&e/{0} feed [full] &7- Depose une pomme (ou 'full' pour rassasier instantanement)."
+    hungry: "&e/{0} hungry &7(ou /{0} starve) - Affame la mouche instantanement (active la dNPF)."
+    spawnpoint: "&e/{0} spawnpoint &7(ou /{0} setspawn) - Definit l'emplacement actuel comme domicile."
+    home: "&e/{0} home &7- Renvoie la mouche a son domicile."
+    status: "&e/{0} status &7- Affiche le modele cerebral, l'humeur (dopamine), vie et sens."
+    clear: "&e/{0} clear &7- Reinitialise la memoire au connectome de base."
+
+status:
+  header: "&6── &e🪰 Statut de la Mouche du Vinaigre &6──"
+  brain_connected: "&e🧠 Cerveau : &aCONNECTE &7(MaleCNS v1.0)"
+  brain_disconnected: "&e🧠 Cerveau : &cDECONNECTE &7(En attente de Python)"
+  mood_title: "&e🎭 Humeur : "
+  mood:
+    eating: "&6🍎 Alimentation &7(Recompense PAM)"
+    scared: "&c😨 Fuite &7(Reflexe DNp01)"
+    sad: "&d😢 Stress/Faim &7(Signal PPL1)"
+    happy: "&a💚 Satisfaite &7(Dopamine PAM)"
+    neutral: "&b🟢 Calme &7(Vol de croisiere)"
+  stats_line: "&e❤️ Vie : &c{0}  &8|  &e🍗 Faim : &f{1} &7({2})"
+  satiety:
+    satiated: "&aRassasiee"
+    normal: "&eNormale"
+    hungry: "&cAffamee"
+  location: "&e📍 Pos : &f[{0}, {1}, {2}] &7({3}°)"
+  odor_source: "&e👃 Odeur : &6{0} &7({1}b, G:{2}/D:{3})"
+  odor_none: "&e👃 Odeur : &7Aucune (Air pur)"
+  scan: "&e👁️ Scan : &7Item : &f{0} &8| &7Joueur : &f{1} &8| &7Menace : {2}"
+  threat:
+    none: "&aAucune"
+    detected: "&c{0} ({1}b)"
+  home_set: "&e🏠 Domicile : &a[{0}, {1}, {2}]"
+  home_none: "&e🏠 Domicile : &7Aucun (Spawn du Monde)"
+  spawning: "&eStatut : &aApparition..."
+  footer: "&6──────────────────────────────"
+
+bottle:
+  item_name: "&aMouche du Vinaigre en Bouteille &e[{0}]"
+  lore:
+    - "&7Cerveau biologique MaleCNS v1.0 au repos."
+    - "&7(Mode veille 0 CPU / 0 RAM)"
+    - "&eClic droit au sol pour liberer."
+  captured: "&a[Drosophila] 🍾 Mouche mise en bouteille ! Le cerveau est en veille (0 CPU)."
+  released: "&a[Drosophila] 🐝 Mouche liberee ! Yeux ouverts et cerveau MaleCNS reveille."

@@ -1,0 +1,87 @@
+# ==============================================================================
+# FruitFly Language File: Deutsch / German (de)
+# ==============================================================================
+
+entity:
+  name: "&eFruchtfliege"
+
+commands:
+  no_permission: "&c[Drosophila] Du benoetigst OP-Rechte, um diesen Befehl zu nutzen."
+  player_only: "&cNur ein Spieler im Spiel kann diesen Befehl ausfuehren."
+  unknown: "&cUnbekannter Befehl. Tippe &e/{0} help&c fuer verfuegbare Befehle."
+  fly_not_found: "&c[Drosophila] Fruchtfliege in dieser Welt nicht gefunden!"
+  fly_spawning: "&c[Drosophila] Fruchtfliege spawnt gerade, bitte kurz warten."
+
+  tp:
+    success: "&a[Drosophila] 🪰 Zur Fruchtfliege teleportiert."
+    console_loc: "&a[Drosophila] Position der Fruchtfliege: [{0}, {1}, {2}]"
+
+  come:
+    success: "&a[Drosophila] 🪰 Fruchtfliege zu deiner Position gerufen!"
+
+  feed:
+    apple_dropped: "&a[Drosophila] 🍎 Apfel bei [{0}, {1}, {2}] fallen gelassen! Beobachte den olfaktorischen Sinkflug."
+    instantly_fed: "&a[Drosophila] 🍎 Fruchtfliege sofort gesaettigt! (Saettigung: 20.0/20.0, Gesundheit wiederhergestellt)"
+
+  hungry:
+    success: "&a[Drosophila] 🪰 Fruchtfliege hungrig gemacht! (Saettigung: 3.0/20.0 • dNPF-Hungerhormon aktiviert)"
+
+  spawnpoint:
+    set: "&a[Drosophila] 🪰 Heimat-Spawnpoint gesetzt auf: [{0}, {1}, {2}]"
+    reset: "&a[Drosophila] 🪰 Spawnpoint zurueckgesetzt (Standard-Welt-Spawn wird genutzt)."
+
+  home:
+    sent: "&a[Drosophila] 🪰 Fruchtfliege zu ihrem Heimatpunkt geschickt!"
+    spawned: "&a[Drosophila] 🪰 Fruchtfliege an ihrem Heimatpunkt gespawnt!"
+
+  clear:
+    success: "&a[Drosophila] 🔄 Gedaechtnis der Fruchtfliege zurueckgesetzt! Pilzkoerper-Erinnerungen auf Basis-Konnektom zurueckgestellt."
+    not_connected: "&c[Drosophila] Python-Gehirn nicht verbunden, Reset-Befehl konnte nicht zugestellt werden."
+
+  help:
+    header: "&6─── &eFruchtfliege (MaleCNS) Befehle &6───"
+    tp: "&e/{0} tp &7- Zur Fruchtfliege teleportieren."
+    come: "&e/{0} come &7- Fruchtfliege zu dir bringen."
+    feed: "&e/{0} feed [full] &7- Wirft einen Apfel (oder 'full' fuer sofortige Saettigung)."
+    hungry: "&e/{0} hungry &7(oder /{0} starve) - Macht die Fliege sofort hungrig (aktiviert dNPF)."
+    spawnpoint: "&e/{0} spawnpoint &7(oder /{0} setspawn) - Setzt aktuelle Position als Heimat."
+    home: "&e/{0} home &7- Schickt die Fliege nach Hause."
+    status: "&e/{0} status &7- Zeigt Gehirnmodell, Dopamin-Stimmung, Gesundheit, Hunger & Sinne."
+    clear: "&e/{0} clear &7- Setzt Gedaechtnis auf Basis-Konnektom zurueck."
+
+status:
+  header: "&6── &e🪰 Fruchtfliegen-Status &6──"
+  brain_connected: "&e🧠 Gehirn: &aVERBUNDEN &7(MaleCNS v1.0)"
+  brain_disconnected: "&e🧠 Gehirn: &cGETRENNT &7(Warte auf Python)"
+  mood_title: "&e🎭 Stimmung: "
+  mood:
+    eating: "&6🍎 Nahrungsaufnahme &7(PAM Belohnung)"
+    scared: "&c😨 Flucht &7(DNp01 Reflex)"
+    sad: "&d😢 Gestresst/Hungrig &7(PPL1 Signal)"
+    happy: "&a💚 Zufrieden &7(PAM Dopamin)"
+    neutral: "&b🟢 Ruhig &7(Reiseflug)"
+  stats_line: "&e❤️ Gesundheit: &c{0}  &8|  &e🍗 Nahrung: &f{1} &7({2})"
+  satiety:
+    satiated: "&aSatt"
+    normal: "&eNormal"
+    hungry: "&cHungrig"
+  location: "&e📍 Ort: &f[{0}, {1}, {2}] &7({3}°)"
+  odor_source: "&e👃 Geruch: &6{0} &7({1}b, L:{2}/R:{3})"
+  odor_none: "&e👃 Geruch: &7Keiner (Reine Luft)"
+  scan: "&e👁️ Scan: &7Item: &f{0} &8| &7Spieler: &f{1} &8| &7Gefahr: {2}"
+  threat:
+    none: "&aKeine"
+    detected: "&c{0} ({1}b)"
+  home_set: "&e🏠 Heimat: &a[{0}, {1}, {2}]"
+  home_none: "&e🏠 Heimat: &7Keine (Welt-Spawn)"
+  spawning: "&eStatus: &aSpawnt..."
+  footer: "&6──────────────────────────────"
+
+bottle:
+  item_name: "&aGefangene Fruchtfliege &e[{0}]"
+  lore:
+    - "&7MaleCNS v1.0 biologisches Gehirn ruht."
+    - "&7(0 CPU / 0 RAM Schlafmodus)"
+    - "&eRechtsklick auf Boden zum Freilassen."
+  captured: "&a[Drosophila] 🍾 Fruchtfliege sicher eingesperrt! Gehirn im Ruhemodus (0 CPU)."
+  released: "&a[Drosophila] 🐝 Fruchtfliege freigelassen! Augen geoeffnet und Gehirn erwacht."

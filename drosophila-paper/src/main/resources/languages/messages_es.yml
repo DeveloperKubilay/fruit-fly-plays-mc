@@ -1,0 +1,87 @@
+# ==============================================================================
+# FruitFly Language File: Español / Spanish (es)
+# ==============================================================================
+
+entity:
+  name: "&eMosca de la Fruta"
+
+commands:
+  no_permission: "&c[Drosophila] Debes tener permisos de OP para usar este comando."
+  player_only: "&cSolo un jugador dentro del juego puede usar este comando."
+  unknown: "&cComando desconocido. Escribe &e/{0} help&c para ver los comandos disponibles."
+  fly_not_found: "&c[Drosophila] ¡No se encontro la mosca de la fruta en este mundo!"
+  fly_spawning: "&c[Drosophila] La mosca esta apareciendo, intentalo en un momento."
+
+  tp:
+    success: "&a[Drosophila] 🪰 Teletransportado a la mosca de la fruta."
+    console_loc: "&a[Drosophila] Posicion de la mosca: [{0}, {1}, {2}]"
+
+  come:
+    success: "&a[Drosophila] 🪰 ¡Mosca de la fruta traida a tu posicion!"
+
+  feed:
+    apple_dropped: "&a[Drosophila] 🍎 ¡Manzana arrojada en [{0}, {1}, {2}]! Observa el descenso olfativo."
+    instantly_fed: "&a[Drosophila] 🍎 ¡Mosca de la fruta saciada al instante! (Saciedad: 20.0/20.0, Salud restaurada)"
+
+  hungry:
+    success: "&a[Drosophila] 🪰 ¡Mosca de la fruta hambrienta! (Saciedad: 3.0/20.0 • Hormona dNPF activada)"
+
+  spawnpoint:
+    set: "&a[Drosophila] 🪰 Punto de aparicion establecido en: [{0}, {1}, {2}]"
+    reset: "&a[Drosophila] 🪰 Punto de aparicion restablecido (se usara el spawn del mundo)."
+
+  home:
+    sent: "&a[Drosophila] 🪰 ¡Mosca enviada a su punto de aparicion!"
+    spawned: "&a[Drosophila] 🪰 ¡Mosca aparecida en su hogar!"
+
+  clear:
+    success: "&a[Drosophila] 🔄 ¡Memoria cerebral reiniciada! Los recuerdos volvieron a los pesos base del conectoma."
+    not_connected: "&c[Drosophila] El cerebro de Python no esta conectado, no se pudo enviar el comando."
+
+  help:
+    header: "&6─── &eComandos de la Mosca de la Fruta (MaleCNS) &6───"
+    tp: "&e/{0} tp &7- Teletransportarse a la mosca."
+    come: "&e/{0} come &7- Traer la mosca hacia ti."
+    feed: "&e/{0} feed [full] &7- Arroja una manzana (o 'full' para saciar al instante)."
+    hungry: "&e/{0} hungry &7(o /{0} starve) - Hace que la mosca tenga hambre inmediata (dNPF)."
+    spawnpoint: "&e/{0} spawnpoint &7(o /{0} setspawn) - Establece la ubicacion actual como su hogar."
+    home: "&e/{0} home &7- Envia la mosca a su hogar."
+    status: "&e/{0} status &7- Muestra el modelo cerebral, animo (dopamina), salud y sentidos."
+    clear: "&e/{0} clear &7- Reinicia la memoria al conectoma MaleCNS inicial."
+
+status:
+  header: "&6── &e🪰 Estado de la Mosca de la Fruta &6──"
+  brain_connected: "&e🧠 Cerebro: &aCONECTADO &7(MaleCNS v1.0)"
+  brain_disconnected: "&e🧠 Cerebro: &cDESCONECTADO &7(Esperando Python)"
+  mood_title: "&e🎭 Animo: "
+  mood:
+    eating: "&6🍎 Alimentandose &7(Recompensa PAM)"
+    scared: "&c😨 Escapando &7(Reflejo DNp01)"
+    sad: "&d😢 Estresada/Hambrienta &7(Senal PPL1)"
+    happy: "&a💚 Contenta &7(Dopamina PAM)"
+    neutral: "&b🟢 Calma &7(Vuelo de Crucero)"
+  stats_line: "&e❤️ Salud: &c{0}  &8|  &e🍗 Comida: &f{1} &7({2})"
+  satiety:
+    satiated: "&aSaciada"
+    normal: "&eNormal"
+    hungry: "&cHambrienta"
+  location: "&e📍 Ubicacion: &f[{0}, {1}, {2}] &7({3}°)"
+  odor_source: "&e👃 Olor: &6{0} &7({1}b, I:{2}/D:{3})"
+  odor_none: "&e👃 Olor: &7Ninguno (Aire limpio)"
+  scan: "&e👁️ Escaneo: &7Item: &f{0} &8| &7Jugador: &f{1} &8| &7Amenaza: {2}"
+  threat:
+    none: "&aNinguna"
+    detected: "&c{0} ({1}b)"
+  home_set: "&e🏠 Hogar: &a[{0}, {1}, {2}]"
+  home_none: "&e🏠 Hogar: &7Ninguno (Spawn del Mundo)"
+  spawning: "&eEstado: &aApareciendo..."
+  footer: "&6──────────────────────────────"
+
+bottle:
+  item_name: "&aMosca de la Fruta Embotellada &e[{0}]"
+  lore:
+    - "&7Cerebro biologico MaleCNS v1.0 descansando."
+    - "&7(Modo suspension 0 CPU / 0 RAM)"
+    - "&eClic derecho en el suelo para liberar."
+  captured: "&a[Drosophila] 🍾 ¡Mosca embotellada! El cerebro entro en suspension (0 CPU)."
+  released: "&a[Drosophila] 🐝 ¡Mosca liberada! Ojos abiertos y cerebro MaleCNS despierto."

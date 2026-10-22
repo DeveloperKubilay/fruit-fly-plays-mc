@@ -42,7 +42,7 @@ public class LanguageManager {
         }
 
         saveDefaultLangResource("messages_en.yml");
-        saveDefaultLangResource("messages_tr.yml");
+        saveDefaultLangResource("messages_" + this.currentLang + ".yml");
 
         // 2. Fallback (İngilizce) yükle
         InputStream fallbackStream = plugin.getResource("languages/messages_en.yml");
@@ -56,12 +56,18 @@ public class LanguageManager {
             this.langConfig = YamlConfiguration.loadConfiguration(langFile);
             plugin.getLogger().info("[Drosophila] Language loaded: " + this.currentLang + " (" + langFile.getName() + ")");
         } else {
-            plugin.getLogger().warning("[Drosophila] Language file not found: " + langFile.getName() + ", falling back to 'en' (English).");
-            File defaultFile = new File(langFolder, "messages_en.yml");
-            if (defaultFile.exists()) {
-                this.langConfig = YamlConfiguration.loadConfiguration(defaultFile);
+            InputStream resStream = plugin.getResource("languages/" + langFile.getName());
+            if (resStream != null) {
+                this.langConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(resStream, StandardCharsets.UTF_8));
+                plugin.getLogger().info("[Drosophila] Language loaded: " + this.currentLang);
             } else {
-                this.langConfig = this.fallbackConfig;
+                plugin.getLogger().warning("[Drosophila] Language file not found: " + langFile.getName() + ", falling back to 'en' (English).");
+                File defaultFile = new File(langFolder, "messages_en.yml");
+                if (defaultFile.exists()) {
+                    this.langConfig = YamlConfiguration.loadConfiguration(defaultFile);
+                } else {
+                    this.langConfig = this.fallbackConfig;
+                }
             }
         }
     }

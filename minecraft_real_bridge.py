@@ -972,8 +972,8 @@ async def bridge_loop(ws_host="localhost", ws_port=8765, label="Drosophila_Fly",
                     tnow = pygame.time.get_ticks() / 1000.0
                     data = json.loads(raw)
                     if not lang_synced:
-                        if data.get("lang") == "tr":
-                            current_lang = "tr"
+                        if data.get("lang"):
+                            current_lang = str(data.get("lang")).lower()
                         lang_synced = True
 
                     # --- AUTH TOKEN GÜVENLİK DOĞRULAMASI ---
